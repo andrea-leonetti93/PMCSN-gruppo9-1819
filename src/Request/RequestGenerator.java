@@ -24,29 +24,36 @@ public class RequestGenerator implements Runnable{
         double arrive2;
         int i = 0;
         ArrivalRequest r;
-        while(clock.currentTime < STOP_TIME){
+        Job j;
+        double curTime = 0;
+        while(curTime <= STOP_TIME){
             distribution.selectStream(0);
             uniform = distribution.uniform(0.0, 1.0);
             if(uniform < prob_lambda1){
                 distribution.selectStream(1);
-                arrive1 = distribution.exponential(1.0/lambda1);
-                Job j = new Job(i);
-                r = new ArrivalRequest(j, 1, arrive1);
-                r.setOrderTime(time+arrive1);
+                arrive1 = clock.lastClass1Arrival1 + distribution.exponential(1.0/lambda1);
+                j = new Job(i, 1);
+                j.setArrivalTime(arrive1);
                 //TODO non aggiornare tempo globale qui
-                time = time + arrive1;
+                //time = time + arrive1;
+                clock.lastClass1Arrival1 = arrive1;
             }else{
                 distribution.selectStream(2);
-                arrive2 = distribution.exponential(1.0/lambda2);
-                Job j = new Job(i);
-                r = new ArrivalRequest(j, 2, arrive2);
-                r.setOrderTime(time+arrive2);
+                arrive2 = clock.lastClass1Arrival2 + distribution.exponential(1.0/lambda2);
+                j = new Job(i, 2);
+                j.setArrivalTime(arrive2);
+                r = new ArrivalRequest(j);
                 //TODO non aggiornare tempo globale qui
-                time = time + arrive2;
+                //time = time + arrive2;
+                clock.lastClass1Arrival2 = arrive2;
             }
             i++;
             //put the request in the queue
+            r = new ArrivalRequest(j);
             requestsQueue.add(r);
+            //clock.currentTime = j.getArrivalTime();
+            curTime = Math.max(clock.lastClass1Arrival1,clock.lastClass1Arrival2);
+            System.out.println("Arrival time = " + curTime);
         }
     }
 
@@ -54,4 +61,20 @@ public class RequestGenerator implements Runnable{
     public void run() {
         generateRequest();
     }
+
+    public static void main(String[] args) {
+        Configuration.getInstance();
+        Thread t = new Thread(new RequestGenerator());
+        RequestQueue.getInstance().printQueue();
+        t.start();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        RequestQueue.getInstance().printQueue();
+
+
+    }
 }
+

@@ -23,6 +23,7 @@ public class Configuration {
     public static Configuration getInstance(){
         if(configuration == null){
             configuration = new Configuration();
+            startConfiguration();
         }
         return configuration;
     }
@@ -53,7 +54,7 @@ public class Configuration {
             STOP_TIME = Integer.parseInt(prop.getProperty("STOP_TIME"));
             PROB_LAMBDA1 = Double.parseDouble(prop.getProperty("prob_lambda1"));
             PROB_LAMBDA2 = Double.parseDouble(prop.getProperty("prob_lambda2"));
-            System.out.println("\n SEED: " + SEED);
+            /*System.out.println("\n SEED: " + SEED);
             System.out.println("\n LAMBDA1: " + LAMBDA1);
             System.out.println("\n LAMBDA2: " + LAMBDA2);
             System.out.println("\n MU1CLET: " + MU1CLET);
@@ -64,7 +65,7 @@ public class Configuration {
             System.out.println("\n S: " + S);
             System.out.println("\n STOP_TIME: " + STOP_TIME);
             System.out.println("\n PROB_LAMBDA1: " + PROB_LAMBDA1);
-            System.out.println("\n PROB_LAMBDA2: " + PROB_LAMBDA2);
+            System.out.println("\n PROB_LAMBDA2: " + PROB_LAMBDA2);*/
         } catch (
                 IOException ex) {
             ex.printStackTrace();

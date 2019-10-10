@@ -10,8 +10,8 @@ public class Cloudlet extends Server {
 
     private RequestQueue requestQueue = RequestQueue.getInstance();
     private Distribution distribution = Distribution.getInstance();
-    private static double serviceTimeMu1;
-    private static double serviceTimeMu2;
+    private double serviceTimeMu1;
+    private double serviceTimeMu2;
     private static double mu1 = Configuration.MU1CLET;
     private static double mu2 = Configuration.MU2CLET;
     private int nServerUsed;
@@ -31,18 +31,20 @@ public class Cloudlet extends Server {
     public void handleRequest(ArrivalRequest r){
         //TODO gestire la richiesta in arrrivo
         CompletedRequest cr;
-        if(r.getType()==1){
+        if(r.getJobType()==1){
             //it handle class1 request
             distribution.selectStream(5);
             //TODO prendi valori da config file
             serviceTimeMu1 = distribution.exponential(1.0/mu1);
-            cr = new CompletedRequest(r.getJob(),1, serviceTimeMu1+r.getArrivalTime());
+            r.getJob().setServiceTime(serviceTimeMu1);
+            cr = new CompletedRequest(r.getJob());
         }else{
             //it handle class2 request
             distribution.selectStream(6);
             //TODO prendi valori da config file
             serviceTimeMu2 = distribution.exponential(1.0/mu2);
-            cr = new CompletedRequest(r.getJob(),2, serviceTimeMu2+r.getArrivalTime());
+            r.getJob().setServiceTime(serviceTimeMu2);
+            cr = new CompletedRequest(r.getJob());
         }
         cr.setServer(this);
         requestQueue.add(cr);
@@ -54,22 +56,6 @@ public class Cloudlet extends Server {
 
     public void decrNServerUsed(){
         nServerUsed--;
-    }
-
-    public double getServiceTimeMu1() {
-        return serviceTimeMu1;
-    }
-
-    public double getServiceTimeMu2() {
-        return serviceTimeMu2;
-    }
-
-    public void setServiceTimeMu2(double serviceTimeMu2) {
-        Cloudlet.serviceTimeMu2 = serviceTimeMu2;
-    }
-
-    public void setServiceTimeMu1(double serviceTimeMu1) {
-        Cloudlet.serviceTimeMu1 = serviceTimeMu1;
     }
 
     public int getnServerUsed() {

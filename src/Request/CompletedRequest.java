@@ -5,21 +5,10 @@ import Util.Job;
 
 public class CompletedRequest extends Request {
 
-    private double completingTime;
-
     private Server server = null;
 
-    public CompletedRequest(Job job, int type, double completingTime) {
-        super(job, type);
-        this.completingTime = completingTime;
-    }
-
-    public double getCompletingTime() {
-        return completingTime;
-    }
-
-    public void setCompletingTime(double completingTime) {
-        this.completingTime = completingTime;
+    public CompletedRequest(Job job) {
+        super(job);
     }
 
     public Server getServer() {
@@ -28,5 +17,18 @@ public class CompletedRequest extends Request {
 
     public void setServer(Server server) {
         this.server = server;
+    }
+
+    @Override
+    public double getRequestTime() {
+        return job.getArrivalTime()+job.getServiceTime();
+    }
+
+    @Override
+    public String toString() {
+        return "CR{" +
+                 job +
+                ", RT=" + getRequestTime() +
+                '}';
     }
 }

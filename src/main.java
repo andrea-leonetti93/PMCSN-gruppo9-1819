@@ -18,10 +18,18 @@ public class main {
         RequestQueue requestQueue = RequestQueue.getInstance();
         Controller controller = Controller.getInstance();
         Clock clock = Clock.getInstance();
+        clock.currentTime = clock.start_time;
+
+        /* GENERO LE RICHIESTE DI ARRIVO*/
         RequestGenerator requestGenerator = new RequestGenerator();
         Thread t = new Thread(requestGenerator);
         t.start();
-        clock.currentTime = clock.start_time;
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        /* GESTIONE DELLA PRIMA RICHIESTA*/
         while(clock.currentTime < Configuration.STOP_TIME){
             controller.getRequest();
         }

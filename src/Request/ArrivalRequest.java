@@ -4,20 +4,22 @@ import Util.Job;
 
 public class ArrivalRequest extends Request {
 
-    private double arrivalTime;
 
-    public ArrivalRequest(Job job, int type, double arrivalTime) {
-        super(job, type);
-        this.arrivalTime = arrivalTime;
+    public ArrivalRequest(Job job) {
+        super(job);
     }
 
-    public double getArrivalTime() {
-        return arrivalTime;
+    @Override
+    public double getRequestTime() {
+        return job.getArrivalTime();
     }
 
-    public void setArrivalTime(double arrivalTime) {
-        this.arrivalTime = arrivalTime;
+    @Override
+    public String toString() {
+        return "AR{" +
+                 job +
+                ", RT=" + getRequestTime() +
+                '}';
     }
-
 
 }
