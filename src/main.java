@@ -30,7 +30,7 @@ public class main {
             e.printStackTrace();
         }
         /* GESTIONE DELLA PRIMA RICHIESTA*/
-        while(clock.currentTime < Configuration.STOP_TIME){
+        while(clock.currentTime < Configuration.STOP_TIME || requestQueue.size()>0){
             controller.getRequest();
         }
 

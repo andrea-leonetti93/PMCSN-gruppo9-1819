@@ -38,6 +38,7 @@ public class Cloudlet extends Server {
             serviceTimeMu1 = distribution.exponential(1.0/mu1);
             r.getJob().setServiceTime(serviceTimeMu1);
             cr = new CompletedRequest(r.getJob());
+            this.nJobsClass1+=1;
         }else{
             //it handle class2 request
             distribution.selectStream(6);
@@ -45,6 +46,7 @@ public class Cloudlet extends Server {
             serviceTimeMu2 = distribution.exponential(1.0/mu2);
             r.getJob().setServiceTime(serviceTimeMu2);
             cr = new CompletedRequest(r.getJob());
+            this.nJobsClass2+=1;
         }
         cr.setServer(this);
         requestQueue.add(cr);

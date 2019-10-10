@@ -42,7 +42,6 @@ public class RequestGenerator implements Runnable{
                 arrive2 = clock.lastClass1Arrival2 + distribution.exponential(1.0/lambda2);
                 j = new Job(i, 2);
                 j.setArrivalTime(arrive2);
-                r = new ArrivalRequest(j);
                 //TODO non aggiornare tempo globale qui
                 //time = time + arrive2;
                 clock.lastClass1Arrival2 = arrive2;
@@ -73,7 +72,6 @@ public class RequestGenerator implements Runnable{
             e.printStackTrace();
         }
         RequestQueue.getInstance().printQueue();
-
 
     }
 }

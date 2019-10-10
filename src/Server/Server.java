@@ -2,8 +2,8 @@ package Server;
 
 public class Server {
 
-    public int nJobsClass1;
-    public int nJobsClass2;
+    public int nJobsClass1 = 0;
+    public int nJobsClass2 = 0;
 
     public int getnJobsClass1() {
         return nJobsClass1;
