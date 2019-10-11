@@ -33,7 +33,8 @@ public class main {
         while(clock.currentTime < Configuration.STOP_TIME || requestQueue.size()>0){
             controller.getRequest();
         }
-
+        System.out.println("Numero job completati: " + controller.numbCompletedRequest());
+        controller.numbJobEachServer();
     }
 
     public void algorithm2(){

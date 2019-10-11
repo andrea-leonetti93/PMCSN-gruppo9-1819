@@ -20,6 +20,7 @@ public class RequestGenerator implements Runnable{
         double lambda2 = Configuration.LAMBDA2;
         double prob_lambda1 = Configuration.PROB_LAMBDA1;
         //double prob_lambda2 = Configuration.PROB_LAMBDA2;
+        double arrive;
         double arrive1;
         double arrive2;
         int i = 0;
@@ -27,33 +28,36 @@ public class RequestGenerator implements Runnable{
         Job j;
         double curTime = 0;
         while(curTime <= STOP_TIME){
+            distribution.selectStream(1);
+            arrive = distribution.exponential(1.0/(lambda1+lambda2));
             distribution.selectStream(0);
             uniform = distribution.uniform(0.0, 1.0);
             if(uniform < prob_lambda1){
-                distribution.selectStream(1);
-                arrive1 = clock.lastClass1Arrival1 + distribution.exponential(1.0/lambda1);
+                //distribution.selectStream(1);
+                arrive1 = clock.lastClass1Arrival + arrive;
                 j = new Job(i, 1);
                 j.setArrivalTime(arrive1);
                 //TODO non aggiornare tempo globale qui
                 //time = time + arrive1;
-                clock.lastClass1Arrival1 = arrive1;
+                clock.lastClass1Arrival = arrive1;
             }else{
-                distribution.selectStream(2);
-                arrive2 = clock.lastClass1Arrival2 + distribution.exponential(1.0/lambda2);
+                //distribution.selectStream(2);
+                arrive2 = clock.lastClass1Arrival + arrive;
                 j = new Job(i, 2);
                 j.setArrivalTime(arrive2);
                 //TODO non aggiornare tempo globale qui
                 //time = time + arrive2;
-                clock.lastClass1Arrival2 = arrive2;
+                clock.lastClass1Arrival = arrive2;
             }
             i++;
             //put the request in the queue
             r = new ArrivalRequest(j);
             requestsQueue.add(r);
             //clock.currentTime = j.getArrivalTime();
-            curTime = Math.max(clock.lastClass1Arrival1,clock.lastClass1Arrival2);
+            curTime = Math.max(clock.lastClass1Arrival,clock.lastClass1Arrival);
             System.out.println("Arrival time = " + curTime);
         }
+        System.out.println("Numero richieste generate: " + i);
     }
 
     @Override

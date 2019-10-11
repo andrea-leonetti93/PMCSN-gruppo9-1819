@@ -21,7 +21,22 @@ public class Controller {
     private List<CompletedRequest> completedRequests;
     private int N = Configuration.N;
     private FileWriter fileWriter;
-
+    private int nJobTotCloudClass1 = 0;
+    private int nJobTotCloudClass2 = 0;
+    private int nJobTotCletClass1 = 0;
+    private int nJobTotCletClass2 = 0;
+    private double serviceTimeC1Clet = 0;
+    private double serviceTimeC2Clet = 0;
+    private double serviceTimeC1Cloud = 0;
+    private double serviceTimeC2Cloud = 0;
+    private double arrivalTimeC1Clet = 0;
+    private double arrivalTimeC2Clet = 0;
+    private double arrivalTimeC1Cloud = 0;
+    private double arrivalTimeC2Cloud = 0;
+    private double completedTimeC1Clet = 0;
+    private double completedTimeC2Clet = 0;
+    private double completedTimeC1Cloud = 0;
+    private double completedTimeC2Cloud = 0;
     private Controller(){
         completedRequests = new ArrayList<CompletedRequest>();
         try{
@@ -109,4 +124,53 @@ public class Controller {
         }
     }
 
+    public int numbCompletedRequest(){
+        return completedRequests.size();
+    }
+
+    public void numbJobEachServer(){
+        CompletedRequest cr;
+        for (CompletedRequest completedRequest : completedRequests) {
+            cr = completedRequest;
+            if (cr.getServer() instanceof Cloudlet) {
+                if (cr.getJobType() == 1) {
+                    nJobTotCletClass1 += 1;
+                    serviceTimeC1Clet+=cr.getJob().getServiceTime();
+                    arrivalTimeC1Clet+=cr.getJob().getArrivalTime();
+                    completedTimeC1Clet+=arrivalTimeC1Clet+serviceTimeC1Clet;
+                } else {
+                    nJobTotCletClass2 += 1;
+                    serviceTimeC2Clet+=cr.getJob().getServiceTime();
+                    arrivalTimeC2Clet+=cr.getJob().getArrivalTime();
+                    completedTimeC2Clet+=arrivalTimeC2Clet+serviceTimeC2Clet;
+                }
+            } else {
+                if (cr.getJobType() == 1) {
+                    nJobTotCloudClass1 += 1;
+                    serviceTimeC1Cloud+=cr.getJob().getServiceTime();
+                    arrivalTimeC1Cloud+=cr.getJob().getArrivalTime();
+                    completedTimeC1Cloud+=arrivalTimeC1Cloud+serviceTimeC1Cloud;
+                } else {
+                    nJobTotCloudClass2 += 1;
+                    serviceTimeC2Cloud+=cr.getJob().getServiceTime();
+                    arrivalTimeC2Cloud+=cr.getJob().getArrivalTime();
+                    completedTimeC2Cloud+=arrivalTimeC2Cloud+serviceTimeC2Cloud;
+                }
+            }
+        }
+        System.out.println("\nNumb job C1 Cloudlet: " + nJobTotCletClass1);
+        System.out.println("\nNumb job C2 Cloudlet: " + nJobTotCletClass2);
+        System.out.println("\nNumb job C1 Cloud: " + nJobTotCloudClass1);
+        System.out.println("\nNumb job C2 Cloud: " + nJobTotCloudClass2);
+        //service time
+        System.out.println("\nTempo servizio C1 Cloudlet: " + serviceTimeC1Clet);
+        System.out.println("\nTempo servizio C2 Cloudlet: " + serviceTimeC2Clet);
+        System.out.println("\nTempo servizio C1 Cloud: " + serviceTimeC1Cloud);
+        System.out.println("\nTempo servizio C2 Cloud: " + serviceTimeC2Cloud);
+        //completed time
+        System.out.println("\nTasso completamenti C1 Cloudlet: " + completedTimeC1Clet);
+        System.out.println("\nTasso completamenti C2 Cloudlet: " + completedTimeC2Clet);
+        System.out.println("\nTasso completamenti C1 Cloud: " + completedTimeC1Cloud);
+        System.out.println("\nTasso completamenti C2 Cloud: " + completedTimeC2Cloud);
+    }
 }
