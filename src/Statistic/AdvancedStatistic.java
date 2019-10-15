@@ -5,6 +5,9 @@ import Server.Cloud;
 import Server.Cloudlet;
 import Util.Clock;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class AdvancedStatistic extends Statistic {
 
     private static AdvancedStatistic advancedStatistic = null;
@@ -17,6 +20,8 @@ public class AdvancedStatistic extends Statistic {
     private BatchMeans cloudThroughputMean;
     private BatchMeans cloudletThroughputMean;
     private BatchMeans globalThroughputMean;
+    private int counter = 0;
+    private FileWriter fileWriter;
 
     public static AdvancedStatistic getInstance(){
         if(advancedStatistic == null){
@@ -35,6 +40,53 @@ public class AdvancedStatistic extends Statistic {
         this.cloudThroughputMean = new BatchMeans();
         this.cloudletThroughputMean = new BatchMeans();
         this.globalThroughputMean = new BatchMeans();
+        try{
+            fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\Batch_Means.csv");
+            fileWriter.append("curtime;");
+            fileWriter.append("CloudMeanPopulation;");
+            fileWriter.append("CloudletMeanPopulation;");
+            fileWriter.append("GlobalMeanPopulation;");
+            fileWriter.append("CloudMeanThroughput;");
+            fileWriter.append("CloudletMeanThroughput;");
+            fileWriter.append("GlobalMeanThroughput;");
+            fileWriter.append("CloudMeanServiceTime;");
+            fileWriter.append("CloudletMeanServiceTime;");
+            fileWriter.append("GlobalMeanServiceTime;");
+            fileWriter.append("\n");
+        }catch (Exception e){
+            System.out.println("Exception: " + e.getMessage());
+        }
+    }
+
+    private void writeOnFile(Clock clock) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(clock.currentTime);
+        sb.append(";");
+        sb.append(cloudMeanPopulation.getBatchMean());
+        sb.append(";");
+        sb.append(cloudletMeanPopulation.getBatchMean());
+        sb.append(";");
+        sb.append(globalMeanPopulation.getBatchMean());
+        sb.append(";");
+        sb.append(cloudThroughputMean.getBatchMean());
+        sb.append(";");
+        sb.append(cloudletThroughputMean.getBatchMean());
+        sb.append(";");
+        sb.append(globalThroughputMean.getBatchMean());
+        sb.append(";");
+        sb.append(cloudServiceMeanTime.getBatchMean());
+        sb.append(";");
+        sb.append(cloudletServiceMeanTime.getBatchMean());
+        sb.append(";");
+        sb.append(globalServiceMeanTime.getBatchMean());
+        sb.append(";");
+        sb.append("\n");
+        try {
+            fileWriter.append(sb.toString());
+            fileWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -48,6 +100,14 @@ public class AdvancedStatistic extends Statistic {
         cloudletThroughputMean.computeBatchMeans(cloudlet.completedRequests/clock.currentTime);
         //requests handled globally
         globalThroughputMean.computeBatchMeans((cloud.completedRequests+cloudlet.completedRequests)/clock.currentTime);
+        if(counter == 256){
+            //TODO write del valore batchmean on file
+            counter = 0;
+            writeOnFile(clock);
+        }else{
+            counter++;
+        }
+
     }
 
     @Override
@@ -67,6 +127,13 @@ public class AdvancedStatistic extends Statistic {
             cloudletServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
         }
         globalServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
+        if(counter == 256){
+            //TODO write del valore batchmean on file
+            counter = 0;
+            writeOnFile(clock);
+        }else{
+            counter++;
+        }
     }
 
     public BatchMeans getCloudMeanPopulation() {
@@ -104,5 +171,4 @@ public class AdvancedStatistic extends Statistic {
     public BatchMeans getGlobalThroughputMean() {
         return globalThroughputMean;
     }
-
 }

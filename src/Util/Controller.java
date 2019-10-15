@@ -147,7 +147,28 @@ public class Controller {
 
     public void numbJobEachServer(){
         if(batch_means){
-            //
+            AdvancedStatistic as = (AdvancedStatistic) s;
+            //population
+            System.out.println("\nNumb mean job Cloud: " + as.getCloudMeanPopulation().getwMean().getCurrent_mean() +
+                    ", dev: " + as.getCloudMeanPopulation().getwMean().getStDeviation());
+            System.out.println("\nNumb mean job Cloudlet: " + as.getCloudletMeanPopulation().getwMean().getCurrent_mean() +
+                    ", dev: " + as.getCloudletMeanPopulation().getwMean().getStDeviation());
+            System.out.println("\nNumb mean job Global: " + as.getGlobalMeanPopulation().getwMean().getCurrent_mean() +
+                    ", dev: " + as.getGlobalMeanPopulation().getwMean().getStDeviation());
+            //service time
+            System.out.println("\nMean service time Cloud: " + as.getCloudServiceMeanTime().getwMean().getCurrent_mean() +
+                    ", dev: " + as.getCloudServiceMeanTime().getwMean().getStDeviation());
+            System.out.println("\nMean service time Cloudlet: " + as.getCloudletServiceMeanTime().getwMean().getCurrent_mean() +
+                    ", dev: " + as.getCloudletServiceMeanTime().getwMean().getStDeviation());
+            System.out.println("\nMean service time Global: " + as.getGlobalServiceMeanTime().getwMean().getCurrent_mean() +
+                    ", dev: " + as.getGlobalServiceMeanTime().getwMean().getStDeviation());
+            //throughput
+            System.out.println("\nMean throughput Cloud: " + as.getCloudThroughputMean().getwMean().getCurrent_mean() +
+                    ", dev: " + as.getCloudThroughputMean().getwMean().getStDeviation());
+            System.out.println("\nMean throughput Cloudlet: " + as.getCloudletThroughputMean().getwMean().getCurrent_mean() +
+                    ", dev: " + as.getCloudletThroughputMean().getwMean().getStDeviation());
+            System.out.println("\nMean throughput Global: " + as.getGlobalThroughputMean().getwMean().getCurrent_mean() +
+                    ", dev: " + as.getGlobalThroughputMean().getwMean().getStDeviation());
         }else{
             BaseStatistic bs = (BaseStatistic) s;
             //population
