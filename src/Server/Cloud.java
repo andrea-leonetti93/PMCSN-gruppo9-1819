@@ -46,6 +46,7 @@ public class Cloud extends Server {
             cr = new CompletedRequest(r.getJob());
             this.nJobsClass2+=1;
         }
+        completedRequests++;
         cr.setServer(this);
         requestQueue.add(cr);
     }

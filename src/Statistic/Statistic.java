@@ -1,14 +1,14 @@
 package Statistic;
 
-public class Statistic {
+import Request.CompletedRequest;
+import Server.Cloud;
+import Server.Cloudlet;
+import Util.Clock;
 
-    private double cloudMeanPopulation;
-    private double cloudletMeanPopulation;
-    private double globalMeanPopulation;
-    private double cloudServiceMeanTime;
-    private double cloudletServiceMeanTime;
-    private double globalServiceMeanTime;
+public abstract class Statistic {
 
+    public abstract void updateStatistic(Clock clock, Cloudlet cloudlet, Cloud cloud);
 
+    public abstract void updateStatistic(Clock clock, Cloudlet cloudlet, Cloud cloud, CompletedRequest request);
 
 }

@@ -18,6 +18,7 @@ public class Configuration {
     public static int STOP_TIME;
     public static double PROB_LAMBDA1;
     public static double PROB_LAMBDA2;
+    public static boolean BATCH_MEANS;
     private static Configuration configuration = null;
 
     public static Configuration getInstance(){
@@ -54,6 +55,7 @@ public class Configuration {
             STOP_TIME = Integer.parseInt(prop.getProperty("STOP_TIME"));
             PROB_LAMBDA1 = Double.parseDouble(prop.getProperty("prob_lambda1"));
             PROB_LAMBDA2 = Double.parseDouble(prop.getProperty("prob_lambda2"));
+            BATCH_MEANS = Boolean.parseBoolean(prop.getProperty("batch_means"));
             /*System.out.println("\n SEED: " + SEED);
             System.out.println("\n LAMBDA1: " + LAMBDA1);
             System.out.println("\n LAMBDA2: " + LAMBDA2);

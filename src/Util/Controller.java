@@ -3,6 +3,7 @@ package Util;
 import Request.*;
 import Server.Cloud;
 import Server.Cloudlet;
+import Statistic.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -19,7 +20,10 @@ public class Controller {
     private Cloud cloud = Cloud.getInstance();
     private Clock clock = Clock.getInstance();
     private List<CompletedRequest> completedRequests;
+    private int cloudCompletedRequests;
+    private int cloudletCompletedRequests;
     private int N = Configuration.N;
+    private boolean batch_means = Configuration.BATCH_MEANS;
     private FileWriter fileWriter;
     private int nJobTotCloudClass1 = 0;
     private int nJobTotCloudClass2 = 0;
@@ -37,7 +41,14 @@ public class Controller {
     private double completedTimeC2Clet = 0;
     private double completedTimeC1Cloud = 0;
     private double completedTimeC2Cloud = 0;
+    private static Statistic s;
+
     private Controller(){
+        if(batch_means){
+            s = AdvancedStatistic.getInstance();
+        }else{
+            s = BaseStatistic.getInstance();
+        }
         completedRequests = new ArrayList<CompletedRequest>();
         try{
             fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\Statistics.csv");
@@ -99,6 +110,12 @@ public class Controller {
                 }
             }
             writeOnFile(clock, cloudlet, cloud);
+            if(re instanceof ArrivalRequest){
+                s.updateStatistic(clock, cloudlet, cloud);
+            }else{
+                s.updateStatistic(clock, cloudlet, cloud, (CompletedRequest) re);
+            }
+
         }
         //clock.incrCurrentTime();
     }
@@ -129,7 +146,33 @@ public class Controller {
     }
 
     public void numbJobEachServer(){
-        CompletedRequest cr;
+        if(batch_means){
+            //
+        }else{
+            BaseStatistic bs = (BaseStatistic) s;
+            //population
+            System.out.println("\nNumb mean job Cloud: " + bs.getCloudMeanPopulation().getCurrent_mean() +
+                    ", dev: " + bs.getCloudMeanPopulation().getStDeviation());
+            System.out.println("\nNumb mean job Cloudlet: " + bs.getCloudletMeanPopulation().getCurrent_mean() +
+                    ", dev: " + bs.getCloudletMeanPopulation().getStDeviation());
+            System.out.println("\nNumb mean job Global: " + bs.getGlobalMeanPopulation().getCurrent_mean() +
+                    ", dev: " + bs.getGlobalMeanPopulation().getStDeviation());
+            //service time
+            System.out.println("\nMean service time Cloud: " + bs.getCloudServiceMeanTime().getCurrent_mean() +
+                    ", dev: " + bs.getCloudServiceMeanTime().getStDeviation());
+            System.out.println("\nMean service time Cloudlet: " + bs.getCloudletServiceMeanTime().getCurrent_mean() +
+                    ", dev: " + bs.getCloudletServiceMeanTime().getStDeviation());
+            System.out.println("\nMean service time Global: " + bs.getGlobalServiceMeanTime().getCurrent_mean() +
+                    ", dev: " + bs.getGlobalServiceMeanTime().getStDeviation());
+            //throughput
+            System.out.println("\nMean throughput Cloud: " + bs.getCloudThroughputMean().getCurrent_mean() +
+                    ", dev: " + bs.getCloudThroughputMean().getStDeviation());
+            System.out.println("\nMean throughput Cloudlet: " + bs.getCloudletThroughputMean().getCurrent_mean() +
+                    ", dev: " + bs.getCloudletThroughputMean().getStDeviation());
+            System.out.println("\nMean throughput Global: " + bs.getGlobalThroughputMean().getCurrent_mean() +
+                    ", dev: " + bs.getGlobalThroughputMean().getStDeviation());
+        }
+        /*CompletedRequest cr;
         for (CompletedRequest completedRequest : completedRequests) {
             cr = completedRequest;
             if (cr.getServer() instanceof Cloudlet) {
@@ -171,6 +214,6 @@ public class Controller {
         System.out.println("\nTasso completamenti C1 Cloudlet: " + completedTimeC1Clet);
         System.out.println("\nTasso completamenti C2 Cloudlet: " + completedTimeC2Clet);
         System.out.println("\nTasso completamenti C1 Cloud: " + completedTimeC1Cloud);
-        System.out.println("\nTasso completamenti C2 Cloud: " + completedTimeC2Cloud);
+        System.out.println("\nTasso completamenti C2 Cloud: " + completedTimeC2Cloud);*/
     }
 }
