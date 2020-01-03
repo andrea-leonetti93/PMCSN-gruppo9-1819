@@ -4,6 +4,7 @@ import Request.CompletedRequest;
 import Server.Cloud;
 import Server.Cloudlet;
 import Util.Clock;
+import Util.Configuration;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class AdvancedStatistic extends Statistic {
     private BatchMeans globalThroughputMean;
     private int counter = 0;
     private FileWriter fileWriter;
+    private static boolean hyperexpo = Configuration.HYPEREXPO;
 
     public static AdvancedStatistic getInstance(){
         if(advancedStatistic == null){
@@ -41,7 +43,11 @@ public class AdvancedStatistic extends Statistic {
         this.cloudletThroughputMean = new BatchMeans();
         this.globalThroughputMean = new BatchMeans();
         try{
-            fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\Batch_Means.csv");
+            if(hyperexpo){
+                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\Batch_MeansHyperexpo.csv");
+            }else{
+                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\Batch_MeansExpo.csv");
+            }
             fileWriter.append("curtime;");
             fileWriter.append("CloudMeanPopulation;");
             fileWriter.append("CloudletMeanPopulation;");
@@ -100,6 +106,9 @@ public class AdvancedStatistic extends Statistic {
         cloudletThroughputMean.computeBatchMeans(cloudlet.completedRequests/clock.currentTime);
         //requests handled globally
         globalThroughputMean.computeBatchMeans((cloud.completedRequests+cloudlet.completedRequests)/clock.currentTime);
+        cloudServiceMeanTime.setCount();
+        cloudletServiceMeanTime.setCount();
+        globalServiceMeanTime.setCount();
         if(counter == 256){
             //TODO write del valore batchmean on file
             counter = 0;
@@ -123,10 +132,13 @@ public class AdvancedStatistic extends Statistic {
         globalThroughputMean.computeBatchMeans((cloud.completedRequests+cloudlet.completedRequests)/clock.currentTime);
         if(request.getServer() instanceof Cloud){
             cloudServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
+            cloudletServiceMeanTime.setCount();
         }else{
             cloudletServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
+            cloudServiceMeanTime.setCount();
         }
         globalServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
+
         if(counter == 256){
             //TODO write del valore batchmean on file
             counter = 0;

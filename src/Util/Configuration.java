@@ -19,6 +19,9 @@ public class Configuration {
     public static double PROB_LAMBDA1;
     public static double PROB_LAMBDA2;
     public static boolean BATCH_MEANS;
+    public static double P_HYPEREXPO;
+    public static boolean HYPEREXPO;
+    public static int ALGORITHM;
     private static Configuration configuration = null;
 
     public static Configuration getInstance(){
@@ -56,6 +59,9 @@ public class Configuration {
             PROB_LAMBDA1 = Double.parseDouble(prop.getProperty("prob_lambda1"));
             PROB_LAMBDA2 = Double.parseDouble(prop.getProperty("prob_lambda2"));
             BATCH_MEANS = Boolean.parseBoolean(prop.getProperty("batch_means"));
+            P_HYPEREXPO = Double.parseDouble(prop.getProperty("p_hyperexpo"));
+            HYPEREXPO = Boolean.parseBoolean(prop.getProperty("hyperexpo"));
+            ALGORITHM = Integer.parseInt(prop.getProperty("algorithm"));
             /*System.out.println("\n SEED: " + SEED);
             System.out.println("\n LAMBDA1: " + LAMBDA1);
             System.out.println("\n LAMBDA2: " + LAMBDA2);

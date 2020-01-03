@@ -14,7 +14,8 @@ public class BatchMeans {
 
     public void computeBatchMeans(double elem){
         wMean.updateWelfordMean(elem);
-        current_batchMean+=wMean.getCurrent_mean();
+        //current_batchMean+=wMean.getCurrent_mean();
+        current_batchMean += elem;
         if(count == batchMeanDim){
             batchMean = current_batchMean/(double)batchMeanDim;
             reset();
@@ -37,4 +38,7 @@ public class BatchMeans {
         return batchMean;
     }
 
+    public void setCount() {
+        this.count++;
+    }
 }

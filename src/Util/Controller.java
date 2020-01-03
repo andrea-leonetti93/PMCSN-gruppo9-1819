@@ -12,6 +12,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static Util.Configuration.S;
+
 public class Controller {
 
     private static Controller controller = null;
@@ -23,7 +25,8 @@ public class Controller {
     private int cloudCompletedRequests;
     private int cloudletCompletedRequests;
     private int N = Configuration.N;
-    private boolean batch_means = Configuration.BATCH_MEANS;
+    private static boolean batch_means = Configuration.BATCH_MEANS;
+    private static boolean hyperexpo = Configuration.HYPEREXPO;
     private FileWriter fileWriter;
     private int nJobTotCloudClass1 = 0;
     private int nJobTotCloudClass2 = 0;
@@ -51,7 +54,11 @@ public class Controller {
         }
         completedRequests = new ArrayList<CompletedRequest>();
         try{
-            fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\Statistics.csv");
+            if(hyperexpo){
+                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\StatisticsHyperexpo.csv");
+            }else{
+                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\StatisticsExpo.csv");
+            }
             fileWriter.append("curtime;");
             fileWriter.append("j1cloudlet;");
             fileWriter.append("j2cloudlet;");
@@ -236,5 +243,69 @@ public class Controller {
         System.out.println("\nTasso completamenti C2 Cloudlet: " + completedTimeC2Clet);
         System.out.println("\nTasso completamenti C1 Cloud: " + completedTimeC1Cloud);
         System.out.println("\nTasso completamenti C2 Cloud: " + completedTimeC2Cloud);*/
+    }
+
+    public void getRequestAlgorithm2() {
+        Request re = requestQueue.poll();
+        if(re !=null){
+            //TODO aggiornare qui clock globale
+            clock.currentTime = re.getRequestTime();
+            //System.out.println("To handle:" + re);
+            System.out.println("Current time:" + clock.currentTime);
+            if(re instanceof ArrivalRequest){
+                //check cloudlet space
+                //if it's lower than N, send the request to the cloudlet
+                //TODO vedere se handleRequest va bene anche per algoritmo due o va modificata
+                if(re.getJobType() == 1) {
+                    if (cloudlet.nJobsClass1 == N) {
+                        cloud.handleRequest((ArrivalRequest) re);
+                    } else if (cloudlet.nJobsClass1 + cloudlet.nJobsClass2 < S) {
+                        cloudlet.handleRequest((ArrivalRequest) re);
+                    } else if (cloudlet.nJobsClass2 > 0) {
+                        //accetta il job di class 1 nel cloudlet e invia uno di classe 2 dla cloudlet al cloud
+
+                    } else {
+                        cloudlet.handleRequest((ArrivalRequest) re);
+                    }
+                }else{
+                    int totCletJobs = cloudlet.nJobsClass1+cloudlet.nJobsClass2;
+                    if(totCletJobs < S){
+                        //cloudlet.incrNServerUsed();
+                        cloudlet.handleRequest((ArrivalRequest) re);
+                        //gestire l'add del server che gestisce la richiesta alla richeista stessa
+                    }
+                    //it the cloudlet is full, send the request to the cloud
+                    else{
+                        cloud.handleRequest((ArrivalRequest) re);
+                    }
+                }
+
+            }
+            else{
+                completedRequests.add((CompletedRequest) re);
+                if(((CompletedRequest) re).getServer() instanceof Cloudlet){
+                    //cloudlet.decrNServerUsed();
+                    if(re.getJobType()==1){
+                        cloudlet.nJobsClass1-=1;
+                    }else{
+                        cloudlet.nJobsClass2-=1;
+                    }
+                }else{
+                    if(re.getJobType()==1){
+                        cloud.nJobsClass1-=1;
+                    }else{
+                        cloud.nJobsClass2-=1;
+                    }
+                }
+            }
+            writeOnFile(clock, cloudlet, cloud);
+            if(re instanceof ArrivalRequest){
+                s.updateStatistic(clock, cloudlet, cloud);
+            }else{
+                s.updateStatistic(clock, cloudlet, cloud, (CompletedRequest) re);
+            }
+
+        }
+        //clock.incrCurrentTime();
     }
 }
