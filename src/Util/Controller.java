@@ -22,6 +22,8 @@ public class Controller {
     private Cloud cloud = Cloud.getInstance();
     private Clock clock = Clock.getInstance();
     private List<CompletedRequest> completedRequests;
+    private List<Request> type2JobRequestInCloudlet;
+    private List<Integer> typeTwoJobToMove;
     private int cloudCompletedRequests;
     private int cloudletCompletedRequests;
     private int N = Configuration.N;
@@ -252,60 +254,109 @@ public class Controller {
             clock.currentTime = re.getRequestTime();
             //System.out.println("To handle:" + re);
             System.out.println("Current time:" + clock.currentTime);
-            if(re instanceof ArrivalRequest){
-                //check cloudlet space
-                //if it's lower than N, send the request to the cloudlet
-                //TODO vedere se handleRequest va bene anche per algoritmo due o va modificata
-                if(re.getJobType() == 1) {
-                    if (cloudlet.nJobsClass1 == N) {
-                        cloud.handleRequest((ArrivalRequest) re);
-                    } else if (cloudlet.nJobsClass1 + cloudlet.nJobsClass2 < S) {
-                        cloudlet.handleRequest((ArrivalRequest) re);
-                    } else if (cloudlet.nJobsClass2 > 0) {
-                        //accetta il job di class 1 nel cloudlet e invia uno di classe 2 dla cloudlet al cloud
+            if(!type2JobRequestInCloudlet.isEmpty() && re.getJobType() == 2){
+                //gestisci le due code
+                int jobId = re.getJob().getId();
+                if(checkList(jobId)){
+                    //già lo rimuove nella checklist()
+                    //removeFromList(jobId);
+                    //aggiornare il tempo e mandare al cloud, probabilmente creare nuova sottoclasse di request
+                    cloud.handleRequest((ArrivalRequest) re);
 
-                    } else {
-                        cloudlet.handleRequest((ArrivalRequest) re);
-                    }
                 }else{
-                    int totCletJobs = cloudlet.nJobsClass1+cloudlet.nJobsClass2;
-                    if(totCletJobs < S){
-                        //cloudlet.incrNServerUsed();
-                        cloudlet.handleRequest((ArrivalRequest) re);
-                        //gestire l'add del server che gestisce la richiesta alla richeista stessa
-                    }
-                    //it the cloudlet is full, send the request to the cloud
-                    else{
-                        cloud.handleRequest((ArrivalRequest) re);
-                    }
+                    //esegue la hnadlerequest normale se è un job 2 nuovo
+                    handleRequest(re);
                 }
-
-            }
-            else{
-                completedRequests.add((CompletedRequest) re);
-                if(((CompletedRequest) re).getServer() instanceof Cloudlet){
-                    //cloudlet.decrNServerUsed();
-                    if(re.getJobType()==1){
-                        cloudlet.nJobsClass1-=1;
-                    }else{
-                        cloudlet.nJobsClass2-=1;
-                    }
-                }else{
-                    if(re.getJobType()==1){
-                        cloud.nJobsClass1-=1;
-                    }else{
-                        cloud.nJobsClass2-=1;
-                    }
-                }
-            }
-            writeOnFile(clock, cloudlet, cloud);
-            if(re instanceof ArrivalRequest){
-                s.updateStatistic(clock, cloudlet, cloud);
             }else{
-                s.updateStatistic(clock, cloudlet, cloud, (CompletedRequest) re);
+                handleRequest(re);
             }
+
 
         }
         //clock.incrCurrentTime();
+    }
+
+    private void handleRequest(Request re){
+        if(re instanceof ArrivalRequest){
+            //check cloudlet space
+            //if it's lower than N, send the request to the cloudlet
+            //TODO vedere se handleRequest va bene anche per algoritmo due o va modificata
+            if(re.getJobType() == 1) {
+                if (cloudlet.nJobsClass1 == N) {
+                    cloud.handleRequest((ArrivalRequest) re);
+                } else if (cloudlet.nJobsClass1 + cloudlet.nJobsClass2 < S) {
+                    cloudlet.handleRequest((ArrivalRequest) re);
+                } else if (cloudlet.nJobsClass2 > 0) {
+                    //accetta il job di class 1 nel cloudlet e invia uno di classe 2 dal cloudlet al cloud
+
+                } else {
+                    cloudlet.handleRequest((ArrivalRequest) re);
+                }
+            }else{
+                int totCletJobs = cloudlet.nJobsClass1+cloudlet.nJobsClass2;
+                if(totCletJobs < S){
+                    //cloudlet.incrNServerUsed();
+                    cloudlet.handleRequest((ArrivalRequest) re);
+                    //gestire l'add del server che gestisce la richiesta alla richeista stessa
+                }
+                //it the cloudlet is full, send the request to the cloud
+                else{
+                    cloud.handleRequest((ArrivalRequest) re);
+                }
+            }
+        }else{
+            completedRequests.add((CompletedRequest) re);
+            if(((CompletedRequest) re).getServer() instanceof Cloudlet){
+                //cloudlet.decrNServerUsed();
+                if(re.getJobType()==1){
+                    cloudlet.nJobsClass1-=1;
+                }else{
+                    cloudlet.nJobsClass2-=1;
+                }
+            }else{
+                if(re.getJobType()==1){
+                    cloud.nJobsClass1-=1;
+                }else{
+                    cloud.nJobsClass2-=1;
+                }
+            }
+        }
+        writeOnFile(clock, cloudlet, cloud);
+        if(re instanceof ArrivalRequest){
+            s.updateStatistic(clock, cloudlet, cloud);
+        }else{
+            s.updateStatistic(clock, cloudlet, cloud, (CompletedRequest) re);
+        }
+    }
+
+    private void updateList(){
+
+    }
+
+    private int checkIfThereClassTwoJobToRemove(double arrivalTimeJobOne){
+        for(Request reTypeTwo : type2JobRequestInCloudlet){
+            double time = reTypeTwo.getJob().getArrivalTime() + reTypeTwo.getJob().getServiceTime();
+            if(time > arrivalTimeJobOne){
+                typeTwoJobToMove.add(reTypeTwo.getJob().getId());
+                type2JobRequestInCloudlet.remove(reTypeTwo);
+                return reTypeTwo.getJob().getId();
+            }
+        }
+        return 0;
+    }
+
+    private boolean checkList(int jobTwoId){
+        for(int reTypeTwo : typeTwoJobToMove){
+            if(jobTwoId == reTypeTwo){
+                typeTwoJobToMove.remove(reTypeTwo);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //rimuove job 2 dalla lista dopo che è stato re-inviato al cloud
+    private void removeFromList(int jobTwoId){
+        typeTwoJobToMove.remove(jobTwoId);
     }
 }
