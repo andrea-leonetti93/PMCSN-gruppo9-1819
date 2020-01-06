@@ -34,24 +34,26 @@ public class Cloudlet extends Server {
         //TODO gestire la richiesta in arrrivo
         CompletedRequest cr;
         if(r.getJobType()==1){
-            //it handle class1 request
-            distribution.selectStream(5);
-            // se hyperexpo allora ci calcoliamo il nuovo service time
+            // it handle class1 request
+            // if the server is hyperexpo then we calculate the new service time
             if(hyperexpo){
                 serviceTimeMu1 = serviceTimeMu1Hyper();
             }else{
+                // otherwise we use the exponential value
+                distribution.selectStream(5);
                 serviceTimeMu1 = distribution.exponential(1.0/mu1);
             }
             r.getJob().setServiceTime(serviceTimeMu1);
             cr = new CompletedRequest(r.getJob());
             this.nJobsClass1+=1;
         }else{
-            //it handle class2 request
-            distribution.selectStream(6);
-            // se hyperexpo allora ci calcoliamo il nuovo service time
+            // it handle class2 request
+            // if the server is hyperexpo then we calculate the new service time
             if(hyperexpo){
                 serviceTimeMu2 = serviceTimeMu2Hyper();
             }else{
+                // otherwise we use the exponential value
+                distribution.selectStream(6);
                 serviceTimeMu2 = distribution.exponential(1.0/mu2);
             }
             r.getJob().setServiceTime(serviceTimeMu2);
@@ -63,6 +65,7 @@ public class Cloudlet extends Server {
         requestQueue.add(cr);
     }
 
+    // calculating the new service time with hyperexponential distribution
     private double serviceTimeMu1Hyper() {
         distribution.selectStream(2);
         uniform = distribution.uniform(0.0, 1.0);
@@ -88,6 +91,7 @@ public class Cloudlet extends Server {
             return serviceTimeMu2;
         }
     }
+    ///////////////////////////////////
 
     public void incrNServerUsed(){
         nServerUsed++;

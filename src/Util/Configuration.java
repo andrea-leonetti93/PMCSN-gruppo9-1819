@@ -22,6 +22,7 @@ public class Configuration {
     public static double P_HYPEREXPO;
     public static boolean HYPEREXPO;
     public static int ALGORITHM;
+    public static double SETUP_TIME;
     private static Configuration configuration = null;
 
     public static Configuration getInstance(){
@@ -62,6 +63,7 @@ public class Configuration {
             P_HYPEREXPO = Double.parseDouble(prop.getProperty("p_hyperexpo"));
             HYPEREXPO = Boolean.parseBoolean(prop.getProperty("hyperexpo"));
             ALGORITHM = Integer.parseInt(prop.getProperty("algorithm"));
+            SETUP_TIME = Double.parseDouble(prop.getProperty("setup_time"));
             /*System.out.println("\n SEED: " + SEED);
             System.out.println("\n LAMBDA1: " + LAMBDA1);
             System.out.println("\n LAMBDA2: " + LAMBDA2);

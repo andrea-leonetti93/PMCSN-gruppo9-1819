@@ -5,7 +5,7 @@ public class Job {
     public int id;
     public int type;
     private double arrivalTime;
-    private double serviceTime;
+    private double serviceTime = 0.0;
 
     @Override
     public String toString() {

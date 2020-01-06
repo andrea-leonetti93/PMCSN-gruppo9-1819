@@ -15,7 +15,7 @@ public class RequestGenerator implements Runnable{
         RequestQueue requestsQueue = RequestQueue.getInstance();
         Clock clock = Clock.getInstance();
         double uniform;
-        //lambda1/2 gets value from config file
+        // lambda1/2 gets value from config file
         double lambda1 = Configuration.LAMBDA1;
         double lambda2 = Configuration.LAMBDA2;
         double prob_lambda1 = Configuration.PROB_LAMBDA1;
@@ -50,7 +50,7 @@ public class RequestGenerator implements Runnable{
                 clock.lastClass1Arrival = arrive2;
             }
             i++;
-            //put the request in the queue
+            // put the request in the queue
             r = new ArrivalRequest(j);
             requestsQueue.add(r);
             //clock.currentTime = j.getArrivalTime();

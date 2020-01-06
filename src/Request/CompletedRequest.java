@@ -6,6 +6,7 @@ import Util.Job;
 public class CompletedRequest extends Request {
 
     private Server server = null;
+    private boolean preempted = false;
 
     public CompletedRequest(Job job) {
         super(job);
@@ -17,6 +18,14 @@ public class CompletedRequest extends Request {
 
     public void setServer(Server server) {
         this.server = server;
+    }
+
+    public boolean isPreempted() {
+        return preempted;
+    }
+
+    public void setPreempted(boolean preempted) {
+        this.preempted = preempted;
     }
 
     @Override

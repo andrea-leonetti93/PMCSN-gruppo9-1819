@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static Util.Configuration.S;
@@ -22,7 +23,7 @@ public class Controller {
     private Cloud cloud = Cloud.getInstance();
     private Clock clock = Clock.getInstance();
     private List<CompletedRequest> completedRequests;
-    private List<Request> type2JobRequestInCloudlet;
+    private ArrayList<Request> type2JobRequestInCloudlet;
     private List<Integer> typeTwoJobToMove;
     private int cloudCompletedRequests;
     private int cloudletCompletedRequests;
@@ -96,7 +97,7 @@ public class Controller {
                     cloudlet.handleRequest((ArrivalRequest) re);
                     //gestire l'add del server che gestisce la richiesta alla richeista stessa
                 }
-                //it the cloudlet is full, send the request to the cloud
+                //if the cloudlet is full, send the request to the cloud
                 else{
                     cloud.handleRequest((ArrivalRequest) re);
                 }
@@ -254,17 +255,17 @@ public class Controller {
             clock.currentTime = re.getRequestTime();
             //System.out.println("To handle:" + re);
             System.out.println("Current time:" + clock.currentTime);
-            if(!type2JobRequestInCloudlet.isEmpty() && re.getJobType() == 2){
-                //gestisci le due code
+            if(!type2JobRequestInCloudlet.isEmpty() && re.getJobType() == 2 && re.getJob().getServiceTime() != 0.0){
+                // handle two queues
                 int jobId = re.getJob().getId();
                 if(checkList(jobId)){
-                    //già lo rimuove nella checklist()
-                    //removeFromList(jobId);
-                    //aggiornare il tempo e mandare al cloud, probabilmente creare nuova sottoclasse di request
-                    cloud.handleRequest((ArrivalRequest) re);
+                    // the job is removed in checklist function
+                    // removeFromList(jobId);
+                    // update the job elaboration time and send it to the cloud
+                    cloud.handleRequestFromCloudlet((CompletedRequest) re);
 
                 }else{
-                    //esegue la hnadlerequest normale se è un job 2 nuovo
+                    // it executes the normal handlerequest function if it recived a new class 2 job
                     handleRequest(re);
                 }
             }else{
@@ -278,28 +279,37 @@ public class Controller {
 
     private void handleRequest(Request re){
         if(re instanceof ArrivalRequest){
-            //check cloudlet space
-            //if it's lower than N, send the request to the cloudlet
-            //TODO vedere se handleRequest va bene anche per algoritmo due o va modificata
+            //check cloudlet space class 1 job
             if(re.getJobType() == 1) {
+                //if it's higher than N, send the request to the cloud
                 if (cloudlet.nJobsClass1 == N) {
                     cloud.handleRequest((ArrivalRequest) re);
+                    //if it's lower than S, send the request to the cloudlet
                 } else if (cloudlet.nJobsClass1 + cloudlet.nJobsClass2 < S) {
                     cloudlet.handleRequest((ArrivalRequest) re);
                 } else if (cloudlet.nJobsClass2 > 0) {
-                    //accetta il job di class 1 nel cloudlet e invia uno di classe 2 dal cloudlet al cloud
-
+                    //if there one or more class 2 job in the cloudlet,
+                    //accept a class 1 job to the cloudlet and send a class 2 job from cloudlet to cloud
+                    int jobId = chooseWhichClassTwoJobRemove();
+                    typeTwoJobToMove.add(jobId);
+                    cloudlet.nJobsClass2-=1;
+                    cloudlet.completedRequests--;
+                    //nJobClass1 and completedRequest are updating in the cloudlet class
+                    cloudlet.handleRequest((ArrivalRequest) re);
+                    //if there's space in the cloudlet
                 } else {
                     cloudlet.handleRequest((ArrivalRequest) re);
                 }
+            //check cloudlet space class 2 job
             }else{
                 int totCletJobs = cloudlet.nJobsClass1+cloudlet.nJobsClass2;
                 if(totCletJobs < S){
-                    //cloudlet.incrNServerUsed();
+                    //adding the job to the list of class 2 jobs accepted by cloudlet
+                    type2JobRequestInCloudlet.add(re);
                     cloudlet.handleRequest((ArrivalRequest) re);
                     //gestire l'add del server che gestisce la richiesta alla richeista stessa
                 }
-                //it the cloudlet is full, send the request to the cloud
+                //if the cloudlet is full, send the request to the cloud
                 else{
                     cloud.handleRequest((ArrivalRequest) re);
                 }
@@ -329,20 +339,11 @@ public class Controller {
         }
     }
 
-    private void updateList(){
-
-    }
-
-    private int checkIfThereClassTwoJobToRemove(double arrivalTimeJobOne){
-        for(Request reTypeTwo : type2JobRequestInCloudlet){
-            double time = reTypeTwo.getJob().getArrivalTime() + reTypeTwo.getJob().getServiceTime();
-            if(time > arrivalTimeJobOne){
-                typeTwoJobToMove.add(reTypeTwo.getJob().getId());
-                type2JobRequestInCloudlet.remove(reTypeTwo);
-                return reTypeTwo.getJob().getId();
-            }
-        }
-        return 0;
+    private int chooseWhichClassTwoJobRemove(){
+        Collections.sort(type2JobRequestInCloudlet, new SortByCompletionTime());
+        int jobId = type2JobRequestInCloudlet.get(0).getJob().getId();
+        type2JobRequestInCloudlet.remove(0);
+        return jobId;
     }
 
     private boolean checkList(int jobTwoId){
