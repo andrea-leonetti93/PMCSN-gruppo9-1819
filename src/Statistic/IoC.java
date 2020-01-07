@@ -13,6 +13,15 @@ public class IoC {
     private static IoC instance = null;
     private static double LOC = 0.95;
     private Rvms rvms = new Rvms();
+    public ArrayList<Double> iocCloudMeanPopulation = new ArrayList<>();
+    public ArrayList<Double> iocCloudletMeanPopulation = new ArrayList<>();
+    public ArrayList<Double> iocGlobalMeanPopulation = new ArrayList<>();
+    public ArrayList<Double> iocCloudThroughputMean = new ArrayList<>();
+    public ArrayList<Double> iocCloudletThroughputMean = new ArrayList<>();
+    public ArrayList<Double> iocGlobalThroughputMean = new ArrayList<>();
+    public ArrayList<Double> iocCloudServiceMeanTime = new ArrayList<>();
+    public ArrayList<Double> iocCloudletServiceMeanTime = new ArrayList<>();
+    public ArrayList<Double> iocGlobalServiceMeanTime = new ArrayList<>();
 
     private IoC(){};
 
@@ -46,6 +55,42 @@ public class IoC {
         }
         double[] confidenceInterval = {sampleMean, width};
         return confidenceInterval;
+    }
+
+    public void setIocCloudMeanPopulation(double value) {
+        this.iocCloudMeanPopulation.add(value);
+    }
+
+    public void setIocCloudletMeanPopulation(double value) {
+        this.iocCloudletMeanPopulation.add(value);
+    }
+
+    public void setIocGlobalMeanPopulation(double value) {
+        this.iocGlobalMeanPopulation.add(value);
+    }
+
+    public void setIocCloudThroughputMean(double value) {
+        this.iocCloudThroughputMean.add(value);
+    }
+
+    public void setIocCloudletThroughputMean(double value) {
+        this.iocCloudletThroughputMean.add(value);
+    }
+
+    public void setIocGlobalThroughputMean(double value) {
+        this.iocGlobalThroughputMean.add(value);
+    }
+
+    public void setIocCloudServiceMeanTime(double value) {
+        this.iocCloudServiceMeanTime.add(value);
+    }
+
+    public void setIocCloudletServiceMeanTime(double value) {
+        this.iocCloudletServiceMeanTime.add(value);
+    }
+
+    public void setIocGlobalServiceMeanTime(double value) {
+        this.iocGlobalServiceMeanTime.add(value);
     }
 
     public static void main(String[] args) {

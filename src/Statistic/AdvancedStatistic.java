@@ -12,6 +12,7 @@ import java.io.IOException;
 public class AdvancedStatistic extends Statistic {
 
     private static AdvancedStatistic advancedStatistic = null;
+    private IoC ioC = IoC.getInstance();
     private BatchMeans cloudMeanPopulation;
     private BatchMeans cloudletMeanPopulation;
     private BatchMeans globalMeanPopulation;
@@ -118,6 +119,15 @@ public class AdvancedStatistic extends Statistic {
         if(counter == 256){
             //TODO write del valore batchmean on file
             counter = 1;
+            ioC.setIocCloudMeanPopulation(cloudMeanPopulation.getBatchMean());
+            ioC.setIocCloudletMeanPopulation(cloudletMeanPopulation.getBatchMean());
+            ioC.setIocGlobalMeanPopulation(globalMeanPopulation.getBatchMean());
+            ioC.setIocCloudThroughputMean(cloudThroughputMean.getBatchMean());
+            ioC.setIocCloudletThroughputMean(cloudletThroughputMean.getBatchMean());
+            ioC.setIocGlobalThroughputMean(globalThroughputMean.getBatchMean());
+            ioC.setIocCloudServiceMeanTime(cloudServiceMeanTime.getBatchMean());
+            ioC.setIocCloudletServiceMeanTime(cloudletServiceMeanTime.getBatchMean());
+            ioC.setIocGlobalServiceMeanTime(globalServiceMeanTime.getBatchMean());
             writeOnFile(clock);
         }else{
             counter++;
@@ -144,10 +154,10 @@ public class AdvancedStatistic extends Statistic {
             //cloudServiceMeanTime.setCount();
         }
         globalServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
-
         if(counter == 256){
             //TODO write del valore batchmean on file
             counter = 1;
+
             writeOnFile(clock);
         }else{
             counter++;
