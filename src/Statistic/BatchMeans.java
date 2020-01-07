@@ -6,7 +6,7 @@ public class BatchMeans {
     private Double current_batchMean = 0.0;
     private Welford wMean;
     private static final int batchMeanDim = 256;
-    private int count = 0;
+    //private int count = 0;
 
     public BatchMeans() {
         reset();
@@ -16,18 +16,18 @@ public class BatchMeans {
         wMean.updateWelfordMean(elem);
         //current_batchMean+=wMean.getCurrent_mean();
         current_batchMean += elem;
-        if(count == batchMeanDim){
+        /*if(count == batchMeanDim){
             batchMean = current_batchMean/(double)batchMeanDim;
             reset();
         }else{
             count++;
-        }
+        }*/
     }
 
     public void reset(){
         current_batchMean = 0.0;
         wMean = new Welford();
-        count = 0;
+        //count = 0;
     }
 
     public Welford getwMean() {
@@ -35,10 +35,12 @@ public class BatchMeans {
     }
 
     public Double getBatchMean() {
+        batchMean = current_batchMean/(double)batchMeanDim;
+        reset();
         return batchMean;
     }
 
-    public void setCount() {
+    /*public void setCount() {
         this.count++;
-    }
+    }*/
 }

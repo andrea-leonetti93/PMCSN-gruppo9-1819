@@ -4,6 +4,10 @@ import Request.CompletedRequest;
 import Server.Cloud;
 import Server.Cloudlet;
 import Util.Clock;
+import Util.Configuration;
+
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class BaseStatistic extends Statistic {
 
@@ -16,6 +20,8 @@ public class BaseStatistic extends Statistic {
     private Welford cloudThroughputMean;
     private Welford cloudletThroughputMean;
     private Welford globalThroughputMean;
+    private FileWriter fileWriter;
+    private static boolean hyperexpo = Configuration.HYPEREXPO;
     private static BaseStatistic baseStatistic = null;
 
     public static BaseStatistic getInstance(){
@@ -35,6 +41,56 @@ public class BaseStatistic extends Statistic {
         this.cloudThroughputMean = new Welford();
         this.cloudletThroughputMean = new Welford();
         this.globalThroughputMean = new Welford();
+        try{
+            if(hyperexpo){
+                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\StatisticsHyperexpo.csv");
+            }else{
+                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\StatisticsExpo.csv");
+            }
+            fileWriter.append("CloudMeanPopulation;");
+            fileWriter.append("CloudletMeanPopulation;");
+            fileWriter.append("GlobalMeanPopulation;");
+            fileWriter.append("CloudMeanThroughput;");
+            fileWriter.append("CloudletMeanThroughput;");
+            fileWriter.append("GlobalMeanThroughput;");
+            fileWriter.append("CloudMeanServiceTime;");
+            fileWriter.append("CloudletMeanServiceTime;");
+            fileWriter.append("GlobalMeanServiceTime;");
+            fileWriter.append("\n");
+        }catch (Exception e){
+            System.out.println("Exception: " + e.getMessage());
+        }
+    }
+
+    private void writeOnFile(Clock clock) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(clock.currentTime);
+        sb.append(";");
+        sb.append(cloudMeanPopulation.getCurrent_mean());
+        sb.append(";");
+        sb.append(cloudletMeanPopulation.getCurrent_mean());
+        sb.append(";");
+        sb.append(globalMeanPopulation.getCurrent_mean());
+        sb.append(";");
+        sb.append(cloudThroughputMean.getCurrent_mean());
+        sb.append(";");
+        sb.append(cloudletThroughputMean.getCurrent_mean());
+        sb.append(";");
+        sb.append(globalThroughputMean.getCurrent_mean());
+        sb.append(";");
+        sb.append(cloudServiceMeanTime.getCurrent_mean());
+        sb.append(";");
+        sb.append(cloudletServiceMeanTime.getCurrent_mean());
+        sb.append(";");
+        sb.append(globalServiceMeanTime.getCurrent_mean());
+        sb.append(";");
+        sb.append("\n");
+        try {
+            fileWriter.append(sb.toString());
+            fileWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -48,6 +104,7 @@ public class BaseStatistic extends Statistic {
         cloudletThroughputMean.updateWelfordMean(cloudlet.completedRequests/clock.currentTime);
         //requests handled globally
         globalThroughputMean.updateWelfordMean((cloud.completedRequests+cloudlet.completedRequests)/clock.currentTime);
+        writeOnFile(clock);
     }
 
     @Override
@@ -67,6 +124,7 @@ public class BaseStatistic extends Statistic {
             cloudletServiceMeanTime.updateWelfordMean(request.getJob().getServiceTime());
         }
         globalServiceMeanTime.updateWelfordMean(request.getJob().getServiceTime());
+        writeOnFile(clock);
     }
 
     public Welford getCloudMeanPopulation() {

@@ -58,15 +58,16 @@ public class Controller {
         completedRequests = new ArrayList<CompletedRequest>();
         try{
             if(hyperexpo){
-                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\StatisticsHyperexpo.csv");
+                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\JobFlowStatsHyperexpo.csv");
             }else{
-                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\StatisticsExpo.csv");
+                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\JobFlowStatsExpo.csv");
             }
             fileWriter.append("curtime;");
             fileWriter.append("j1cloudlet;");
             fileWriter.append("j2cloudlet;");
             fileWriter.append("j1cloud;");
             fileWriter.append("j2cloud;");
+            fileWriter.append("curtime;");
             fileWriter.append("\n");
         }catch (Exception e){
             System.out.println("Exception: " + e.getMessage());
@@ -125,7 +126,6 @@ public class Controller {
             }else{
                 s.updateStatistic(clock, cloudlet, cloud, (CompletedRequest) re);
             }
-
         }
         //clock.incrCurrentTime();
     }

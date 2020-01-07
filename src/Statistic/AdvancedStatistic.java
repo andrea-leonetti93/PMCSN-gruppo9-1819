@@ -97,18 +97,24 @@ public class AdvancedStatistic extends Statistic {
 
     @Override
     public void updateStatistic(Clock clock, Cloudlet cloudlet, Cloud cloud) {
+        // cloud population
         cloudMeanPopulation.computeBatchMeans(cloud.getAllJobs());
+        // cloudlet population
         cloudletMeanPopulation.computeBatchMeans(cloudlet.getAllJobs());
+        // global population
         globalMeanPopulation.computeBatchMeans(cloud.getAllJobs()+cloudlet.getAllJobs());
-        //requests handled by cloud
+        // requests handled by cloud
         cloudThroughputMean.computeBatchMeans(cloud.completedRequests/clock.currentTime);
-        //requests handled by cloudlet
+        // requests handled by cloudlet
         cloudletThroughputMean.computeBatchMeans(cloudlet.completedRequests/clock.currentTime);
-        //requests handled globally
+        // requests handled globally
         globalThroughputMean.computeBatchMeans((cloud.completedRequests+cloudlet.completedRequests)/clock.currentTime);
-        cloudServiceMeanTime.setCount();
-        cloudletServiceMeanTime.setCount();
-        globalServiceMeanTime.setCount();
+        // cloud service time
+        //cloudServiceMeanTime.setCount();
+        // cloudlet service time
+        //cloudletServiceMeanTime.setCount();
+        // global service time
+        //globalServiceMeanTime.setCount();
         if(counter == 256){
             //TODO write del valore batchmean on file
             counter = 0;
@@ -132,10 +138,10 @@ public class AdvancedStatistic extends Statistic {
         globalThroughputMean.computeBatchMeans((cloud.completedRequests+cloudlet.completedRequests)/clock.currentTime);
         if(request.getServer() instanceof Cloud){
             cloudServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
-            cloudletServiceMeanTime.setCount();
+            //cloudletServiceMeanTime.setCount();
         }else{
             cloudletServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
-            cloudServiceMeanTime.setCount();
+            //cloudServiceMeanTime.setCount();
         }
         globalServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
 
