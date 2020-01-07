@@ -29,8 +29,8 @@ public class Controller {
     private int cloudletCompletedRequests;
     private int N = Configuration.N;
     private static boolean batch_means = Configuration.BATCH_MEANS;
-    private static boolean hyperexpo = Configuration.HYPEREXPO;
-    private FileWriter fileWriter;
+    //private static boolean hyperexpo = Configuration.HYPEREXPO;
+    //private FileWriter fileWriter;
     private int nJobTotCloudClass1 = 0;
     private int nJobTotCloudClass2 = 0;
     private int nJobTotCletClass1 = 0;
@@ -56,7 +56,7 @@ public class Controller {
             s = BaseStatistic.getInstance();
         }
         completedRequests = new ArrayList<CompletedRequest>();
-        try{
+        /*try{
             if(hyperexpo){
                 fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\JobFlowStatsHyperexpo.csv");
             }else{
@@ -71,7 +71,7 @@ public class Controller {
             fileWriter.append("\n");
         }catch (Exception e){
             System.out.println("Exception: " + e.getMessage());
-        }
+        }*/
     }
 
     public static Controller getInstance()
@@ -88,7 +88,7 @@ public class Controller {
             //TODO aggiornare qui clock globale
             clock.currentTime = re.getRequestTime();
             //System.out.println("To handle:" + re);
-            System.out.println("Current time:" + clock.currentTime);
+            //System.out.println("Current time:" + clock.currentTime);
             if(re instanceof ArrivalRequest){
                 //check cloudlet space
                 //if it's lower than N, send the request to the cloudlet
@@ -120,7 +120,7 @@ public class Controller {
                     }
                 }
             }
-            writeOnFile(clock, cloudlet, cloud);
+            //writeOnFile(clock, cloudlet, cloud);
             if(re instanceof ArrivalRequest){
                 s.updateStatistic(clock, cloudlet, cloud);
             }else{
@@ -130,7 +130,7 @@ public class Controller {
         //clock.incrCurrentTime();
     }
 
-    private void writeOnFile(Clock clock, Cloudlet cloudlet, Cloud cloud) {
+    /*private void writeOnFile(Clock clock, Cloudlet cloudlet, Cloud cloud) {
         StringBuilder sb = new StringBuilder();
         sb.append(clock.currentTime);
         sb.append(";");
@@ -149,7 +149,7 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public int numbCompletedRequest(){
         return completedRequests.size();
@@ -202,6 +202,34 @@ public class Controller {
                     ", dev: " + bs.getCloudletThroughputMean().getStDeviation());
             System.out.println("\nMean throughput Global: " + bs.getGlobalThroughputMean().getCurrent_mean() +
                     ", dev: " + bs.getGlobalThroughputMean().getStDeviation());
+            // statistics on each class job
+            // mean population
+            System.out.println("\nMean population job C1 Cloudlet: " + bs.getMeanPopulationJobClassOneClet().getCurrent_mean() +
+                    ", dev: " + bs.getMeanPopulationJobClassOneClet().getStDeviation());
+            System.out.println("\nMean population job C2 Cloudlet: " + bs.getMeanPopulationJobClassTwoClet().getCurrent_mean() +
+                    ", dev: " + bs.getMeanPopulationJobClassTwoClet().getStDeviation());
+            System.out.println("\nMean population job C1 Cloud: " + bs.getMeanPopulationJobClassOneCloud().getCurrent_mean() +
+                    ", dev: " + bs.getMeanPopulationJobClassOneCloud().getStDeviation());
+            System.out.println("\nMean population job C2 Cloud: " + bs.getMeanPopulationJobClassTwoCloud().getCurrent_mean() +
+                    ", dev: " + bs.getMeanPopulationJobClassTwoCloud().getStDeviation());
+            // mean throughput
+            System.out.println("\nMean throughput job C1 Cloudlet: " + bs.getMeanThroughputJobClassOneClet().getCurrent_mean() +
+                    ", dev: " + bs.getMeanThroughputJobClassOneClet().getStDeviation());
+            System.out.println("\nMean throughput job C2 Cloudlet: " + bs.getMeanThroughputJobClassTwoClet().getCurrent_mean() +
+                    ", dev: " + bs.getMeanThroughputJobClassTwoClet().getStDeviation());
+            System.out.println("\nMean throughput job C1 Cloud: " + bs.getMeanThroughputJobClassOneCloud().getCurrent_mean() +
+                    ", dev: " + bs.getMeanThroughputJobClassOneCloud().getStDeviation());
+            System.out.println("\nMean throughput job C2 Cloud: " + bs.getMeanThroughputJobClassTwoCloud().getCurrent_mean() +
+                    ", dev: " + bs.getMeanThroughputJobClassTwoCloud().getStDeviation());
+            // mean service time
+            System.out.println("\nMean Service time job C1 Cloudlet: " + bs.getMeanServiceTimeJobClassOneClet().getCurrent_mean() +
+                    ", dev: " + bs.getMeanServiceTimeJobClassOneClet().getStDeviation());
+            System.out.println("\nMean Service time job C2 Cloudlet: " + bs.getMeanServiceTimeJobClassTwoClet().getCurrent_mean() +
+                    ", dev: " + bs.getMeanServiceTimeJobClassTwoClet().getStDeviation());
+            System.out.println("\nMean Service time job C1 Cloud: " + bs.getMeanServiceTimeJobClassOneCloud().getCurrent_mean() +
+                    ", dev: " + bs.getMeanServiceTimeJobClassOneCloud().getStDeviation());
+            System.out.println("\nMean Service time job C2 Cloud: " + bs.getMeanServiceTimeJobClassTwoCloud().getCurrent_mean() +
+                    ", dev: " + bs.getMeanServiceTimeJobClassTwoCloud().getStDeviation());
         }
         /*CompletedRequest cr;
         for (CompletedRequest completedRequest : completedRequests) {
@@ -254,7 +282,7 @@ public class Controller {
             //TODO aggiornare qui clock globale
             clock.currentTime = re.getRequestTime();
             //System.out.println("To handle:" + re);
-            System.out.println("Current time:" + clock.currentTime);
+            //System.out.println("Current time:" + clock.currentTime);
             if(!type2JobRequestInCloudlet.isEmpty() && re.getJobType() == 2 && re.getJob().getServiceTime() != 0.0){
                 // handle two queues
                 int jobId = re.getJob().getId();
@@ -331,7 +359,7 @@ public class Controller {
                 }
             }
         }
-        writeOnFile(clock, cloudlet, cloud);
+        //writeOnFile(clock, cloudlet, cloud);
         if(re instanceof ArrivalRequest){
             s.updateStatistic(clock, cloudlet, cloud);
         }else{

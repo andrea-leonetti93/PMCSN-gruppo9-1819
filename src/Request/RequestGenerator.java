@@ -55,7 +55,7 @@ public class RequestGenerator implements Runnable{
             requestsQueue.add(r);
             //clock.currentTime = j.getArrivalTime();
             curTime = Math.max(clock.lastClass1Arrival,clock.lastClass1Arrival);
-            System.out.println("Arrival time = " + curTime);
+            //System.out.println("Arrival time = " + curTime);
         }
         System.out.println("Numero richieste generate: " + i);
     }

@@ -38,6 +38,7 @@ public class Cloud extends Server {
             r.getJob().setServiceTime(serviceTimeMu1);
             cr = new CompletedRequest(r.getJob());
             this.nJobsClass1+=1;
+            this.completedReqJobsClass1+=1;
         }else{
             // it handle class2 request
             distribution.selectStream(4);
@@ -46,8 +47,9 @@ public class Cloud extends Server {
             r.getJob().setServiceTime(serviceTimeMu2);
             cr = new CompletedRequest(r.getJob());
             this.nJobsClass2+=1;
+            this.completedReqJobsClass2+=1;
         }
-        completedRequests++;
+        this.completedRequests++;
         cr.setServer(this);
         requestQueue.add(cr);
     }
