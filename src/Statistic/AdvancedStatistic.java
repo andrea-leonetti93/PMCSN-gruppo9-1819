@@ -21,7 +21,7 @@ public class AdvancedStatistic extends Statistic {
     private BatchMeans cloudThroughputMean;
     private BatchMeans cloudletThroughputMean;
     private BatchMeans globalThroughputMean;
-    private int counter = 0;
+    private int counter = 1;
     private FileWriter fileWriter;
     private static boolean hyperexpo = Configuration.HYPEREXPO;
 
@@ -117,7 +117,7 @@ public class AdvancedStatistic extends Statistic {
         //globalServiceMeanTime.setCount();
         if(counter == 256){
             //TODO write del valore batchmean on file
-            counter = 0;
+            counter = 1;
             writeOnFile(clock);
         }else{
             counter++;
@@ -147,7 +147,7 @@ public class AdvancedStatistic extends Statistic {
 
         if(counter == 256){
             //TODO write del valore batchmean on file
-            counter = 0;
+            counter = 1;
             writeOnFile(clock);
         }else{
             counter++;

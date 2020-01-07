@@ -47,6 +47,7 @@ public class BaseStatistic extends Statistic {
             }else{
                 fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\StatisticsExpo.csv");
             }
+            fileWriter.append("curtime;");
             fileWriter.append("CloudMeanPopulation;");
             fileWriter.append("CloudletMeanPopulation;");
             fileWriter.append("GlobalMeanPopulation;");
