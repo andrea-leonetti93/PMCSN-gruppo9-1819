@@ -13,15 +13,28 @@ public class IoC {
     private static IoC instance = null;
     private static double LOC = 0.95;
     private Rvms rvms = new Rvms();
-    public ArrayList<Double> iocCloudMeanPopulation = new ArrayList<>();
-    public ArrayList<Double> iocCloudletMeanPopulation = new ArrayList<>();
-    public ArrayList<Double> iocGlobalMeanPopulation = new ArrayList<>();
-    public ArrayList<Double> iocCloudThroughputMean = new ArrayList<>();
-    public ArrayList<Double> iocCloudletThroughputMean = new ArrayList<>();
-    public ArrayList<Double> iocGlobalThroughputMean = new ArrayList<>();
-    public ArrayList<Double> iocCloudServiceMeanTime = new ArrayList<>();
-    public ArrayList<Double> iocCloudletServiceMeanTime = new ArrayList<>();
-    public ArrayList<Double> iocGlobalServiceMeanTime = new ArrayList<>();
+    private ArrayList<Double> iocCloudMeanPopulation = new ArrayList<>();
+    private ArrayList<Double> iocCloudletMeanPopulation = new ArrayList<>();
+    private ArrayList<Double> iocGlobalMeanPopulation = new ArrayList<>();
+    private ArrayList<Double> iocCloudThroughputMean = new ArrayList<>();
+    private ArrayList<Double> iocCloudletThroughputMean = new ArrayList<>();
+    private ArrayList<Double> iocGlobalThroughputMean = new ArrayList<>();
+    private ArrayList<Double> iocCloudServiceMeanTime = new ArrayList<>();
+    private ArrayList<Double> iocCloudletServiceMeanTime = new ArrayList<>();
+    private ArrayList<Double> iocGlobalServiceMeanTime = new ArrayList<>();
+    // statistics for each job class
+    private ArrayList<Double> iocMeanPopulationJobClassOneClet = new ArrayList<>();
+    private ArrayList<Double> iocMeanPopulationJobClassTwoClet = new ArrayList<>();
+    private ArrayList<Double> iocMeanPopulationJobClassOneCloud = new ArrayList<>();
+    private ArrayList<Double> iocMeanPopulationJobClassTwoCloud = new ArrayList<>();
+    private ArrayList<Double> iocMeanThroughputJobClassOneClet = new ArrayList<>();
+    private ArrayList<Double> iocMeanThroughputJobClassTwoClet = new ArrayList<>();
+    private ArrayList<Double> iocMeanThroughputJobClassOneCloud = new ArrayList<>();
+    private ArrayList<Double> iocMeanThroughputJobClassTwoCloud = new ArrayList<>();
+    private ArrayList<Double> iocMeanServiceTimeJobClassOneClet = new ArrayList<>();
+    private ArrayList<Double> iocMeanServiceTimeJobClassTwoClet = new ArrayList<>();
+    private ArrayList<Double> iocMeanServiceTimeJobClassOneCloud = new ArrayList<>();
+    private ArrayList<Double> iocMeanServiceTimeJobClassTwoCloud = new ArrayList<>();
 
     private IoC(){};
 
@@ -55,6 +68,59 @@ public class IoC {
         }
         double[] confidenceInterval = {sampleMean, width};
         return confidenceInterval;
+    }
+
+    public void computeIoCForEveryMetric(){
+        double[] confIntCMP = computeIoC(iocCloudMeanPopulation);
+        double[] confIntCLMP = computeIoC(iocCloudletMeanPopulation);
+        double[] confIntGMP = computeIoC(iocGlobalMeanPopulation);
+        double[] confIntCTM = computeIoC(iocCloudThroughputMean);
+        double[] confIntCLTM = computeIoC(iocCloudletThroughputMean);
+        double[] confIntGTM = computeIoC(iocGlobalThroughputMean);
+        double[] confIntCSM = computeIoC(iocCloudServiceMeanTime);
+        double[] confIntCLSM = computeIoC(iocCloudletServiceMeanTime);
+        double[] confIntGSM = computeIoC(iocGlobalServiceMeanTime);
+        double[] confIntPJ1CL = computeIoC(iocMeanPopulationJobClassOneClet);
+        double[] confIntPJ2CL = computeIoC(iocMeanPopulationJobClassTwoClet);
+        double[] confIntPJ1C = computeIoC(iocMeanPopulationJobClassOneCloud);
+        double[] confIntPJ2C = computeIoC(iocMeanPopulationJobClassTwoCloud);
+        double[] confIntTJ1CL = computeIoC(iocMeanThroughputJobClassOneClet);
+        double[] confIntTJ2CL = computeIoC(iocMeanThroughputJobClassTwoClet);
+        double[] confIntTJ1C = computeIoC(iocMeanThroughputJobClassOneCloud);
+        double[] confIntTJ2C = computeIoC(iocMeanThroughputJobClassTwoCloud);
+        double[] confIntSJ1CL = computeIoC(iocMeanServiceTimeJobClassOneClet);
+        double[] confIntSJ2CL = computeIoC(iocMeanServiceTimeJobClassTwoClet);
+        double[] confIntSJ1C = computeIoC(iocMeanServiceTimeJobClassOneCloud);
+        double[] confIntSJ2C = computeIoC(iocMeanServiceTimeJobClassTwoCloud);
+
+        System.out.println("\n INTERVALLI DI CONFIDENZA ");
+
+        System.out.println("\nNumb mean job Cloud: " + confIntCMP[0] + ", width: " + confIntCMP[1]);
+        System.out.println("\nNumb mean job Cloudlet: " + confIntCLMP[0] + ", width: " + confIntCLMP[1]);
+        System.out.println("\nNumb mean job Global: " + confIntGMP[0] + ", width: " + confIntGMP[1]);
+
+        System.out.println("\nThroughput mean job Cloud: " + confIntCTM[0] + ", width: " + confIntCTM[1]);
+        System.out.println("\nThroughput mean job Cloudlet: " + confIntCLTM[0] + ", width: " + confIntCLTM[1]);
+        System.out.println("\nThroughput mean job Global: " + confIntGTM[0] + ", width: " + confIntGTM[1]);
+
+        System.out.println("\nService mean time job Cloud: " + confIntCSM[0] + ", width: " + confIntCSM[1]);
+        System.out.println("\nService mean time job Cloudlet: " + confIntCLSM[0] + ", width: " + confIntCLSM[1]);
+        System.out.println("\nService mean time job Global: " + confIntGSM[0] + ", width: " + confIntGSM[1]);
+
+        System.out.println("\nNumb mean job class 1 Cloudlet: " + confIntPJ1CL[0] + ", width: " + confIntPJ1CL[1]);
+        System.out.println("\nNumb mean job class 2 Cloudlet: " + confIntPJ2CL[0] + ", width: " + confIntPJ2CL[1]);
+        System.out.println("\nNumb mean job class 1 Cloud: " + confIntPJ1C[0] + ", width: " + confIntPJ1C[1]);
+        System.out.println("\nNumb mean job class 2 Cloud: " + confIntPJ2C[0] + ", width: " + confIntPJ2C[1]);
+
+        System.out.println("\nThroughput mean job class 1 Cloudlet: " + confIntTJ1CL[0] + ", width: " + confIntTJ1CL[1]);
+        System.out.println("\nThroughput mean job class 2 Cloudlet: " + confIntTJ2CL[0] + ", width: " + confIntTJ2CL[1]);
+        System.out.println("\nThroughput mean job class 1 Cloud: " + confIntTJ1C[0] + ", width: " + confIntTJ1C[1]);
+        System.out.println("\nThroughput mean job class 2 Cloud: " + confIntTJ2C[0] + ", width: " + confIntTJ2C[1]);
+
+        System.out.println("\nService mean time job class 1 Cloudlet: " + confIntSJ1CL[0] + ", width: " + confIntSJ1CL[1]);
+        System.out.println("\nService mean time job class 2 Cloudlet: " + confIntSJ2CL[0] + ", width: " + confIntSJ2CL[1]);
+        System.out.println("\nService mean time job class 1 Cloud: " + confIntSJ1C[0] + ", width: " + confIntSJ1C[1]);
+        System.out.println("\nService mean time job class 2 Cloud: " + confIntSJ2C[0] + ", width: " + confIntSJ2C[1]);
     }
 
     public void setIocCloudMeanPopulation(double value) {
@@ -91,6 +157,54 @@ public class IoC {
 
     public void setIocGlobalServiceMeanTime(double value) {
         this.iocGlobalServiceMeanTime.add(value);
+    }
+
+    public void addIocMeanPopulationJobClassOneClet(double value) {
+        this.iocMeanPopulationJobClassOneClet.add(value);
+    }
+
+    public void addIocMeanPopulationJobClassTwoClet(double value) {
+        this.iocMeanPopulationJobClassTwoClet.add(value);
+    }
+
+    public void addIocMeanPopulationJobClassOneCloud(double value) {
+        this.iocMeanPopulationJobClassOneCloud.add(value);
+    }
+
+    public void addIocMeanPopulationJobClassTwoCloud(double value) {
+        this.iocMeanPopulationJobClassTwoCloud.add(value);
+    }
+
+    public void addIocMeanThroughputJobClassOneClet(double value) {
+        this.iocMeanThroughputJobClassOneClet.add(value);
+    }
+
+    public void addIocMeanThroughputJobClassTwoClet(double value) {
+        this.iocMeanThroughputJobClassTwoClet.add(value);
+    }
+
+    public void addIocMeanThroughputJobClassOneCloud(double value) {
+        this.iocMeanThroughputJobClassOneCloud.add(value);
+    }
+
+    public void addIocMeanThroughputJobClassTwoCloud(double value) {
+        this.iocMeanThroughputJobClassTwoCloud.add(value);
+    }
+
+    public void addIocMeanServiceTimeJobClassOneClet(double value) {
+        this.iocMeanServiceTimeJobClassOneClet.add(value);
+    }
+
+    public void addIocMeanServiceTimeJobClassTwoClet(double value) {
+        this.iocMeanServiceTimeJobClassTwoClet.add(value);
+    }
+
+    public void addIocMeanServiceTimeJobClassOneCloud(double value) {
+        this.iocMeanServiceTimeJobClassOneCloud.add(value);
+    }
+
+    public void addIocMeanServiceTimeJobClassTwoCloud(double value) {
+        this.iocMeanServiceTimeJobClassTwoCloud.add(value);
     }
 
     public static void main(String[] args) {

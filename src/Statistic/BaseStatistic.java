@@ -156,31 +156,6 @@ public class BaseStatistic extends Statistic {
     }
 
     @Override
-    public void updateStatistic(Clock clock, Cloudlet cloudlet, Cloud cloud) {
-        cloudMeanPopulation.updateWelfordMean(cloud.getAllJobs());
-        cloudletMeanPopulation.updateWelfordMean(cloudlet.getAllJobs());
-        globalMeanPopulation.updateWelfordMean(cloud.getAllJobs()+cloudlet.getAllJobs());
-        //requests handled by cloud
-        cloudThroughputMean.updateWelfordMean(cloud.completedRequests/clock.currentTime);
-        //requests handled by cloudlet
-        cloudletThroughputMean.updateWelfordMean(cloudlet.completedRequests/clock.currentTime);
-        //requests handled globally
-        globalThroughputMean.updateWelfordMean((cloud.completedRequests+cloudlet.completedRequests)/clock.currentTime);
-        // statistics for each job class
-        // mean population
-        meanPopulationJobClassOneClet.updateWelfordMean(cloudlet.nJobsClass1);
-        meanPopulationJobClassTwoClet.updateWelfordMean(cloudlet.nJobsClass2);
-        meanPopulationJobClassOneCloud.updateWelfordMean(cloud.nJobsClass1);
-        meanPopulationJobClassTwoCloud.updateWelfordMean(cloud.nJobsClass2);
-        // mean throughput
-        meanThroughputJobClassOneClet.updateWelfordMean(cloudlet.completedReqJobsClass1/clock.currentTime);
-        meanThroughputJobClassTwoClet.updateWelfordMean(cloudlet.completedReqJobsClass2/clock.currentTime);
-        meanThroughputJobClassOneCloud.updateWelfordMean(cloud.completedReqJobsClass1/clock.currentTime);
-        meanThroughputJobClassTwoCloud.updateWelfordMean(cloud.completedReqJobsClass2/clock.currentTime);
-        writeOnFile(clock);
-    }
-
-    @Override
     public void updateStatistic(Clock clock, Cloudlet cloudlet, Cloud cloud, CompletedRequest request) {
         cloudMeanPopulation.updateWelfordMean(cloud.getAllJobs());
         cloudletMeanPopulation.updateWelfordMean(cloudlet.getAllJobs());
@@ -191,22 +166,24 @@ public class BaseStatistic extends Statistic {
         cloudletThroughputMean.updateWelfordMean(cloudlet.completedRequests/clock.currentTime);
         //requests handled globally
         globalThroughputMean.updateWelfordMean((cloud.completedRequests+cloudlet.completedRequests)/clock.currentTime);
-        if(request.getServer() instanceof Cloud){
-            cloudServiceMeanTime.updateWelfordMean(request.getJob().getServiceTime());
-            if(request.getJobType() == 1){
-                meanServiceTimeJobClassOneCloud.updateWelfordMean(request.getJob().getServiceTime());
-            }else{
-                meanServiceTimeJobClassTwoCloud.updateWelfordMean(request.getJob().getServiceTime());
+        if(request != null) {
+            if (request.getServer() instanceof Cloud) {
+                cloudServiceMeanTime.updateWelfordMean(request.getJob().getServiceTime());
+                if (request.getJobType() == 1) {
+                    meanServiceTimeJobClassOneCloud.updateWelfordMean(request.getJob().getServiceTime());
+                } else {
+                    meanServiceTimeJobClassTwoCloud.updateWelfordMean(request.getJob().getServiceTime());
+                }
+            } else {
+                cloudletServiceMeanTime.updateWelfordMean(request.getJob().getServiceTime());
+                if (request.getJobType() == 1) {
+                    meanServiceTimeJobClassOneClet.updateWelfordMean(request.getJob().getServiceTime());
+                } else {
+                    meanServiceTimeJobClassTwoClet.updateWelfordMean(request.getJob().getServiceTime());
+                }
             }
-        }else{
-            cloudletServiceMeanTime.updateWelfordMean(request.getJob().getServiceTime());
-            if(request.getJobType() == 1){
-                meanServiceTimeJobClassOneClet.updateWelfordMean(request.getJob().getServiceTime());
-            }else{
-                meanServiceTimeJobClassTwoClet.updateWelfordMean(request.getJob().getServiceTime());
-            }
+            globalServiceMeanTime.updateWelfordMean(request.getJob().getServiceTime());
         }
-        globalServiceMeanTime.updateWelfordMean(request.getJob().getServiceTime());
         // statistics for each job class
         // mean population
         meanPopulationJobClassOneClet.updateWelfordMean(cloudlet.nJobsClass1);
@@ -221,87 +198,87 @@ public class BaseStatistic extends Statistic {
         writeOnFile(clock);
     }
 
-    public Welford getCloudMeanPopulation() {
+    public Welford getCloudMeanPopulation(){
         return cloudMeanPopulation;
     }
 
-    public Welford getCloudletMeanPopulation() {
+    public Welford getCloudletMeanPopulation(){
         return cloudletMeanPopulation;
     }
 
-    public Welford getGlobalMeanPopulation() {
+    public Welford getGlobalMeanPopulation(){
         return globalMeanPopulation;
     }
 
-    public Welford getCloudServiceMeanTime() {
+    public Welford getCloudServiceMeanTime(){
         return cloudServiceMeanTime;
     }
 
-    public Welford getCloudletServiceMeanTime() {
+    public Welford getCloudletServiceMeanTime(){
         return cloudletServiceMeanTime;
     }
 
-    public Welford getGlobalServiceMeanTime() {
+    public Welford getGlobalServiceMeanTime(){
         return globalServiceMeanTime;
     }
 
-    public Welford getCloudThroughputMean() {
+    public Welford getCloudThroughputMean(){
         return cloudThroughputMean;
     }
 
-    public Welford getCloudletThroughputMean() {
+    public Welford getCloudletThroughputMean(){
         return cloudletThroughputMean;
     }
 
-    public Welford getGlobalThroughputMean() {
+    public Welford getGlobalThroughputMean(){
         return globalThroughputMean;
     }
 
-    public Welford getMeanPopulationJobClassOneClet() {
+    public Welford getMeanPopulationJobClassOneClet(){
         return meanPopulationJobClassOneClet;
     }
 
-    public Welford getMeanPopulationJobClassTwoClet() {
+    public Welford getMeanPopulationJobClassTwoClet(){
         return meanPopulationJobClassTwoClet;
     }
 
-    public Welford getMeanPopulationJobClassOneCloud() {
+    public Welford getMeanPopulationJobClassOneCloud(){
         return meanPopulationJobClassOneCloud;
     }
 
-    public Welford getMeanPopulationJobClassTwoCloud() {
+    public Welford getMeanPopulationJobClassTwoCloud(){
         return meanPopulationJobClassTwoCloud;
     }
 
-    public Welford getMeanThroughputJobClassOneClet() {
+    public Welford getMeanThroughputJobClassOneClet(){
         return meanThroughputJobClassOneClet;
     }
 
-    public Welford getMeanThroughputJobClassTwoClet() {
+    public Welford getMeanThroughputJobClassTwoClet(){
         return meanThroughputJobClassTwoClet;
     }
 
-    public Welford getMeanThroughputJobClassOneCloud() {
+    public Welford getMeanThroughputJobClassOneCloud(){
         return meanThroughputJobClassOneCloud;
     }
 
-    public Welford getMeanThroughputJobClassTwoCloud() {
+    public Welford getMeanThroughputJobClassTwoCloud(){
         return meanThroughputJobClassTwoCloud;
     }
 
-    public Welford getMeanServiceTimeJobClassOneClet() {
+    public Welford getMeanServiceTimeJobClassOneClet(){
         return meanServiceTimeJobClassOneClet;
     }
 
-    public Welford getMeanServiceTimeJobClassTwoClet() {
+    public Welford getMeanServiceTimeJobClassTwoClet(){
         return meanServiceTimeJobClassTwoClet;
     }
 
-    public Welford getMeanServiceTimeJobClassOneCloud() {
+    public Welford getMeanServiceTimeJobClassOneCloud(){
         return meanServiceTimeJobClassOneCloud;
     }
 
-    public Welford getMeanServiceTimeJobClassTwoCloud() {
+    public Welford getMeanServiceTimeJobClassTwoCloud(){
         return meanServiceTimeJobClassTwoCloud;
     }
 }

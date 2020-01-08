@@ -122,7 +122,7 @@ public class Controller {
             }
             //writeOnFile(clock, cloudlet, cloud);
             if(re instanceof ArrivalRequest){
-                s.updateStatistic(clock, cloudlet, cloud);
+                s.updateStatistic(clock, cloudlet, cloud, null);
             }else{
                 s.updateStatistic(clock, cloudlet, cloud, (CompletedRequest) re);
             }
@@ -155,7 +155,7 @@ public class Controller {
         return completedRequests.size();
     }
 
-    public void numbJobEachServer(){
+    public void printStatistics(){
         if(batch_means){
             AdvancedStatistic as = (AdvancedStatistic) s;
             //population
@@ -361,7 +361,7 @@ public class Controller {
         }
         //writeOnFile(clock, cloudlet, cloud);
         if(re instanceof ArrivalRequest){
-            s.updateStatistic(clock, cloudlet, cloud);
+            s.updateStatistic(clock, cloudlet, cloud, null);
         }else{
             s.updateStatistic(clock, cloudlet, cloud, (CompletedRequest) re);
         }
