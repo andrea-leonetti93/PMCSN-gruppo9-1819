@@ -27,4 +27,7 @@ public class Welford {
         return stDeviation;
     }
 
+    public int getN() {
+        return (int) n;
+    }
 }

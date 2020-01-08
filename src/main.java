@@ -1,5 +1,6 @@
 import Request.RequestGenerator;
 import Statistic.IoC;
+import Statistic.PrintStatistics;
 import Util.Clock;
 import Util.Configuration;
 import Util.Controller;
@@ -24,6 +25,7 @@ public class main {
         Controller controller = Controller.getInstance();
         Clock clock = Clock.getInstance();
         IoC ioC = IoC.getInstance();
+        PrintStatistics printStatistics = PrintStatistics.getInstance();
         clock.currentTime = clock.start_time;
 
         /* GENERO LE RICHIESTE DI ARRIVO*/
@@ -42,6 +44,7 @@ public class main {
         System.out.println("Numero job completati: " + controller.numbCompletedRequest());
         controller.printStatistics();
         ioC.computeIoCForEveryMetric();
+        printStatistics.writeStatistics();
     }
 
     private static void algorithm2(){

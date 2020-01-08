@@ -4,10 +4,6 @@ import Request.CompletedRequest;
 import Server.Cloud;
 import Server.Cloudlet;
 import Util.Clock;
-import Util.Configuration;
-
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class AdvancedStatistic extends Statistic {
 
@@ -36,8 +32,6 @@ public class AdvancedStatistic extends Statistic {
     private BatchMeans meanServiceTimeJobClassOneCloud;
     private BatchMeans meanServiceTimeJobClassTwoCloud;
     private int counter = 1;
-    private FileWriter fileWriter;
-    private static boolean hyperexpo = Configuration.HYPEREXPO;
 
     public static AdvancedStatistic getInstance(){
         if(advancedStatistic == null){
@@ -68,93 +62,6 @@ public class AdvancedStatistic extends Statistic {
         this.meanServiceTimeJobClassTwoClet = new BatchMeans();
         this.meanServiceTimeJobClassOneCloud = new BatchMeans();
         this.meanServiceTimeJobClassTwoCloud = new BatchMeans();
-        try{
-            if(hyperexpo){
-                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\Batch_MeansHyperexpo.csv");
-            }else{
-                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\Batch_MeansExpo.csv");
-            }
-            fileWriter.append("curtime;");
-            fileWriter.append("CloudMeanPopulation;");
-            fileWriter.append("CloudletMeanPopulation;");
-            fileWriter.append("GlobalMeanPopulation;");
-            fileWriter.append("CloudMeanThroughput;");
-            fileWriter.append("CloudletMeanThroughput;");
-            fileWriter.append("GlobalMeanThroughput;");
-            fileWriter.append("CloudMeanServiceTime;");
-            fileWriter.append("CloudletMeanServiceTime;");
-            fileWriter.append("GlobalMeanServiceTime;");
-            fileWriter.append("MeanPopJobClassOneCloudlet;");
-            fileWriter.append("MeanPopJobClassTwoCloudlet;");
-            fileWriter.append("MeanPopJobClassOneCloud;");
-            fileWriter.append("MeanPopJobClassTwoCloud;");
-            fileWriter.append("MeanThrJobClassOneClet;");
-            fileWriter.append("MeanThrJobClassTwoClet;");
-            fileWriter.append("MeanThrJobClassOneCloud;");
-            fileWriter.append("MeanThrJobClassTwoCloud;");
-            fileWriter.append("MeanSTimeJobClassOneClet;");
-            fileWriter.append("MeanSTimeJobClassTwoClet;");
-            fileWriter.append("MeanSTimeJobClassOneCloud;");
-            fileWriter.append("MeanSTimeJobClassTwoCloud;");
-            fileWriter.append("\n");
-        }catch (Exception e){
-            System.out.println("Exception: " + e.getMessage());
-        }
-    }
-
-    private void writeOnFile(Clock clock) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(clock.currentTime);
-        sb.append(";");
-        sb.append(cloudMeanPopulation.getBatchMean());
-        sb.append(";");
-        sb.append(cloudletMeanPopulation.getBatchMean());
-        sb.append(";");
-        sb.append(globalMeanPopulation.getBatchMean());
-        sb.append(";");
-        sb.append(cloudThroughputMean.getBatchMean());
-        sb.append(";");
-        sb.append(cloudletThroughputMean.getBatchMean());
-        sb.append(";");
-        sb.append(globalThroughputMean.getBatchMean());
-        sb.append(";");
-        sb.append(cloudServiceMeanTime.getBatchMean());
-        sb.append(";");
-        sb.append(cloudletServiceMeanTime.getBatchMean());
-        sb.append(";");
-        sb.append(globalServiceMeanTime.getBatchMean());
-        sb.append(";");
-        sb.append(meanPopulationJobClassOneClet.getBatchMean());
-        sb.append(";");
-        sb.append(meanPopulationJobClassTwoClet.getBatchMean());
-        sb.append(";");
-        sb.append(meanPopulationJobClassOneCloud.getBatchMean());
-        sb.append(";");
-        sb.append(meanPopulationJobClassTwoCloud.getBatchMean());
-        sb.append(";");
-        sb.append(meanThroughputJobClassOneClet.getBatchMean());
-        sb.append(";");
-        sb.append(meanThroughputJobClassTwoClet.getBatchMean());
-        sb.append(";");
-        sb.append(meanThroughputJobClassOneCloud.getBatchMean());
-        sb.append(";");
-        sb.append(meanThroughputJobClassTwoCloud.getBatchMean());
-        sb.append(";");
-        sb.append(meanServiceTimeJobClassOneClet.getBatchMean());
-        sb.append(";");
-        sb.append(meanServiceTimeJobClassTwoClet.getBatchMean());
-        sb.append(";");
-        sb.append(meanServiceTimeJobClassOneCloud.getBatchMean());
-        sb.append(";");
-        sb.append(meanServiceTimeJobClassTwoCloud.getBatchMean());
-        sb.append(";");
-        sb.append("\n");
-        try {
-            fileWriter.append(sb.toString());
-            fileWriter.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -169,22 +76,7 @@ public class AdvancedStatistic extends Statistic {
         //requests handled globally
         globalThroughputMean.computeBatchMeans((cloud.completedRequests+cloudlet.completedRequests)/clock.currentTime);
         if(request != null){
-            if(request.getServer() instanceof Cloud){
-                cloudServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
-                if(request.getJobType() == 1){
-                    meanServiceTimeJobClassOneCloud.computeBatchMeans(request.getJob().getServiceTime());
-                }else{
-                    meanServiceTimeJobClassTwoCloud.computeBatchMeans(request.getJob().getServiceTime());
-                }
-            }else{
-                cloudletServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
-                if(request.getJobType() == 1){
-                    meanServiceTimeJobClassOneClet.computeBatchMeans(request.getJob().getServiceTime());
-                }else{
-                    meanServiceTimeJobClassTwoClet.computeBatchMeans(request.getJob().getServiceTime());
-                }
-            }
-            globalServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
+            updateStatisticCompletedReq(request);
         }
         // statistics for each job class
         // mean population
@@ -206,9 +98,6 @@ public class AdvancedStatistic extends Statistic {
             ioC.setIocCloudThroughputMean(cloudThroughputMean.getBatchMean());
             ioC.setIocCloudletThroughputMean(cloudletThroughputMean.getBatchMean());
             ioC.setIocGlobalThroughputMean(globalThroughputMean.getBatchMean());
-            ioC.setIocCloudServiceMeanTime(cloudServiceMeanTime.getBatchMean());
-            ioC.setIocCloudletServiceMeanTime(cloudletServiceMeanTime.getBatchMean());
-            ioC.setIocGlobalServiceMeanTime(globalServiceMeanTime.getBatchMean());
             ioC.addIocMeanPopulationJobClassOneClet(meanPopulationJobClassOneClet.getBatchMean());
             ioC.addIocMeanPopulationJobClassTwoClet(meanPopulationJobClassTwoClet.getBatchMean());
             ioC.addIocMeanPopulationJobClassOneCloud(meanPopulationJobClassOneCloud.getBatchMean());
@@ -217,49 +106,132 @@ public class AdvancedStatistic extends Statistic {
             ioC.addIocMeanThroughputJobClassTwoClet(meanThroughputJobClassTwoClet.getBatchMean());
             ioC.addIocMeanThroughputJobClassOneCloud(meanThroughputJobClassOneCloud.getBatchMean());
             ioC.addIocMeanThroughputJobClassTwoCloud(meanThroughputJobClassTwoCloud.getBatchMean());
-            ioC.addIocMeanServiceTimeJobClassOneClet(meanServiceTimeJobClassOneClet.getBatchMean());
-            ioC.addIocMeanServiceTimeJobClassTwoClet(meanServiceTimeJobClassTwoClet.getBatchMean());
-            ioC.addIocMeanServiceTimeJobClassOneCloud(meanServiceTimeJobClassOneCloud.getBatchMean());
-            ioC.addIocMeanServiceTimeJobClassTwoCloud(meanServiceTimeJobClassTwoCloud.getBatchMean());
-            writeOnFile(clock);
         }else{
             counter++;
         }
     }
 
-    public BatchMeans getCloudMeanPopulation() {
+    private void updateStatisticCompletedReq(CompletedRequest request){
+        if(request.getServer() instanceof Cloud){
+            cloudServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
+            if(cloudServiceMeanTime.getwMean().getN()%256==0){
+                ioC.setIocCloudServiceMeanTime(cloudServiceMeanTime.getBatchMeanForIoC());
+            }
+            if(request.getJobType() == 1){
+                meanServiceTimeJobClassOneCloud.computeBatchMeans(request.getJob().getServiceTime());
+                if(meanServiceTimeJobClassOneCloud.getwMean().getN()%256==0){
+                    ioC.addIocMeanServiceTimeJobClassOneCloud(meanServiceTimeJobClassOneCloud.getBatchMeanForIoC());
+                }
+            }else{
+                meanServiceTimeJobClassTwoCloud.computeBatchMeans(request.getJob().getServiceTime());
+                if(meanServiceTimeJobClassTwoCloud.getwMean().getN()%256==0){
+                    ioC.addIocMeanServiceTimeJobClassTwoCloud(meanServiceTimeJobClassTwoCloud.getBatchMeanForIoC());
+                }
+            }
+        }else{
+            cloudletServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
+            if(cloudletServiceMeanTime.getwMean().getN()%256==0){
+                ioC.setIocCloudletServiceMeanTime(cloudletServiceMeanTime.getBatchMeanForIoC());
+            }
+            if(request.getJobType() == 1){
+                meanServiceTimeJobClassOneClet.computeBatchMeans(request.getJob().getServiceTime());
+                if(meanServiceTimeJobClassOneClet.getwMean().getN()%256==0){
+                    ioC.addIocMeanServiceTimeJobClassOneClet(meanServiceTimeJobClassOneClet.getBatchMeanForIoC());
+                }
+            }else{
+                meanServiceTimeJobClassTwoClet.computeBatchMeans(request.getJob().getServiceTime());
+                if(meanServiceTimeJobClassTwoClet.getwMean().getN()%256==0){
+                    ioC.addIocMeanServiceTimeJobClassTwoClet(meanServiceTimeJobClassTwoClet.getBatchMeanForIoC());
+                }
+            }
+        }
+        globalServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
+        if(globalServiceMeanTime.getwMean().getN()%256==0){
+            ioC.setIocGlobalServiceMeanTime(globalServiceMeanTime.getBatchMeanForIoC());
+        }
+    }
+
+    public BatchMeans getCloudMeanPopulation(){
         return cloudMeanPopulation;
     }
 
-    public BatchMeans getCloudletMeanPopulation() {
+    public BatchMeans getCloudletMeanPopulation(){
         return cloudletMeanPopulation;
     }
 
-    public BatchMeans getGlobalMeanPopulation() {
+    public BatchMeans getGlobalMeanPopulation(){
         return globalMeanPopulation;
     }
 
-    public BatchMeans getCloudServiceMeanTime() {
+    public BatchMeans getCloudServiceMeanTime(){
         return cloudServiceMeanTime;
     }
 
-    public BatchMeans getCloudletServiceMeanTime() {
+    public BatchMeans getCloudletServiceMeanTime(){
         return cloudletServiceMeanTime;
     }
 
-    public BatchMeans getGlobalServiceMeanTime() {
+    public BatchMeans getGlobalServiceMeanTime(){
         return globalServiceMeanTime;
     }
 
-    public BatchMeans getCloudThroughputMean() {
+    public BatchMeans getCloudThroughputMean(){
         return cloudThroughputMean;
     }
 
-    public BatchMeans getCloudletThroughputMean() {
+    public BatchMeans getCloudletThroughputMean(){
         return cloudletThroughputMean;
     }
 
-    public BatchMeans getGlobalThroughputMean() {
+    public BatchMeans getGlobalThroughputMean(){
         return globalThroughputMean;
+    }
+
+    public BatchMeans getMeanPopulationJobClassOneClet() {
+        return meanPopulationJobClassOneClet;
+    }
+
+    public BatchMeans getMeanPopulationJobClassTwoClet(){
+        return meanPopulationJobClassTwoClet;
+    }
+
+    public BatchMeans getMeanPopulationJobClassOneCloud(){
+        return meanPopulationJobClassOneCloud;
+    }
+
+    public BatchMeans getMeanPopulationJobClassTwoCloud(){
+        return meanPopulationJobClassTwoCloud;
+    }
+
+    public BatchMeans getMeanThroughputJobClassOneClet() {
+        return meanThroughputJobClassOneClet;
+    }
+
+    public BatchMeans getMeanThroughputJobClassTwoClet() {
+        return meanThroughputJobClassTwoClet;
+    }
+
+    public BatchMeans getMeanThroughputJobClassOneCloud() {
+        return meanThroughputJobClassOneCloud;
+    }
+
+    public BatchMeans getMeanThroughputJobClassTwoCloud() {
+        return meanThroughputJobClassTwoCloud;
+    }
+
+    public BatchMeans getMeanServiceTimeJobClassOneClet() {
+        return meanServiceTimeJobClassOneClet;
+    }
+
+    public BatchMeans getMeanServiceTimeJobClassTwoClet() {
+        return meanServiceTimeJobClassTwoClet;
+    }
+
+    public BatchMeans getMeanServiceTimeJobClassOneCloud() {
+        return meanServiceTimeJobClassOneCloud;
+    }
+
+    public BatchMeans getMeanServiceTimeJobClassTwoCloud() {
+        return meanServiceTimeJobClassTwoCloud;
     }
 }

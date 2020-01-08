@@ -6,6 +6,7 @@ public class BatchMeans {
     private Double current_batchMean = 0.0;
     private Welford wMean;
     private static final int batchMeanDim = 256;
+    private int counter = 0;
 
     public BatchMeans() {
         wMean = new Welford();
@@ -26,7 +27,13 @@ public class BatchMeans {
     }
 
     public Double getBatchMean() {
-        batchMean = current_batchMean/(double)batchMeanDim;
+        batchMean = current_batchMean / (double) batchMeanDim;
+        reset();
+        return batchMean;
+    }
+
+    public Double getBatchMeanForIoC(){
+        batchMean = current_batchMean / (double) batchMeanDim;
         reset();
         return batchMean;
     }
