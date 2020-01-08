@@ -2,6 +2,7 @@ package Statistic;
 
 import Util.Configuration;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -31,13 +32,19 @@ public class PrintStatistics {
     private FileWriter serviceTimeClass2CletFile;
     private FileWriter serviceTimeClass1CloudFile;
     private FileWriter serviceTimeClass2CloudFile;
+    private String path1;
+    private String path2;
+    private String path3;
 
     private static boolean hyperexpo = Configuration.HYPEREXPO;
 
     private PrintStatistics(){
+        path1 = System.getProperty("user.dir") + File.separator + "stat" + File.separator + "Population";
+        path2 = System.getProperty("user.dir") + File.separator + "stat" + File.separator + "ServiceTime";
+        path3 = System.getProperty("user.dir") + File.separator + "stat" + File.separator + "Throughput";
         try{
             if(hyperexpo){
-                populationFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Population\\Batch_PopulationHyper.csv");
+                populationFile = new FileWriter(path1 + File.separator + "Batch_PopulationHyper.csv");
                 throughputFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Throughput\\Batch_ThrpughputHyper.csv");
                 populationClass1CletFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Population\\Batch_PopClass1CletHyper.csv");
                 populationClass2CletFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Population\\Batch_PopClass2CletHyper.csv");
@@ -55,23 +62,23 @@ public class PrintStatistics {
                 serviceTimeClass1CloudFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\ServiceTime\\Batch_STimeClass1CloudHyper.csv");
                 serviceTimeClass2CloudFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\ServiceTime\\Batch_STimeClass2CloudHyper.csv");
             }else{
-                populationFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Population\\Batch_MeansExpo.csv");
-                throughputFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Throughput\\Batch_ThrpughputExpo.csv");
-                populationClass1CletFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Population\\Batch_PopClass1CletExpo.csv");
-                populationClass2CletFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Population\\Batch_PopClass2CletExpo.csv");
-                populationClass1CloudFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Population\\Batch_PopClass1CloudExpo.csv");
-                populationClass2CloudFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Population\\Batch_PopClass2CloudExpo.csv");
-                throughputClass1CletFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Throughput\\Batch_ThrClass1CletExpo.csv");
-                throughputClass2CletFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Throughput\\Batch_ThrClass2CletExpo.csv");
-                throughputClass1CloudFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Throughput\\Batch_ThrClass1CloudExpo.csv");
-                throughputClass2CloudFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\Throughput\\Batch_ThrClass2CloudExpo.csv");
-                serviceTimeCloudFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\ServiceTime\\Batch_STimeCloudExpo.csv");
-                serviceTimeCloudletFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\ServiceTime\\Batch_STimeCletExpo.csv");
-                serviceTimeGlobalFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\ServiceTime\\Batch_STimeGlobalExpo.csv");
-                serviceTimeClass1CletFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\ServiceTime\\Batch_STimeClass1CletExpo.csv");
-                serviceTimeClass2CletFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\ServiceTime\\Batch_STimeClass2CletExpo.csv");
-                serviceTimeClass1CloudFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\ServiceTime\\Batch_STimeClass1CloudExpo.csv");
-                serviceTimeClass2CloudFile = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\stat\\ServiceTime\\Batch_STimeClass2CloudExpo.csv");
+                populationFile = new FileWriter(path1 + File.separator + "Batch_MeansExpo.csv");
+                throughputFile = new FileWriter(path3 + File.separator + "Batch_ThrpughputExpo.csv");
+                populationClass1CletFile = new FileWriter(path1 + File.separator + "Batch_PopClass1CletExpo.csv");
+                populationClass2CletFile = new FileWriter(path1 + File.separator + "Batch_PopClass2CletExpo.csv");
+                populationClass1CloudFile = new FileWriter(path1 + File.separator + "Batch_PopClass1CloudExpo.csv");
+                populationClass2CloudFile = new FileWriter(path1 + File.separator + "Batch_PopClass2CloudExpo.csv");
+                throughputClass1CletFile = new FileWriter(path3 + File.separator + "Batch_ThrClass1CletExpo.csv");
+                throughputClass2CletFile = new FileWriter(path3 + File.separator + "Batch_ThrClass2CletExpo.csv");
+                throughputClass1CloudFile = new FileWriter(path3 + File.separator + "Batch_ThrClass1CloudExpo.csv");
+                throughputClass2CloudFile = new FileWriter(path3 + File.separator + "Batch_ThrClass2CloudExpo.csv");
+                serviceTimeCloudFile = new FileWriter(path2 + File.separator + "Batch_STimeCloudExpo.csv");
+                serviceTimeCloudletFile = new FileWriter(path2 + File.separator + "Batch_STimeCletExpo.csv");
+                serviceTimeGlobalFile = new FileWriter(path2 + File.separator + "Batch_STimeGlobalExpo.csv");
+                serviceTimeClass1CletFile = new FileWriter(path2 + File.separator + "Batch_STimeClass1CletExpo.csv");
+                serviceTimeClass2CletFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2CletExpo.csv");
+                serviceTimeClass1CloudFile = new FileWriter(path2 + File.separator + "Batch_STimeClass1CloudExpo.csv");
+                serviceTimeClass2CloudFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2CloudExpo.csv");
             }
             //TODO check if it's necessary adding the curtime to each file with the statistics, ex: value1CloudMeanPop : curtime
             //fileWriter.append("curtime;");
@@ -143,6 +150,10 @@ public class PrintStatistics {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String getPath(){
+        return path1;
     }
 
     private void writeThroughputStatistics() {

@@ -6,6 +6,7 @@ import Server.Cloudlet;
 import Util.Clock;
 import Util.Configuration;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -36,6 +37,7 @@ public class BaseStatistic extends Statistic {
     private FileWriter fileWriter;
     private static boolean hyperexpo = Configuration.HYPEREXPO;
     private static BaseStatistic baseStatistic = null;
+    private String path;
 
     public static BaseStatistic getInstance(){
         if(baseStatistic == null){
@@ -45,6 +47,7 @@ public class BaseStatistic extends Statistic {
     }
 
     private BaseStatistic() {
+        path = System.getProperty("user.dir") + File.separator + "stat" + File.separator + "BaseStatistics";
         this.cloudletMeanPopulation = new Welford();
         this.cloudMeanPopulation = new Welford();
         this.globalMeanPopulation = new Welford();
@@ -68,9 +71,10 @@ public class BaseStatistic extends Statistic {
         this.meanServiceTimeJobClassTwoCloud = new Welford();
         try{
             if(hyperexpo){
-                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\StatisticsHyperexpo.csv");
+
+                fileWriter = new FileWriter(path + File.separator + "StatisticsHyperexpo.csv");
             }else{
-                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\StatisticsExpo.csv");
+                fileWriter = new FileWriter(path + File.separator + "StatisticsExpo.csv");
             }
             fileWriter.append("curtime;");
             fileWriter.append("CloudMeanPopulation;");
