@@ -39,6 +39,8 @@ public class Controller {
             s = BaseStatistic.getInstance();
         }
         completedRequests = new ArrayList<CompletedRequest>();
+        type2JobRequestInCloudlet = new ArrayList<>();
+        typeTwoJobToMove = new ArrayList<>();
         /*try{
             if(hyperexpo){
                 fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\JobFlowStatsHyperexpo.csv");
@@ -251,7 +253,7 @@ public class Controller {
             clock.currentTime = re.getRequestTime();
             //System.out.println("To handle:" + re);
             //System.out.println("Current time:" + clock.currentTime);
-            if(!type2JobRequestInCloudlet.isEmpty() && re.getJobType() == 2 && re.getJob().getServiceTime() != 0.0){
+            if(!typeTwoJobToMove.isEmpty() && re.getJobType() == 2 && re.getJob().getServiceTime() != 0.0){
                 // handle two queues
                 int jobId = re.getJob().getId();
                 if(checkList(jobId)){
@@ -290,6 +292,7 @@ public class Controller {
                     typeTwoJobToMove.add(jobId);
                     cloudlet.nJobsClass2-=1;
                     cloudlet.completedRequests--;
+                    cloudlet.completedReqJobsClass2-=1;
                     //gestire jobclassone/two
                     //nJobClass1 and completedRequest are updating in the cloudlet class
                     cloudlet.handleRequest((ArrivalRequest) re);
@@ -344,9 +347,9 @@ public class Controller {
     }
 
     private boolean checkList(int jobTwoId){
-        for(int reTypeTwo : typeTwoJobToMove){
-            if(jobTwoId == reTypeTwo){
-                typeTwoJobToMove.remove(reTypeTwo);
+        for(int i=0; i<typeTwoJobToMove.size(); i++){
+            if(jobTwoId == typeTwoJobToMove.get(i)){
+                typeTwoJobToMove.remove(i);
                 return true;
             }
         }

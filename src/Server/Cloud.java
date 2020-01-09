@@ -15,6 +15,7 @@ public class Cloud extends Server {
     private static double mu2 = Configuration.MU2CLOUD;
     private static double setup_time = Configuration.SETUP_TIME;
     private double serviceTimeMu2;
+    private double nJobClass2PreemptedCompleted = 0.0;
     private static Cloud cloudInstance = null;
 
     private Cloud() {
@@ -62,7 +63,9 @@ public class Cloud extends Server {
         cr.getJob().setServiceTime(serviceTimeMu2 + setup_time);
         cr.setPreempted(true);
         this.nJobsClass2+=1;
-        completedRequests++;
+        this.completedRequests++;
+        this.completedReqJobsClass2+=1;
+        this.nJobClass2PreemptedCompleted+=1;
         cr.setServer(this);
         requestQueue.add(cr);
     }
