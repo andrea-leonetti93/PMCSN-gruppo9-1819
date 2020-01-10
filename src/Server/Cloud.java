@@ -3,8 +3,12 @@ package Server;
 import Distribution.Distribution;
 import Request.ArrivalRequest;
 import Request.CompletedRequest;
+import Request.PreemptedRequest;
 import Util.Configuration;
+import Util.Job;
 import Util.RequestQueue;
+
+import java.util.ArrayList;
 
 public class Cloud extends Server {
 
@@ -17,6 +21,7 @@ public class Cloud extends Server {
     private double serviceTimeMu2;
     private double nJobClass2PreemptedCompleted = 0.0;
     private static Cloud cloudInstance = null;
+    public ArrayList<CompletedRequest> preemptedRequest = new ArrayList<>();
 
     private Cloud() {
     }
@@ -56,17 +61,21 @@ public class Cloud extends Server {
     }
 
     // handle request from cloudlet to cloud second algorithm
-    public void handleRequestFromCloudlet(CompletedRequest cr){
+    public void handleRequestFromCloudlet(Job job){
+        CompletedRequest cr;
         distribution.selectStream(4);
         serviceTimeMu2 = distribution.exponential(1.0/mu2);
         // setting the new completion value of the job + the setup time for moving the job from the cloudlet to the cloud
-        cr.getJob().setServiceTime(serviceTimeMu2 + setup_time);
+        cr = new CompletedRequest(job);
+        double newServiceTime = serviceTimeMu2 + setup_time;
+        job.setServiceTime(newServiceTime);
         cr.setPreempted(true);
         this.nJobsClass2+=1;
         this.completedRequests++;
         this.completedReqJobsClass2+=1;
         this.nJobClass2PreemptedCompleted+=1;
         cr.setServer(this);
+        preemptedRequest.add(cr);
         requestQueue.add(cr);
     }
 

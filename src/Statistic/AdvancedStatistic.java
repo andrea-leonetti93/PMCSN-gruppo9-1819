@@ -1,6 +1,7 @@
 package Statistic;
 
 import Request.CompletedRequest;
+import Request.PreemptedRequest;
 import Server.Cloud;
 import Server.Cloudlet;
 import Util.Clock;
@@ -78,6 +79,9 @@ public class AdvancedStatistic extends Statistic {
         if(request != null){
             updateStatisticCompletedReq(request);
         }
+        /*if(preempted != null){
+            updateStatisticPreemptedReq(preempted);
+        }*/
         // statistics for each job class
         // mean population
         meanPopulationJobClassOneClet.computeBatchMeans(cloudlet.nJobsClass1);
@@ -148,6 +152,17 @@ public class AdvancedStatistic extends Statistic {
         globalServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
         if(globalServiceMeanTime.getwMean().getN()%256==0){
             ioC.setIocGlobalServiceMeanTime(globalServiceMeanTime.getBatchMeanForIoC());
+        }
+    }
+
+    public void updateStatisticPreemptedReq(PreemptedRequest preempted){
+        cloudServiceMeanTime.computeBatchMeans(preempted.getJob().getServiceTime());
+        if(cloudServiceMeanTime.getwMean().getN()%256==0){
+            ioC.setIocCloudServiceMeanTime(cloudServiceMeanTime.getBatchMeanForIoC());
+        }
+        meanServiceTimeJobClassTwoCloud.computeBatchMeans(preempted.getJob().getServiceTime());
+        if(meanServiceTimeJobClassTwoCloud.getwMean().getN()%256==0){
+                ioC.addIocMeanServiceTimeJobClassTwoCloud(meanServiceTimeJobClassTwoCloud.getBatchMeanForIoC());
         }
     }
 

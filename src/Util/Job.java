@@ -1,11 +1,14 @@
 package Util;
 
+import Request.CompletedRequest;
+
 public class Job {
 
     public int id;
     public int type;
     private double arrivalTime;
     private double serviceTime = 0.0;
+    private CompletedRequest completedRequest;
 
     @Override
     public String toString() {
@@ -44,5 +47,13 @@ public class Job {
 
     public void setServiceTime(double serviceTime) {
         this.serviceTime = serviceTime;
+    }
+
+    public CompletedRequest getCompletedRequest() {
+        return completedRequest;
+    }
+
+    public void setCompletedRequest(CompletedRequest completedRequest) {
+        this.completedRequest = completedRequest;
     }
 }

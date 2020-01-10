@@ -3,13 +3,12 @@ package Request;
 import Server.Server;
 import Util.Job;
 
-public class CompletedRequest extends Request {
+public class PreemptedRequest extends Request {
 
     private Server server = null;
     private boolean preempted = false;
-    private boolean toDelete = false;
 
-    public CompletedRequest(Job job) {
+    public PreemptedRequest(Job job) {
         super(job);
     }
 
@@ -29,14 +28,6 @@ public class CompletedRequest extends Request {
         this.preempted = preempted;
     }
 
-    public boolean isToDelete() {
-        return toDelete;
-    }
-
-    public void setToDelete(boolean toDelete) {
-        this.toDelete = toDelete;
-    }
-
     @Override
     public double getRequestTime() {
         return job.getArrivalTime()+job.getServiceTime();
@@ -44,11 +35,9 @@ public class CompletedRequest extends Request {
 
     @Override
     public String toString() {
-        return "CR{" +
-                 job +
+        return "PR{" +
+                job +
                 ", RT=" + getRequestTime() +
-                ", Server= " + getServer().toString() +
-                ", Preempted= " + isPreempted() +
                 '}';
     }
 }

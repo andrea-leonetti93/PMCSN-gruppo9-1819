@@ -19,6 +19,7 @@ public class Cloudlet extends Server {
     private int nServerUsed;
     private static Cloudlet cloudletInstance = null;
     private double uniform;
+    public int allClass2JobsArrivedToCLoudlet = 0;
 
     private Cloudlet() {
     }
@@ -48,6 +49,7 @@ public class Cloudlet extends Server {
             this.nJobsClass1+=1;
             this.completedReqJobsClass1+=1;
         }else{
+            allClass2JobsArrivedToCLoudlet++;
             // it handle class2 request
             // if the server is hyperexpo then we calculate the new service time
             if(hyperexpo){
@@ -59,6 +61,7 @@ public class Cloudlet extends Server {
             }
             r.getJob().setServiceTime(serviceTimeMu2);
             cr = new CompletedRequest(r.getJob());
+            r.getJob().setCompletedRequest(cr);
             this.nJobsClass2+=1;
             this.completedReqJobsClass2+=1;
         }

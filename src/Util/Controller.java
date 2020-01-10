@@ -22,8 +22,9 @@ public class Controller {
     private Cloud cloud = Cloud.getInstance();
     private Clock clock = Clock.getInstance();
     private List<CompletedRequest> completedRequests;
-    private ArrayList<Request> type2JobRequestInCloudlet;
-    private List<Integer> typeTwoJobToMove;
+    private List<Integer> preemptedRequests;
+    public ArrayList<Request> type2JobRequestInCloudlet;
+    public List<Integer> typeTwoJobToMove;
     private int cloudCompletedRequests;
     private int cloudletCompletedRequests;
     private int N = Configuration.N;
@@ -38,7 +39,8 @@ public class Controller {
         }else{
             s = BaseStatistic.getInstance();
         }
-        completedRequests = new ArrayList<CompletedRequest>();
+        completedRequests = new ArrayList<>();
+        preemptedRequests = new ArrayList<>();
         type2JobRequestInCloudlet = new ArrayList<>();
         typeTwoJobToMove = new ArrayList<>();
         /*try{
@@ -138,6 +140,10 @@ public class Controller {
 
     public int numbCompletedRequest(){
         return completedRequests.size();
+    }
+
+    public int numbPreemptedRequest(){
+        return preemptedRequests.size();
     }
 
     public void printStatistics(){
@@ -248,29 +254,44 @@ public class Controller {
 
     public void getRequestAlgorithm2() {
         Request re = requestQueue.poll();
-        if(re !=null){
+        if(re != null){
             //TODO aggiornare qui clock globale
             clock.currentTime = re.getRequestTime();
             //System.out.println("To handle:" + re);
             //System.out.println("Current time:" + clock.currentTime);
-            if(!typeTwoJobToMove.isEmpty() && re.getJobType() == 2 && re.getJob().getServiceTime() != 0.0){
+            //TODO cambiare questo controllo che è sbagliato!!!!!!!
+            /*if(re instanceof ArrivalRequest){
+                handleRequest(re);
+            }else if(re.getJobType() == 1){
+                handleRequest(re);
+            }
+            int jobId = re.getJob().getId();
+            if(re instanceof CompletedRequest && ((CompletedRequest) re).isToDelete()){
+                preemptedRequests.add(jobId);
+            }else{
+                handleRequest(re);
+            }*/
+            int jobId = re.getJob().getId();
+            if(typeTwoJobToMove.size()!=0 && re instanceof CompletedRequest && ((CompletedRequest) re).isToDelete()){
                 // handle two queues
-                int jobId = re.getJob().getId();
+                //int jobId = re.getJob().getId();
                 if(checkList(jobId)){
                     // the job is removed in checklist function
                     // removeFromList(jobId);
                     // update the job elaboration time and send it to the cloud
-                    cloud.handleRequestFromCloudlet((CompletedRequest) re);
-
-                }else{
+                    //cloud.handleRequestFromCloudlet((CompletedRequest) re);
+                    preemptedRequests.add(jobId);
+                    //System.out.println("Job ID: " + jobId + "preempted\n");
+                }/*else{
                     // it executes the normal handlerequest function if it recived a new class 2 job
                     handleRequest(re);
-                }
+                }*/
+            }else if(re instanceof CompletedRequest && ((CompletedRequest) re).getServer() instanceof Cloudlet){
+                removeFromList(re.getJob().getId());
+                handleRequest(re);
             }else{
                 handleRequest(re);
             }
-
-
         }
         //clock.incrCurrentTime();
     }
@@ -288,14 +309,18 @@ public class Controller {
                 } else if (cloudlet.nJobsClass2 > 0) {
                     //if there one or more class 2 job in the cloudlet,
                     //accept a class 1 job to the cloudlet and send a class 2 job from cloudlet to cloud
-                    int jobId = chooseWhichClassTwoJobRemove();
-                    typeTwoJobToMove.add(jobId);
+                    Job job = chooseWhichClassTwoJobRemove();
+                    typeTwoJobToMove.add(job.getId());
+                    //job.getCompletedRequest().setToDelete(true);
+                    //job.setCompletedRequest(null);
+                    //reqToDelete.setJob(null);
                     cloudlet.nJobsClass2-=1;
                     cloudlet.completedRequests--;
                     cloudlet.completedReqJobsClass2-=1;
                     //gestire jobclassone/two
                     //nJobClass1 and completedRequest are updating in the cloudlet class
                     cloudlet.handleRequest((ArrivalRequest) re);
+                    cloud.handleRequestFromCloudlet(job);
                     //if there's space in the cloudlet
                 } else {
                     cloudlet.handleRequest((ArrivalRequest) re);
@@ -314,14 +339,18 @@ public class Controller {
                     cloud.handleRequest((ArrivalRequest) re);
                 }
             }
-        }else{
+        }else if(re instanceof CompletedRequest){
             completedRequests.add((CompletedRequest) re);
+            //TODO gestire la richiesta prelazionata che deve dare come instanceof quella del cloud
             if(((CompletedRequest) re).getServer() instanceof Cloudlet){
                 //cloudlet.decrNServerUsed();
                 if(re.getJobType()==1){
                     cloudlet.nJobsClass1-=1;
                 }else{
+                    //TODO sistemare l'errore qua porco dioooooooooooooooooooooooo
                     cloudlet.nJobsClass2-=1;
+                    /*if(cloudlet.nJobsClass2>0){
+                    }*/
                 }
             }else{
                 if(re.getJobType()==1){
@@ -334,16 +363,20 @@ public class Controller {
         //writeOnFile(clock, cloudlet, cloud);
         if(re instanceof ArrivalRequest){
             s.updateStatistic(clock, cloudlet, cloud, null);
-        }else{
+        }else if(re instanceof CompletedRequest){
             s.updateStatistic(clock, cloudlet, cloud, (CompletedRequest) re);
-        }
+        }/*else if(re instanceof PreemptedRequest){
+            //prendere le statistiche per preempted request
+            s.updateStatistic(clock, cloudlet, cloud, null, (PreemptedRequest) re);
+        }*/
     }
 
-    private int chooseWhichClassTwoJobRemove(){
+    private Job chooseWhichClassTwoJobRemove(){
         Collections.sort(type2JobRequestInCloudlet, new SortByCompletionTime());
-        int jobId = type2JobRequestInCloudlet.get(0).getJob().getId();
+        Job job = type2JobRequestInCloudlet.get(0).getJob();
+        job.getCompletedRequest().setToDelete(true);
         type2JobRequestInCloudlet.remove(0);
-        return jobId;
+        return job;
     }
 
     private boolean checkList(int jobTwoId){
@@ -356,8 +389,11 @@ public class Controller {
         return false;
     }
 
-    //rimuove job 2 dalla lista dopo che è stato re-inviato al cloud
-    private void removeFromList(int jobTwoId){
-        typeTwoJobToMove.remove(jobTwoId);
+    private void removeFromList(int jobId){
+        for(int i=0; i<type2JobRequestInCloudlet.size(); i++){
+            if(jobId == type2JobRequestInCloudlet.get(i).getJob().getId()){
+                type2JobRequestInCloudlet.remove(i);
+            }
+        }
     }
 }
