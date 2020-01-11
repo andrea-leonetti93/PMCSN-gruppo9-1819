@@ -11,7 +11,6 @@ import Util.RequestQueue;
 
 public class main {
 
-
     public static void main(String[] args) {
         //initialize variables
         Configuration.startConfiguration();
@@ -30,7 +29,7 @@ public class main {
         PrintStatistics printStatistics = PrintStatistics.getInstance();
         clock.currentTime = clock.start_time;
 
-        /* GENERO LE RICHIESTE DI ARRIVO*/
+        /* GENERATING ARRIVAL REQUESTS */
         RequestGenerator requestGenerator = new RequestGenerator();
         Thread t = new Thread(requestGenerator);
         t.start();
@@ -39,7 +38,7 @@ public class main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        /* GESTIONE DELLA PRIMA RICHIESTA*/
+        /* HANDLING OF THE REQUESTS */
         while (clock.currentTime < Configuration.STOP_TIME || requestQueue.size() > 0) {
             controller.getRequest();
         }
@@ -58,7 +57,8 @@ public class main {
         IoC ioC = IoC.getInstance();
         PrintStatistics printStatistics = PrintStatistics.getInstance();
         clock.currentTime = clock.start_time;
-        /* GENERO LE RICHIESTE DI ARRIVO*/
+
+        /* GENERATING ARRIVAL REQUESTS */
         RequestGenerator requestGenerator = new RequestGenerator();
         Thread t = new Thread(requestGenerator);
         t.start();
@@ -67,7 +67,7 @@ public class main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        /* GESTIONE DELLA PRIMA RICHIESTA*/
+        /* HANDLING OF THE REQUESTS */
         while(clock.currentTime < Configuration.STOP_TIME || requestQueue.size()>0){
             controller.getRequestAlgorithm2();
         }

@@ -33,7 +33,6 @@ public class Cloud extends Server {
     }
 
     public void handleRequest(ArrivalRequest r){
-        //TODO gestire la richiesta in arrrivo
         CompletedRequest cr;
         if(r.getJobType()==1){
             // it handle class1 request
@@ -76,5 +75,4 @@ public class Cloud extends Server {
         preemptedRequest.add(cr);
         requestQueue.add(cr);
     }
-
 }

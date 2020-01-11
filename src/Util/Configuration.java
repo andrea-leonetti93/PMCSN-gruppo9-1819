@@ -64,18 +64,6 @@ public class Configuration {
             HYPEREXPO = Boolean.parseBoolean(prop.getProperty("hyperexpo"));
             ALGORITHM = Integer.parseInt(prop.getProperty("algorithm"));
             SETUP_TIME = Double.parseDouble(prop.getProperty("setup_time"));
-            /*System.out.println("\n SEED: " + SEED);
-            System.out.println("\n LAMBDA1: " + LAMBDA1);
-            System.out.println("\n LAMBDA2: " + LAMBDA2);
-            System.out.println("\n MU1CLET: " + MU1CLET);
-            System.out.println("\n MU2CLET: " + MU2CLET);
-            System.out.println("\n MU1CLOUD: " + MU1CLOUD);
-            System.out.println("\n MU2CLOUD: " + MU2CLOUD);
-            System.out.println("\n N: " + N);
-            System.out.println("\n S: " + S);
-            System.out.println("\n STOP_TIME: " + STOP_TIME);
-            System.out.println("\n PROB_LAMBDA1: " + PROB_LAMBDA1);
-            System.out.println("\n PROB_LAMBDA2: " + PROB_LAMBDA2);*/
         } catch (
                 IOException ex) {
             ex.printStackTrace();

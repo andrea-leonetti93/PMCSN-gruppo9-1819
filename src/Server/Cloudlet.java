@@ -96,20 +96,4 @@ public class Cloudlet extends Server {
         }
     }
     ///////////////////////////////////
-
-    public void incrNServerUsed(){
-        nServerUsed++;
-    }
-
-    public void decrNServerUsed(){
-        nServerUsed--;
-    }
-
-    public int getnServerUsed() {
-        return nServerUsed;
-    }
-
-    public void setnServerUsed(int nServerUsed) {
-        this.nServerUsed = nServerUsed;
-    }
 }

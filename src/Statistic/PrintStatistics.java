@@ -32,13 +32,13 @@ public class PrintStatistics {
     private FileWriter serviceTimeClass2CletFile;
     private FileWriter serviceTimeClass1CloudFile;
     private FileWriter serviceTimeClass2CloudFile;
-    private String path1;
-    private String path2;
-    private String path3;
     private static int algorithm = Configuration.ALGORITHM;
     private static boolean hyperexpo = Configuration.HYPEREXPO;
 
     private PrintStatistics(){
+        String path1;
+        String path2;
+        String path3;
         if(algorithm == 1){
             path1 = System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "Population";
             path2 = System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "ServiceTime";

@@ -6,7 +6,6 @@ public class BatchMeans {
     private Double current_batchMean = 0.0;
     private Welford wMean;
     private static final int batchMeanDim = 256;
-    private int counter = 0;
 
     public BatchMeans() {
         wMean = new Welford();

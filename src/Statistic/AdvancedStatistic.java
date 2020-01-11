@@ -151,17 +151,6 @@ public class AdvancedStatistic extends Statistic {
         }
     }
 
-    /*public void updateStatisticPreemptedReq(PreemptedRequest preempted){
-        cloudServiceMeanTime.computeBatchMeans(preempted.getJob().getServiceTime());
-        if(cloudServiceMeanTime.getwMean().getN()%256==0){
-            ioC.setIocCloudServiceMeanTime(cloudServiceMeanTime.getBatchMeanForIoC());
-        }
-        meanServiceTimeJobClassTwoCloud.computeBatchMeans(preempted.getJob().getServiceTime());
-        if(meanServiceTimeJobClassTwoCloud.getwMean().getN()%256==0){
-                ioC.addIocMeanServiceTimeJobClassTwoCloud(meanServiceTimeJobClassTwoCloud.getBatchMeanForIoC());
-        }
-    }*/
-
     public BatchMeans getCloudMeanPopulation(){
         return cloudMeanPopulation;
     }

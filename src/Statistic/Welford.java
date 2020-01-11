@@ -1,8 +1,6 @@
 package Statistic;
 
 
-import java.util.ArrayList;
-
 public class Welford {
 
     private double LOC = 0.95;

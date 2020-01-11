@@ -249,31 +249,15 @@ public class Controller {
     public void getRequestAlgorithm2() {
         Request re = requestQueue.poll();
         if(re != null){
-            //TODO aggiornare qui clock globale
             clock.currentTime = re.getRequestTime();
-            //System.out.println("To handle:" + re);
-            //System.out.println("Current time:" + clock.currentTime);
-            //TODO cambiare questo controllo che è sbagliato!!!!!!!
-            /*if(re instanceof ArrivalRequest){
-                handleRequest(re);
-            }else if(re.getJobType() == 1){
-                handleRequest(re);
-            }
-            int jobId = re.getJob().getId();
-            if(re instanceof CompletedRequest && ((CompletedRequest) re).isToDelete()){
-                preemptedRequests.add(jobId);
-            }else{
-                handleRequest(re);
-            }*/
-            int jobId = re.getJob().getId();
+            //TODO CONTROLLARE SE QUESTO CONTROLLO FUNZIONA!!!!!!!
             if(typeTwoJobToMove.size()!=0 && re instanceof CompletedRequest && ((CompletedRequest) re).isToDelete()){
                 // handle two queues
-                //int jobId = re.getJob().getId();
+                int jobId = re.getJob().getId();
                 if(checkList(jobId)){
                     // the job is removed in checklist function
                     // removeFromList(jobId);
                     // update the job elaboration time and send it to the cloud
-                    //cloud.handleRequestFromCloudlet((CompletedRequest) re);
                     preemptedRequests.add(jobId);
                     //System.out.println("Job ID: " + jobId + "preempted\n");
                 }/*else{
@@ -287,7 +271,6 @@ public class Controller {
                 handleRequest(re);
             }
         }
-        //clock.incrCurrentTime();
     }
 
     private void handleRequest(Request re){
@@ -311,7 +294,7 @@ public class Controller {
                     cloudlet.nJobsClass2-=1;
                     cloudlet.completedRequests--;
                     cloudlet.completedReqJobsClass2-=1;
-                    //gestire jobclassone/two
+                    //handle jobclassone/two
                     //nJobClass1 and completedRequest are updating in the cloudlet class
                     cloudlet.handleRequest((ArrivalRequest) re);
                     cloud.handleRequestFromCloudlet(job);
