@@ -1,7 +1,6 @@
 package Statistic;
 
 import Request.CompletedRequest;
-import Request.PreemptedRequest;
 import Server.Cloud;
 import Server.Cloudlet;
 import Util.Clock;

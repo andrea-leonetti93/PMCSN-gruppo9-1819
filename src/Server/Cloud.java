@@ -3,7 +3,6 @@ package Server;
 import Distribution.Distribution;
 import Request.ArrivalRequest;
 import Request.CompletedRequest;
-import Request.PreemptedRequest;
 import Util.Configuration;
 import Util.Job;
 import Util.RequestQueue;
@@ -39,7 +38,6 @@ public class Cloud extends Server {
         if(r.getJobType()==1){
             // it handle class1 request
             distribution.selectStream(3);
-            //TODO prendi valori da config file
             serviceTimeMu1= distribution.exponential(1.0/mu1);
             r.getJob().setServiceTime(serviceTimeMu1);
             cr = new CompletedRequest(r.getJob());
@@ -48,7 +46,6 @@ public class Cloud extends Server {
         }else{
             // it handle class2 request
             distribution.selectStream(4);
-            //TODO prendi valori da config file
             serviceTimeMu2 = distribution.exponential(1.0/mu2);
             r.getJob().setServiceTime(serviceTimeMu2);
             cr = new CompletedRequest(r.getJob());
@@ -63,6 +60,7 @@ public class Cloud extends Server {
     // handle request from cloudlet to cloud second algorithm
     public void handleRequestFromCloudlet(Job job){
         CompletedRequest cr;
+        //
         distribution.selectStream(4);
         serviceTimeMu2 = distribution.exponential(1.0/mu2);
         // setting the new completion value of the job + the setup time for moving the job from the cloudlet to the cloud

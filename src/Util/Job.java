@@ -4,8 +4,8 @@ import Request.CompletedRequest;
 
 public class Job {
 
-    public int id;
-    public int type;
+    private int id;
+    private int type;
     private double arrivalTime;
     private double serviceTime = 0.0;
     private CompletedRequest completedRequest;
@@ -55,5 +55,9 @@ public class Job {
 
     public void setCompletedRequest(CompletedRequest completedRequest) {
         this.completedRequest = completedRequest;
+    }
+
+    public int getType() {
+        return type;
     }
 }

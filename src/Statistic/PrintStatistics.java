@@ -35,13 +35,19 @@ public class PrintStatistics {
     private String path1;
     private String path2;
     private String path3;
-
+    private static int algorithm = Configuration.ALGORITHM;
     private static boolean hyperexpo = Configuration.HYPEREXPO;
 
     private PrintStatistics(){
-        path1 = System.getProperty("user.dir") + File.separator + "stat" + File.separator + "Population";
-        path2 = System.getProperty("user.dir") + File.separator + "stat" + File.separator + "ServiceTime";
-        path3 = System.getProperty("user.dir") + File.separator + "stat" + File.separator + "Throughput";
+        if(algorithm == 1){
+            path1 = System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "Population";
+            path2 = System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "ServiceTime";
+            path3 = System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "Throughput";
+        }else{
+            path1 = System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "Population";
+            path2 = System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "ServiceTime";
+            path3 = System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "Throughput";
+        }
         try{
             if(hyperexpo){
                 populationFile = new FileWriter(path1 + File.separator + "Batch_PopulationHyper.csv");

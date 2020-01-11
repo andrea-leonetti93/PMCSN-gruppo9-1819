@@ -1,7 +1,6 @@
 package Statistic;
 
 import Request.CompletedRequest;
-import Request.PreemptedRequest;
 import Server.Cloud;
 import Server.Cloudlet;
 import Util.Clock;
@@ -37,8 +36,8 @@ public class BaseStatistic extends Statistic {
     private Welford meanServiceTimeJobClassTwoCloud;
     private FileWriter fileWriter;
     private static boolean hyperexpo = Configuration.HYPEREXPO;
+    private static int algorithm = Configuration.ALGORITHM;
     private static BaseStatistic baseStatistic = null;
-    private String path;
 
     public static BaseStatistic getInstance(){
         if(baseStatistic == null){
@@ -48,7 +47,12 @@ public class BaseStatistic extends Statistic {
     }
 
     private BaseStatistic() {
-        path = System.getProperty("user.dir") + File.separator + "stat" + File.separator + "BaseStatistics";
+        String path;
+        if(algorithm == 1){
+            path = System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "BaseStatistics";
+        }else{
+            path = System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "BaseStatistics";
+        }
         this.cloudletMeanPopulation = new Welford();
         this.cloudMeanPopulation = new Welford();
         this.globalMeanPopulation = new Welford();
@@ -72,7 +76,6 @@ public class BaseStatistic extends Statistic {
         this.meanServiceTimeJobClassTwoCloud = new Welford();
         try{
             if(hyperexpo){
-
                 fileWriter = new FileWriter(path + File.separator + "StatisticsHyperexpo.csv");
             }else{
                 fileWriter = new FileWriter(path + File.separator + "StatisticsExpo.csv");

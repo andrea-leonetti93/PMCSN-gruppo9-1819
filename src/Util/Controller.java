@@ -4,10 +4,6 @@ import Request.*;
 import Server.Cloud;
 import Server.Cloudlet;
 import Statistic.*;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,8 +21,6 @@ public class Controller {
     private List<Integer> preemptedRequests;
     public ArrayList<Request> type2JobRequestInCloudlet;
     public List<Integer> typeTwoJobToMove;
-    private int cloudCompletedRequests;
-    private int cloudletCompletedRequests;
     private int N = Configuration.N;
     private static boolean batch_means = Configuration.BATCH_MEANS;
     //private static boolean hyperexpo = Configuration.HYPEREXPO;
@@ -343,14 +337,11 @@ public class Controller {
             completedRequests.add((CompletedRequest) re);
             //TODO gestire la richiesta prelazionata che deve dare come instanceof quella del cloud
             if(((CompletedRequest) re).getServer() instanceof Cloudlet){
-                //cloudlet.decrNServerUsed();
                 if(re.getJobType()==1){
                     cloudlet.nJobsClass1-=1;
                 }else{
-                    //TODO sistemare l'errore qua porco dioooooooooooooooooooooooo
+                    //TODO sistemare l'errore qua
                     cloudlet.nJobsClass2-=1;
-                    /*if(cloudlet.nJobsClass2>0){
-                    }*/
                 }
             }else{
                 if(re.getJobType()==1){
@@ -365,10 +356,7 @@ public class Controller {
             s.updateStatistic(clock, cloudlet, cloud, null);
         }else if(re instanceof CompletedRequest){
             s.updateStatistic(clock, cloudlet, cloud, (CompletedRequest) re);
-        }/*else if(re instanceof PreemptedRequest){
-            //prendere le statistiche per preempted request
-            s.updateStatistic(clock, cloudlet, cloud, null, (PreemptedRequest) re);
-        }*/
+        }
     }
 
     private Job chooseWhichClassTwoJobRemove(){

@@ -27,8 +27,7 @@ public abstract class Request implements Comparable<Request> {
     }
 
     public int getJobType(){
-        //TODO cambia type come private
-        return job.type;
+        return job.getType();
     }
 
     public void setJob(Job job) {

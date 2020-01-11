@@ -2,4 +2,5 @@
 out
 *.iml
 src/**/*.csv
-stat
+stat1
+stat2

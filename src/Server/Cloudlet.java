@@ -21,8 +21,7 @@ public class Cloudlet extends Server {
     private double uniform;
     public int allClass2JobsArrivedToCLoudlet = 0;
 
-    private Cloudlet() {
-    }
+    private Cloudlet() {}
 
     public static Cloudlet getInstance(){
         if(cloudletInstance == null){
