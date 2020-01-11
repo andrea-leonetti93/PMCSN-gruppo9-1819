@@ -145,104 +145,104 @@ public class Controller {
             AdvancedStatistic as = (AdvancedStatistic) s;
             //population
             System.out.println("\nNumb mean job Cloud: " + as.getCloudMeanPopulation().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getCloudMeanPopulation().getwMean().getStDeviation());
+                    ", dev: " + as.getCloudMeanPopulation().getwMean().getVariance());
             System.out.println("\nNumb mean job Cloudlet: " + as.getCloudletMeanPopulation().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getCloudletMeanPopulation().getwMean().getStDeviation());
+                    ", dev: " + as.getCloudletMeanPopulation().getwMean().getVariance());
             System.out.println("\nNumb mean job Global: " + as.getGlobalMeanPopulation().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getGlobalMeanPopulation().getwMean().getStDeviation());
+                    ", dev: " + as.getGlobalMeanPopulation().getwMean().getVariance());
             //service time
             System.out.println("\nMean service time Cloud: " + as.getCloudServiceMeanTime().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getCloudServiceMeanTime().getwMean().getStDeviation());
+                    ", dev: " + as.getCloudServiceMeanTime().getwMean().getVariance());
             System.out.println("\nMean service time Cloudlet: " + as.getCloudletServiceMeanTime().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getCloudletServiceMeanTime().getwMean().getStDeviation());
+                    ", dev: " + as.getCloudletServiceMeanTime().getwMean().getVariance());
             System.out.println("\nMean service time Global: " + as.getGlobalServiceMeanTime().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getGlobalServiceMeanTime().getwMean().getStDeviation());
+                    ", dev: " + as.getGlobalServiceMeanTime().getwMean().getVariance());
             //throughput
             System.out.println("\nMean throughput Cloud: " + as.getCloudThroughputMean().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getCloudThroughputMean().getwMean().getStDeviation());
+                    ", dev: " + as.getCloudThroughputMean().getwMean().getVariance());
             System.out.println("\nMean throughput Cloudlet: " + as.getCloudletThroughputMean().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getCloudletThroughputMean().getwMean().getStDeviation());
+                    ", dev: " + as.getCloudletThroughputMean().getwMean().getVariance());
             System.out.println("\nMean throughput Global: " + as.getGlobalThroughputMean().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getGlobalThroughputMean().getwMean().getStDeviation());
+                    ", dev: " + as.getGlobalThroughputMean().getwMean().getVariance());
             // statistics on each class job
             // mean population
             System.out.println("\nMean population job C1 Cloudlet: " + as.getMeanPopulationJobClassOneClet().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getMeanPopulationJobClassOneClet().getwMean().getStDeviation());
+                    ", dev: " + as.getMeanPopulationJobClassOneClet().getwMean().getVariance());
             System.out.println("\nMean population job C2 Cloudlet: " + as.getMeanPopulationJobClassTwoClet().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getMeanPopulationJobClassTwoClet().getwMean().getStDeviation());
+                    ", dev: " + as.getMeanPopulationJobClassTwoClet().getwMean().getVariance());
             System.out.println("\nMean population job C1 Cloud: " + as.getMeanPopulationJobClassOneCloud().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getMeanPopulationJobClassOneCloud().getwMean().getStDeviation());
+                    ", dev: " + as.getMeanPopulationJobClassOneCloud().getwMean().getVariance());
             System.out.println("\nMean population job C2 Cloud: " + as.getMeanPopulationJobClassTwoCloud().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getMeanPopulationJobClassTwoCloud().getwMean().getStDeviation());
+                    ", dev: " + as.getMeanPopulationJobClassTwoCloud().getwMean().getVariance());
             // mean throughput
             System.out.println("\nMean throughput job C1 Cloudlet: " + as.getMeanThroughputJobClassOneClet().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getMeanThroughputJobClassOneClet().getwMean().getStDeviation());
+                    ", dev: " + as.getMeanThroughputJobClassOneClet().getwMean().getVariance());
             System.out.println("\nMean throughput job C2 Cloudlet: " + as.getMeanThroughputJobClassTwoClet().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getMeanThroughputJobClassTwoClet().getwMean().getStDeviation());
+                    ", dev: " + as.getMeanThroughputJobClassTwoClet().getwMean().getVariance());
             System.out.println("\nMean throughput job C1 Cloud: " + as.getMeanThroughputJobClassOneCloud().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getMeanThroughputJobClassOneCloud().getwMean().getStDeviation());
+                    ", dev: " + as.getMeanThroughputJobClassOneCloud().getwMean().getVariance());
             System.out.println("\nMean throughput job C2 Cloud: " + as.getMeanThroughputJobClassTwoCloud().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getMeanThroughputJobClassTwoCloud().getwMean().getStDeviation());
+                    ", dev: " + as.getMeanThroughputJobClassTwoCloud().getwMean().getVariance());
             // mean service time
             System.out.println("\nMean Service time job C1 Cloudlet: " + as.getMeanServiceTimeJobClassOneClet().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getMeanServiceTimeJobClassOneClet().getwMean().getStDeviation());
+                    ", dev: " + as.getMeanServiceTimeJobClassOneClet().getwMean().getVariance());
             System.out.println("\nMean Service time job C2 Cloudlet: " + as.getMeanServiceTimeJobClassTwoClet().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getMeanServiceTimeJobClassTwoClet().getwMean().getStDeviation());
+                    ", dev: " + as.getMeanServiceTimeJobClassTwoClet().getwMean().getVariance());
             System.out.println("\nMean Service time job C1 Cloud: " + as.getMeanServiceTimeJobClassOneCloud().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getMeanServiceTimeJobClassOneCloud().getwMean().getStDeviation());
+                    ", dev: " + as.getMeanServiceTimeJobClassOneCloud().getwMean().getVariance());
             System.out.println("\nMean Service time job C2 Cloud: " + as.getMeanServiceTimeJobClassTwoCloud().getwMean().getCurrent_mean() +
-                    ", dev: " + as.getMeanServiceTimeJobClassTwoCloud().getwMean().getStDeviation());
+                    ", dev: " + as.getMeanServiceTimeJobClassTwoCloud().getwMean().getVariance());
         }else{
             BaseStatistic bs = (BaseStatistic) s;
             //population
             System.out.println("\nNumb mean job Cloud: " + bs.getCloudMeanPopulation().getCurrent_mean() +
-                    ", dev: " + bs.getCloudMeanPopulation().getStDeviation());
+                    ", dev: " + bs.getCloudMeanPopulation().getVariance());
             System.out.println("\nNumb mean job Cloudlet: " + bs.getCloudletMeanPopulation().getCurrent_mean() +
-                    ", dev: " + bs.getCloudletMeanPopulation().getStDeviation());
+                    ", dev: " + bs.getCloudletMeanPopulation().getVariance());
             System.out.println("\nNumb mean job Global: " + bs.getGlobalMeanPopulation().getCurrent_mean() +
-                    ", dev: " + bs.getGlobalMeanPopulation().getStDeviation());
+                    ", dev: " + bs.getGlobalMeanPopulation().getVariance());
             //service time
             System.out.println("\nMean service time Cloud: " + bs.getCloudServiceMeanTime().getCurrent_mean() +
-                    ", dev: " + bs.getCloudServiceMeanTime().getStDeviation());
+                    ", dev: " + bs.getCloudServiceMeanTime().getVariance());
             System.out.println("\nMean service time Cloudlet: " + bs.getCloudletServiceMeanTime().getCurrent_mean() +
-                    ", dev: " + bs.getCloudletServiceMeanTime().getStDeviation());
+                    ", dev: " + bs.getCloudletServiceMeanTime().getVariance());
             System.out.println("\nMean service time Global: " + bs.getGlobalServiceMeanTime().getCurrent_mean() +
-                    ", dev: " + bs.getGlobalServiceMeanTime().getStDeviation());
+                    ", dev: " + bs.getGlobalServiceMeanTime().getVariance());
             //throughput
             System.out.println("\nMean throughput Cloud: " + bs.getCloudThroughputMean().getCurrent_mean() +
-                    ", dev: " + bs.getCloudThroughputMean().getStDeviation());
+                    ", dev: " + bs.getCloudThroughputMean().getVariance());
             System.out.println("\nMean throughput Cloudlet: " + bs.getCloudletThroughputMean().getCurrent_mean() +
-                    ", dev: " + bs.getCloudletThroughputMean().getStDeviation());
+                    ", dev: " + bs.getCloudletThroughputMean().getVariance());
             System.out.println("\nMean throughput Global: " + bs.getGlobalThroughputMean().getCurrent_mean() +
-                    ", dev: " + bs.getGlobalThroughputMean().getStDeviation());
+                    ", dev: " + bs.getGlobalThroughputMean().getVariance());
             // statistics on each class job
             // mean population
             System.out.println("\nMean population job C1 Cloudlet: " + bs.getMeanPopulationJobClassOneClet().getCurrent_mean() +
-                    ", dev: " + bs.getMeanPopulationJobClassOneClet().getStDeviation());
+                    ", dev: " + bs.getMeanPopulationJobClassOneClet().getVariance());
             System.out.println("\nMean population job C2 Cloudlet: " + bs.getMeanPopulationJobClassTwoClet().getCurrent_mean() +
-                    ", dev: " + bs.getMeanPopulationJobClassTwoClet().getStDeviation());
+                    ", dev: " + bs.getMeanPopulationJobClassTwoClet().getVariance());
             System.out.println("\nMean population job C1 Cloud: " + bs.getMeanPopulationJobClassOneCloud().getCurrent_mean() +
-                    ", dev: " + bs.getMeanPopulationJobClassOneCloud().getStDeviation());
+                    ", dev: " + bs.getMeanPopulationJobClassOneCloud().getVariance());
             System.out.println("\nMean population job C2 Cloud: " + bs.getMeanPopulationJobClassTwoCloud().getCurrent_mean() +
-                    ", dev: " + bs.getMeanPopulationJobClassTwoCloud().getStDeviation());
+                    ", dev: " + bs.getMeanPopulationJobClassTwoCloud().getVariance());
             // mean throughput
             System.out.println("\nMean throughput job C1 Cloudlet: " + bs.getMeanThroughputJobClassOneClet().getCurrent_mean() +
-                    ", dev: " + bs.getMeanThroughputJobClassOneClet().getStDeviation());
+                    ", dev: " + bs.getMeanThroughputJobClassOneClet().getVariance());
             System.out.println("\nMean throughput job C2 Cloudlet: " + bs.getMeanThroughputJobClassTwoClet().getCurrent_mean() +
-                    ", dev: " + bs.getMeanThroughputJobClassTwoClet().getStDeviation());
+                    ", dev: " + bs.getMeanThroughputJobClassTwoClet().getVariance());
             System.out.println("\nMean throughput job C1 Cloud: " + bs.getMeanThroughputJobClassOneCloud().getCurrent_mean() +
-                    ", dev: " + bs.getMeanThroughputJobClassOneCloud().getStDeviation());
+                    ", dev: " + bs.getMeanThroughputJobClassOneCloud().getVariance());
             System.out.println("\nMean throughput job C2 Cloud: " + bs.getMeanThroughputJobClassTwoCloud().getCurrent_mean() +
-                    ", dev: " + bs.getMeanThroughputJobClassTwoCloud().getStDeviation());
+                    ", dev: " + bs.getMeanThroughputJobClassTwoCloud().getVariance());
             // mean service time
             System.out.println("\nMean Service time job C1 Cloudlet: " + bs.getMeanServiceTimeJobClassOneClet().getCurrent_mean() +
-                    ", dev: " + bs.getMeanServiceTimeJobClassOneClet().getStDeviation());
+                    ", dev: " + bs.getMeanServiceTimeJobClassOneClet().getVariance());
             System.out.println("\nMean Service time job C2 Cloudlet: " + bs.getMeanServiceTimeJobClassTwoClet().getCurrent_mean() +
-                    ", dev: " + bs.getMeanServiceTimeJobClassTwoClet().getStDeviation());
+                    ", dev: " + bs.getMeanServiceTimeJobClassTwoClet().getVariance());
             System.out.println("\nMean Service time job C1 Cloud: " + bs.getMeanServiceTimeJobClassOneCloud().getCurrent_mean() +
-                    ", dev: " + bs.getMeanServiceTimeJobClassOneCloud().getStDeviation());
+                    ", dev: " + bs.getMeanServiceTimeJobClassOneCloud().getVariance());
             System.out.println("\nMean Service time job C2 Cloud: " + bs.getMeanServiceTimeJobClassTwoCloud().getCurrent_mean() +
-                    ", dev: " + bs.getMeanServiceTimeJobClassTwoCloud().getStDeviation());
+                    ", dev: " + bs.getMeanServiceTimeJobClassTwoCloud().getVariance());
         }
     }
 
