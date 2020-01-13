@@ -49,6 +49,34 @@ public class BaseStatistic extends Statistic {
 
     private BaseStatistic() {
         String path;
+        File dir1 = new File(System.getProperty("user.dir") + File.separator + "stat1");
+        if (!dir1.exists()) {
+            if (dir1.mkdir()) {
+                System.out.println("Directory stat1 is created!");
+                File baseDir = new File(System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "BaseStatistics");
+                if(baseDir.mkdir()){
+                    System.out.println("Directory BaseStatistics in stat1 created");
+                }else{
+                    System.out.println("Failed to create directory BaseStatistics!");
+                }
+            } else {
+                System.out.println("Failed to create directory stat1!");
+            }
+        }
+        File dir2 = new File(System.getProperty("user.dir") + File.separator + "stat2");
+        if(!dir2.exists()){
+            if (dir2.mkdir()) {
+                System.out.println("Directory stat2 is created!");
+                File baseDir = new File(System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "BaseStatistics");
+                if(baseDir.mkdir()){
+                    System.out.println("Directory BaseStatistics in stat2 created");
+                }else{
+                    System.out.println("Failed to create directory BaseStatistics!");
+                }
+            } else {
+                System.out.println("Failed to create directory stat2!");
+            }
+        }
         if(algorithm == 1){
             path = System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "BaseStatistics";
         }else{

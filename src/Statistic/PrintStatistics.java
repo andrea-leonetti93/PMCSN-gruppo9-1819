@@ -40,6 +40,7 @@ public class PrintStatistics {
         String path1;
         String path2;
         String path3;
+        CreateDirectory();
         if(algorithm == 1){
             path1 = System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "Population";
             path2 = System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "ServiceTime";
@@ -142,6 +143,61 @@ public class PrintStatistics {
             printStatistics = new PrintStatistics();
 
         return printStatistics;
+    }
+
+    private void CreateDirectory(){
+        File dir1 = new File(System.getProperty("user.dir") + File.separator + "stat1");
+        if (!dir1.exists()) {
+            if (dir1.mkdir()) {
+                System.out.println("Directory stat1 is created!");
+                File popDir = new File(System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "Population");
+                if(popDir.mkdir()){
+                    System.out.println("Directory Population in stat1 created");
+                }else{
+                    System.out.println("Failed to create directory Population!");
+                }
+                File thrDir = new File(System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "Throughput");
+                if(thrDir.mkdir()){
+                    System.out.println("Directory Throughput in stat1 created");
+                }else{
+                    System.out.println("Failed to create directory Throughput!");
+                }
+                File serDir = new File(System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "ServiceTime");
+                if(serDir.mkdir()){
+                    System.out.println("Directory ServiceTime in stat1 created");
+                }else{
+                    System.out.println("Failed to create directory ServiceTime!");
+                }
+            } else {
+                System.out.println("Failed to create directory stat1!");
+            }
+        }
+        File dir2 = new File(System.getProperty("user.dir") + File.separator + "stat2");
+        if(!dir2.exists()){
+            if(dir2.mkdir()){
+                System.out.println("Directory stat2 is created!");
+                File popDir = new File(System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "Population");
+                if(popDir.mkdir()){
+                    System.out.println("Directory Population in stat2 created");
+                }else{
+                    System.out.println("Failed to create directory Population!");
+                }
+                File thrDir = new File(System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "Throughput");
+                if(thrDir.mkdir()){
+                    System.out.println("Directory Throughput in stat2 created");
+                }else{
+                    System.out.println("Failed to create directory Throughput!");
+                }
+                File serDir = new File(System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "ServiceTime");
+                if(serDir.mkdir()){
+                    System.out.println("Directory ServiceTime in stat2 created");
+                }else{
+                    System.out.println("Failed to create directory ServiceTime!");
+                }
+            }else{
+                System.out.println("Failed to create directory stat2!");
+            }
+        }
     }
 
     private void writePopulationStatistics() {
