@@ -31,6 +31,7 @@ public class AdvancedStatistic extends Statistic {
     private BatchMeans meanServiceTimeJobClassTwoClet;
     private BatchMeans meanServiceTimeJobClassOneCloud;
     private BatchMeans meanServiceTimeJobClassTwoCloud;
+    private BatchMeans meanServiceTimeJobClassTwoPreempted;
     private int counter = 1;
 
     public static AdvancedStatistic getInstance(){
@@ -62,6 +63,7 @@ public class AdvancedStatistic extends Statistic {
         this.meanServiceTimeJobClassTwoClet = new BatchMeans();
         this.meanServiceTimeJobClassOneCloud = new BatchMeans();
         this.meanServiceTimeJobClassTwoCloud = new BatchMeans();
+        this.meanServiceTimeJobClassTwoPreempted = new BatchMeans();
     }
 
     @Override
@@ -126,6 +128,13 @@ public class AdvancedStatistic extends Statistic {
                 meanServiceTimeJobClassTwoCloud.computeBatchMeans(request.getJob().getServiceTime());
                 if(meanServiceTimeJobClassTwoCloud.getwMean().getN()%256==0){
                     ioC.addIocMeanServiceTimeJobClassTwoCloud(meanServiceTimeJobClassTwoCloud.getBatchMeanForIoC());
+                }
+                // if the request is preempted then update the mean value of the service time in the cloud
+                if(request.isPreempted()){
+                    meanServiceTimeJobClassTwoPreempted.computeBatchMeans(request.getJob().getServiceTime());
+                    if(meanServiceTimeJobClassTwoPreempted.getwMean().getN()%256==0){
+                        ioC.addIocMeanServiceTimeJobClassTwoPreempted(meanServiceTimeJobClassTwoPreempted.getBatchMeanForIoC());
+                    }
                 }
             }
         }else{
@@ -233,5 +242,9 @@ public class AdvancedStatistic extends Statistic {
 
     public BatchMeans getMeanServiceTimeJobClassTwoCloud() {
         return meanServiceTimeJobClassTwoCloud;
+    }
+
+    public BatchMeans getMeanServiceTimeJobClassTwoPreempted() {
+        return meanServiceTimeJobClassTwoPreempted;
     }
 }

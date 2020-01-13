@@ -34,6 +34,7 @@ public class BaseStatistic extends Statistic {
     private Welford meanServiceTimeJobClassTwoClet;
     private Welford meanServiceTimeJobClassOneCloud;
     private Welford meanServiceTimeJobClassTwoCloud;
+    private Welford meanServiceTimeJobClassTwoPreempted;
     private FileWriter fileWriter;
     private static boolean hyperexpo = Configuration.HYPEREXPO;
     private static int algorithm = Configuration.ALGORITHM;
@@ -74,6 +75,7 @@ public class BaseStatistic extends Statistic {
         this.meanServiceTimeJobClassTwoClet = new Welford();
         this.meanServiceTimeJobClassOneCloud = new Welford();
         this.meanServiceTimeJobClassTwoCloud = new Welford();
+        this.meanServiceTimeJobClassTwoPreempted = new Welford();
         try{
             if(hyperexpo){
                 fileWriter = new FileWriter(path + File.separator + "StatisticsHyperexpo.csv");
@@ -102,6 +104,7 @@ public class BaseStatistic extends Statistic {
             fileWriter.append("MeanSTimeJobClassTwoClet;");
             fileWriter.append("MeanSTimeJobClassOneCloud;");
             fileWriter.append("MeanSTimeJobClassTwoCloud;");
+            fileWriter.append("MeanSTimeJobClassTwoPreempted;");
             fileWriter.append("\n");
         }catch (Exception e){
             System.out.println("Exception: " + e.getMessage());
@@ -154,6 +157,8 @@ public class BaseStatistic extends Statistic {
         sb.append(";");
         sb.append(meanServiceTimeJobClassTwoCloud.getCurrent_mean());
         sb.append(";");
+        sb.append(meanServiceTimeJobClassTwoPreempted.getCurrent_mean());
+        sb.append(";");
         sb.append("\n");
         try {
             fileWriter.append(sb.toString());
@@ -181,6 +186,10 @@ public class BaseStatistic extends Statistic {
                     meanServiceTimeJobClassOneCloud.updateWelfordMean(request.getJob().getServiceTime());
                 } else {
                     meanServiceTimeJobClassTwoCloud.updateWelfordMean(request.getJob().getServiceTime());
+                    // if the request is preempted then update the mean value of the service time in the cloud
+                    if(request.isPreempted()){
+                        meanServiceTimeJobClassTwoPreempted.updateWelfordMean(request.getJob().getServiceTime());
+                    }
                 }
             } else {
                 cloudletServiceMeanTime.updateWelfordMean(request.getJob().getServiceTime());
@@ -288,5 +297,9 @@ public class BaseStatistic extends Statistic {
 
     public Welford getMeanServiceTimeJobClassTwoCloud(){
         return meanServiceTimeJobClassTwoCloud;
+    }
+
+    public Welford getMeanServiceTimeJobClassTwoPreempted() {
+        return meanServiceTimeJobClassTwoPreempted;
     }
 }

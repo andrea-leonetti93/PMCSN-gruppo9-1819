@@ -1,13 +1,11 @@
 package Statistic;
 
-
 public class Welford {
 
     private double LOC = 0.95;
     private double current_mean = 0.0;
     private double current_var;
     private double n = 0.0;
-
 
     public void updateWelfordMean(double elem){
         n++;

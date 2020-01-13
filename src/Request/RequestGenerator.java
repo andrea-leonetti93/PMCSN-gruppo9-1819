@@ -65,18 +65,5 @@ public class RequestGenerator implements Runnable{
         generateRequest();
     }
 
-    public static void main(String[] args) {
-        Configuration.getInstance();
-        Thread t = new Thread(new RequestGenerator());
-        RequestQueue.getInstance().printQueue();
-        t.start();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        RequestQueue.getInstance().printQueue();
-
-    }
 }
 

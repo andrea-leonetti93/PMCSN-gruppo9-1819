@@ -1,6 +1,7 @@
 package Statistic;
 
 import Distribution.Rvms;
+import Util.Configuration;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,9 +11,12 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class IoC {
+
     private static IoC instance = null;
     private static double LOC = 0.95;
     private Rvms rvms = new Rvms();
+    private static int algorithm = Configuration.ALGORITHM;
+    // global statistics
     private ArrayList<Double> iocCloudMeanPopulation = new ArrayList<>();
     private ArrayList<Double> iocCloudletMeanPopulation = new ArrayList<>();
     private ArrayList<Double> iocGlobalMeanPopulation = new ArrayList<>();
@@ -35,6 +39,7 @@ public class IoC {
     private ArrayList<Double> iocMeanServiceTimeJobClassTwoClet = new ArrayList<>();
     private ArrayList<Double> iocMeanServiceTimeJobClassOneCloud = new ArrayList<>();
     private ArrayList<Double> iocMeanServiceTimeJobClassTwoCloud = new ArrayList<>();
+    private ArrayList<Double> iocMeanServiceTimeJobClassTwoPreempted = new ArrayList<>();
 
     private IoC(){};
 
@@ -95,6 +100,7 @@ public class IoC {
         double[] confIntSJ2CL = computeIoC(iocMeanServiceTimeJobClassTwoClet);
         double[] confIntSJ1C = computeIoC(iocMeanServiceTimeJobClassOneCloud);
         double[] confIntSJ2C = computeIoC(iocMeanServiceTimeJobClassTwoCloud);
+        double[] confIntSJ2P = computeIoC(iocMeanServiceTimeJobClassTwoPreempted);
 
         System.out.println("\n INTERVALLI DI CONFIDENZA ");
 
@@ -124,6 +130,9 @@ public class IoC {
         System.out.println("\nService mean time job class 2 Cloudlet: " + confIntSJ2CL[0] + ", width: " + confIntSJ2CL[1]);
         System.out.println("\nService mean time job class 1 Cloud: " + confIntSJ1C[0] + ", width: " + confIntSJ1C[1]);
         System.out.println("\nService mean time job class 2 Cloud: " + confIntSJ2C[0] + ", width: " + confIntSJ2C[1]);
+        if(algorithm == 2){
+            System.out.println("\nService mean time job class 2 Preempted: " + confIntSJ2P[0] + ", width: " + confIntSJ2P[1]);
+        }
     }
 
     public void setIocCloudMeanPopulation(double value) {
@@ -210,6 +219,10 @@ public class IoC {
         this.iocMeanServiceTimeJobClassTwoCloud.add(value);
     }
 
+    public void addIocMeanServiceTimeJobClassTwoPreempted(double value) {
+        this.iocMeanServiceTimeJobClassTwoPreempted.add(value);
+    }
+
     public ArrayList<Double> getIocCloudMeanPopulation() {
         return iocCloudMeanPopulation;
     }
@@ -294,58 +307,9 @@ public class IoC {
         return iocMeanServiceTimeJobClassTwoCloud;
     }
 
-    public static void main(String[] args) {
-        long   n    = 0;                     /* counts data points */
-        double sum  = 0.0;
-        double mean = 0.0;
-        double data;
-        double stdev;
-        double u, t, w;
-        double diff;
-
-        String line ="";
-        Rvms rvms = new Rvms();
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        try{
-            line = br.readLine();
-
-            while (line!=null) {         /* use Welford's one-pass method */
-                StringTokenizer tokenizer = new StringTokenizer(line);
-                if(tokenizer.hasMoreTokens()){
-                    data = Double.parseDouble(tokenizer.nextToken());
-
-                    n++;                 /* and standard deviation        */
-                    diff  = data - mean;
-                    sum  += diff * diff * (n - 1.0) / n;
-                    mean += diff / n;
-                }
-
-                line = br.readLine();
-
-            }
-        }catch(IOException e){
-            System.err.println(e);
-            System.exit(1);
-        }
-
-        stdev  = Math.sqrt(sum / n);
-
-        DecimalFormat df = new DecimalFormat("###0.00");
-
-        if (n > 1) {
-            u = 1.0 - 0.5 * (1.0 - LOC);              /* interval parameter  */
-            t = rvms.idfStudent(n - 1, u);            /* critical value of t */
-            w = t * stdev / Math.sqrt(n - 1);         /* interval half width */
-
-            System.out.print("\nbased upon " + n + " data points");
-            System.out.print(" and with " + (int) (100.0 * LOC + 0.5) +
-                    "% confidence\n");
-            System.out.print("the expected value is in the interval ");
-            System.out.print( df.format(mean) + " +/- " + df.format(w) + "\n");
-        }
-        else{
-            System.out.print("ERROR - insufficient data\n");
-        }
+    public ArrayList<Double> getIocMeanServiceTimeJobClassTwoPreempted() {
+        return iocMeanServiceTimeJobClassTwoPreempted;
     }
+
 }
 

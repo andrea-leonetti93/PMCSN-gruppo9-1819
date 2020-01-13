@@ -32,6 +32,7 @@ public class PrintStatistics {
     private FileWriter serviceTimeClass2CletFile;
     private FileWriter serviceTimeClass1CloudFile;
     private FileWriter serviceTimeClass2CloudFile;
+    private FileWriter serviceTimeClass2PreemptedFile;
     private static int algorithm = Configuration.ALGORITHM;
     private static boolean hyperexpo = Configuration.HYPEREXPO;
 
@@ -67,6 +68,7 @@ public class PrintStatistics {
                 serviceTimeClass2CletFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2CletHyper.csv");
                 serviceTimeClass1CloudFile = new FileWriter(path2 + File.separator + "Batch_STimeClass1CloudHyper.csv");
                 serviceTimeClass2CloudFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2CloudHyper.csv");
+                serviceTimeClass2PreemptedFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2PreemptedHyper.csv");
             }else{
                 populationFile = new FileWriter(path1 + File.separator + "Batch_MeansExpo.csv");
                 throughputFile = new FileWriter(path3 + File.separator + "Batch_ThrpughputExpo.csv");
@@ -85,6 +87,7 @@ public class PrintStatistics {
                 serviceTimeClass2CletFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2CletExpo.csv");
                 serviceTimeClass1CloudFile = new FileWriter(path2 + File.separator + "Batch_STimeClass1CloudExpo.csv");
                 serviceTimeClass2CloudFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2CloudExpo.csv");
+                serviceTimeClass2PreemptedFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2PreemptedExpo.csv");
             }
             //TODO check if it's necessary adding the curtime to each file with the statistics, ex: value1CloudMeanPop : curtime
             //fileWriter.append("curtime;");
@@ -125,6 +128,8 @@ public class PrintStatistics {
             serviceTimeClass1CloudFile.append("MeanSTimeJobClassOneCloud;");
             serviceTimeClass1CloudFile.append("\n");
             serviceTimeClass2CloudFile.append("MeanSTimeJobClassTwoCloud;");
+            serviceTimeClass2CloudFile.append("\n");
+            serviceTimeClass2CloudFile.append("MeanSTimeJobClassTwoPreempted;");
             serviceTimeClass2CloudFile.append("\n");
         }catch (Exception e){
             System.out.println("Exception: " + e.getMessage());
@@ -402,6 +407,21 @@ public class PrintStatistics {
         }
     }
 
+    private void writeServiceTimeClass2PreemptedStatistics() {
+        for(int i=0; i<ioC.getIocMeanServiceTimeJobClassTwoPreempted().size(); i++){
+            StringBuilder sb = new StringBuilder();
+            sb.append(ioC.getIocMeanServiceTimeJobClassTwoPreempted().get(i));
+            sb.append(";");
+            sb.append("\n");
+            try {
+                serviceTimeClass2PreemptedFile.append(sb.toString());
+                serviceTimeClass2PreemptedFile.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void writeStatistics(){
         writePopulationStatistics();
         writeThroughputStatistics();
@@ -420,6 +440,9 @@ public class PrintStatistics {
         writeServiceTimeClass2CletStatistics();
         writeServiceTimeClass1CloudStatistics();
         writeServiceTimeClass2CloudStatistics();
+        if(algorithm == 2){
+            writeServiceTimeClass2PreemptedStatistics();
+        }
     }
 
 }
