@@ -252,14 +252,13 @@ public class Controller {
     public void getRequestAlgorithm2() {
         Request re = requestQueue.poll();
         if(re != null){
+            //TODO CONTROLLARE COME VIENE AGGIORNATO IL TEMPO IN QUESTO CASO!!!!!!!
             clock.currentTime = re.getRequestTime();
-            //TODO CONTROLLARE SE QUESTO CONTROLLO FUNZIONA!!!!!!!
             if(typeTwoJobToMove.size()!=0 && re instanceof CompletedRequest && ((CompletedRequest) re).isToDelete()){
                 // handle two queues
                 int jobId = re.getJob().getId();
                 if(checkList(jobId)){
-                    // the job is removed in checklist function
-                    // removeFromList(jobId);
+                    // the preempted job is removed from the checklist
                     // update the job elaboration time and send it to the cloud
                     preemptedRequests.add(jobId);
                     //System.out.println("Job ID: " + jobId + "preempted\n");
