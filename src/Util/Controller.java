@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static Util.Configuration.S;
-
 public class Controller {
 
     private static Controller controller = null;
@@ -21,11 +19,12 @@ public class Controller {
     private List<Integer> preemptedRequests;
     public ArrayList<Request> type2JobRequestInCloudlet;
     public List<Integer> typeTwoJobToMove;
+    private double numberAllJobClass1 = 0.0;
+    private double numberAllJobClass2 = 0.0;
     private static int N = Configuration.N;
+    private static int S = Configuration.S;
     private static boolean batch_means = Configuration.BATCH_MEANS;
     private static int algorithm = Configuration.ALGORITHM;
-    //private static boolean hyperexpo = Configuration.HYPEREXPO;
-    //private FileWriter fileWriter;
     private static Statistic s;
 
     private Controller(){
@@ -73,6 +72,11 @@ public class Controller {
             if(re instanceof ArrivalRequest){
                 //check cloudlet space
                 //if it's lower than N, send the request to the cloudlet
+                if(re.getJobType() == 1){
+                    numberAllJobClass1+=1;
+                }else{
+                    numberAllJobClass2+=1;
+                }
                 int totCletJobs = cloudlet.nJobsClass1+cloudlet.nJobsClass2;
                 if(totCletJobs < N){
                     //cloudlet.incrNServerUsed();
@@ -109,27 +113,6 @@ public class Controller {
             }
         }
     }
-
-    /*private void writeOnFile(Clock clock, Cloudlet cloudlet, Cloud cloud) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(clock.currentTime);
-        sb.append(";");
-        sb.append(cloudlet.nJobsClass1);
-        sb.append(";");
-        sb.append(cloudlet.nJobsClass2);
-        sb.append(";");
-        sb.append(cloud.nJobsClass1);
-        sb.append(";");
-        sb.append(cloud.nJobsClass2);
-        sb.append("\n");
-
-        try {
-            fileWriter.append(sb.toString());
-            fileWriter.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
 
     public int numbCompletedRequest(){
         return completedRequests.size();
@@ -252,7 +235,17 @@ public class Controller {
             }
         }
         if(algorithm == 2){
-            System.out.println("\nNumber of preempted job: " + ((double) numbPreemptedRequest()/(double) numbCompletedRequest())*100.0 + " %\n");
+            double probLossC1 = (cloud.completedReqJobsClass1/(cloudlet.completedReqJobsClass1+cloud.completedReqJobsClass1));
+            double probPreemption = ((double) numbPreemptedRequest()/(double) numbCompletedRequest());
+            double probLossC2 = (cloud.completedReqJobsClass2/(cloudlet.completedReqJobsClass2+cloud.completedReqJobsClass2));
+            System.out.println("\nProbabilità di blocco job classe 1: " + probLossC1*100.0 + " %");
+            System.out.println("\nProbabilità di blocco job classe 2: " + (probLossC2-probPreemption)*100.0 + " %");
+            System.out.println("\nNumber of preempted job: " + probPreemption + " %\n");
+        }else{
+            double probLossC1 = (cloud.completedReqJobsClass1/numberAllJobClass1)*100.0;
+            double probLossC2 = (cloud.completedReqJobsClass2/numberAllJobClass2)*100.0;
+            System.out.println("\nProbabilità di blocco job classe 1: " + probLossC1 + " %");
+            System.out.println("\nProbabilità di blocco job classe 2: " + probLossC2 + " %");
         }
     }
 
@@ -278,6 +271,7 @@ public class Controller {
                 removeFromList(re.getJob().getId());
                 handleRequest(re);
             }else{
+                // it handle all the arrival request and the completed request of the cloud
                 handleRequest(re);
             }
         }
