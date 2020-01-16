@@ -10,13 +10,12 @@ public class Cloudlet extends Server {
 
     private RequestQueue requestQueue = RequestQueue.getInstance();
     private Distribution distribution = Distribution.getInstance();
-    private double serviceTimeMu1;
-    private double serviceTimeMu2;
     private static double mu1 = Configuration.MU1CLET;
     private static double mu2 = Configuration.MU2CLET;
     private static double p_hyperexpo = Configuration.P_HYPEREXPO;
     private static boolean hyperexpo = Configuration.HYPEREXPO;
-    private int nServerUsed;
+    private double servicemenatimemu2 = 0.0;
+    private double counter = 0.0;
     private static Cloudlet cloudletInstance = null;
     private double uniform;
     public int allClass2JobsArrivedToCLoudlet = 0;
@@ -34,6 +33,7 @@ public class Cloudlet extends Server {
         //TODO gestire la richiesta in arrrivo
         CompletedRequest cr;
         if(r.getJobType()==1){
+            double serviceTimeMu1;
             // it handle class1 request
             // if the server is hyperexpo then we calculate the new service time
             if(hyperexpo){
@@ -46,8 +46,9 @@ public class Cloudlet extends Server {
             r.getJob().setServiceTime(serviceTimeMu1);
             cr = new CompletedRequest(r.getJob());
             this.nJobsClass1+=1;
-            this.completedReqJobsClass1+=1;
+            //this.completedReqJobsClass1+=1;
         }else{
+            double serviceTimeMu2;
             allClass2JobsArrivedToCLoudlet++;
             // it handle class2 request
             // if the server is hyperexpo then we calculate the new service time
@@ -59,18 +60,30 @@ public class Cloudlet extends Server {
                 serviceTimeMu2 = distribution.exponential(1.0/mu2);
             }
             r.getJob().setServiceTime(serviceTimeMu2);
+            if(counter < 256.0){
+                System.out.println("service time: " + serviceTimeMu2);
+                counter++;
+            }
+            /*servicemenatimemu2 += serviceTimeMu2;
+            counter++;
+            if(counter == 256.0){
+                System.out.println("Service time: " + servicemenatimemu2/counter);
+                servicemenatimemu2 = 0.0;
+                counter = 0.0;
+            }*/
             cr = new CompletedRequest(r.getJob());
             r.getJob().setCompletedRequest(cr);
             this.nJobsClass2+=1;
-            this.completedReqJobsClass2+=1;
+            //this.completedReqJobsClass2+=1;
         }
-        this.completedRequests++;
+        //this.completedRequests++;
         cr.setServer(this);
         requestQueue.add(cr);
     }
 
     // calculating the new service time with hyperexponential distribution
     private double serviceTimeMu1Hyper() {
+        double serviceTimeMu1;
         distribution.selectStream(2);
         uniform = distribution.uniform(0.0, 1.0);
         distribution.selectStream(5);
@@ -84,6 +97,7 @@ public class Cloudlet extends Server {
     }
 
     private double serviceTimeMu2Hyper() {
+        double serviceTimeMu2;
         distribution.selectStream(7);
         uniform = distribution.uniform(0.0, 1.0);
         distribution.selectStream(6);

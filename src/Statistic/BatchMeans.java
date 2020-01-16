@@ -31,11 +31,12 @@ public class BatchMeans {
         return batchMean;
     }
 
-    public Double getBatchMeanForIoC(){
+    /*public Double getBatchMeanForIoC(){
         batchMean = current_batchMean / (double) batchMeanDim;
+        System.out.println("valore");
         reset();
         return batchMean;
-    }
+    }*/
 
     public Double getCurrent_batchMean() {
         return current_batchMean;

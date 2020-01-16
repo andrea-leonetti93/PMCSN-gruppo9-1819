@@ -7,6 +7,7 @@ import Statistic.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Controller {
 
@@ -236,10 +237,10 @@ public class Controller {
         }
         if(algorithm == 2){
             double probLossC1 = (cloud.completedReqJobsClass1/(cloudlet.completedReqJobsClass1+cloud.completedReqJobsClass1));
-            double probPreemption = ((double) numbPreemptedRequest()/(double) numbCompletedRequest());
+            double probPreemption = ((double) numbPreemptedRequest()/(cloudlet.completedReqJobsClass2+cloud.completedReqJobsClass2));
             double probLossC2 = (cloud.completedReqJobsClass2/(cloudlet.completedReqJobsClass2+cloud.completedReqJobsClass2));
             System.out.println("\nProbabilità di blocco job classe 1: " + probLossC1*100.0 + " %");
-            System.out.println("\nProbabilità di blocco job classe 2: " + (probLossC2-probPreemption)*100.0 + " %");
+            System.out.println("\nProbabilità di blocco job classe 2: " + (probLossC2)*100.0 + " %");
             System.out.println("\nNumber of preempted job: " + probPreemption + " %\n");
         }else{
             double probLossC1 = (cloud.completedReqJobsClass1/numberAllJobClass1)*100.0;
@@ -254,7 +255,7 @@ public class Controller {
         if(re != null){
             //TODO CONTROLLARE COME VIENE AGGIORNATO IL TEMPO IN QUESTO CASO!!!!!!!
             clock.currentTime = re.getRequestTime();
-            if(typeTwoJobToMove.size()!=0 && re instanceof CompletedRequest && ((CompletedRequest) re).isToDelete()){
+            if(re instanceof CompletedRequest && ((CompletedRequest) re).isToDelete()){
                 // handle two queues
                 int jobId = re.getJob().getId();
                 if(checkList(jobId)){
@@ -295,12 +296,10 @@ public class Controller {
                     //job.setCompletedRequest(null);
                     //reqToDelete.setJob(null);
                     cloudlet.nJobsClass2-=1;
-                    cloudlet.completedRequests--;
-                    cloudlet.completedReqJobsClass2-=1;
                     //handle jobclassone/two
                     //nJobClass1 and completedRequest are updating in the cloudlet class
-                    cloudlet.handleRequest((ArrivalRequest) re);
                     cloud.handleRequestFromCloudlet(job);
+                    cloudlet.handleRequest((ArrivalRequest) re);
                     //if there's space in the cloudlet
                 } else {
                     cloudlet.handleRequest((ArrivalRequest) re);
@@ -325,16 +324,22 @@ public class Controller {
             if(((CompletedRequest) re).getServer() instanceof Cloudlet){
                 if(re.getJobType()==1){
                     cloudlet.nJobsClass1-=1;
+                    cloudlet.completedReqJobsClass1+=1;
                 }else{
                     //TODO sistemare l'errore qua
                     cloudlet.nJobsClass2-=1;
+                    cloudlet.completedReqJobsClass2+=1;
                 }
+                cloudlet.completedRequests++;
             }else{
                 if(re.getJobType()==1){
                     cloud.nJobsClass1-=1;
+                    cloud.completedReqJobsClass1+=1;
                 }else{
                     cloud.nJobsClass2-=1;
+                    cloud.completedReqJobsClass2+=1;
                 }
+                cloud.completedRequests++;
             }
         }
         //writeOnFile(clock, cloudlet, cloud);
@@ -346,10 +351,13 @@ public class Controller {
     }
 
     private Job chooseWhichClassTwoJobRemove(){
-        Collections.sort(type2JobRequestInCloudlet, new SortByCompletionTime());
-        Job job = type2JobRequestInCloudlet.get(0).getJob();
+        Random random = new Random();
+        //Collections.sort(type2JobRequestInCloudlet, new SortByCompletionTime());
+        int randomInteger = random.nextInt(type2JobRequestInCloudlet.size());
+        Job job = type2JobRequestInCloudlet.get(randomInteger).getJob();
+        //System.out.println("Job da eliminare: " + job);
         job.getCompletedRequest().setToDelete(true);
-        type2JobRequestInCloudlet.remove(0);
+        type2JobRequestInCloudlet.remove(randomInteger);
         return job;
     }
 

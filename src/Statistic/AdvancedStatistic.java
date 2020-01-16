@@ -33,6 +33,8 @@ public class AdvancedStatistic extends Statistic {
     private BatchMeans meanServiceTimeJobClassTwoCloud;
     private BatchMeans meanServiceTimeJobClassTwoPreempted;
     private int counter = 1;
+    private int counter2 = 1;
+    private double menasertimemu2 = 0.0;
 
     public static AdvancedStatistic getInstance(){
         if(advancedStatistic == null){
@@ -117,46 +119,56 @@ public class AdvancedStatistic extends Statistic {
         if(request.getServer() instanceof Cloud){
             cloudServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
             if(cloudServiceMeanTime.getwMean().getN()%256==0){
-                ioC.setIocCloudServiceMeanTime(cloudServiceMeanTime.getBatchMeanForIoC());
+                ioC.setIocCloudServiceMeanTime(cloudServiceMeanTime.getBatchMean());
             }
             if(request.getJobType() == 1){
                 meanServiceTimeJobClassOneCloud.computeBatchMeans(request.getJob().getServiceTime());
                 if(meanServiceTimeJobClassOneCloud.getwMean().getN()%256==0){
-                    ioC.addIocMeanServiceTimeJobClassOneCloud(meanServiceTimeJobClassOneCloud.getBatchMeanForIoC());
+                    ioC.addIocMeanServiceTimeJobClassOneCloud(meanServiceTimeJobClassOneCloud.getBatchMean());
                 }
             }else{
                 meanServiceTimeJobClassTwoCloud.computeBatchMeans(request.getJob().getServiceTime());
                 if(meanServiceTimeJobClassTwoCloud.getwMean().getN()%256==0){
-                    ioC.addIocMeanServiceTimeJobClassTwoCloud(meanServiceTimeJobClassTwoCloud.getBatchMeanForIoC());
+                    ioC.addIocMeanServiceTimeJobClassTwoCloud(meanServiceTimeJobClassTwoCloud.getBatchMean());
                 }
                 // if the request is preempted then update the mean value of the service time in the cloud
                 if(request.isPreempted()){
                     meanServiceTimeJobClassTwoPreempted.computeBatchMeans(request.getJob().getServiceTime());
                     if(meanServiceTimeJobClassTwoPreempted.getwMean().getN()%256==0){
-                        ioC.addIocMeanServiceTimeJobClassTwoPreempted(meanServiceTimeJobClassTwoPreempted.getBatchMeanForIoC());
+                        ioC.addIocMeanServiceTimeJobClassTwoPreempted(meanServiceTimeJobClassTwoPreempted.getBatchMean());
                     }
                 }
             }
         }else{
             cloudletServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
             if(cloudletServiceMeanTime.getwMean().getN()%256==0){
-                ioC.setIocCloudletServiceMeanTime(cloudletServiceMeanTime.getBatchMeanForIoC());
+                ioC.setIocCloudletServiceMeanTime(cloudletServiceMeanTime.getBatchMean());
             }
             if(request.getJobType() == 1){
                 meanServiceTimeJobClassOneClet.computeBatchMeans(request.getJob().getServiceTime());
                 if(meanServiceTimeJobClassOneClet.getwMean().getN()%256==0){
-                    ioC.addIocMeanServiceTimeJobClassOneClet(meanServiceTimeJobClassOneClet.getBatchMeanForIoC());
+                    ioC.addIocMeanServiceTimeJobClassOneClet(meanServiceTimeJobClassOneClet.getBatchMean());
                 }
             }else{
                 meanServiceTimeJobClassTwoClet.computeBatchMeans(request.getJob().getServiceTime());
+                menasertimemu2 += request.getJob().getServiceTime();
+                counter2++;
+                if(counter2 == 256){
+                    System.out.println("mena ser time: " + menasertimemu2/256.0);
+                    counter2 = 0;
+                    menasertimemu2 = 0.0;
+                }
+                //System.out.println("Job: " + request);
                 if(meanServiceTimeJobClassTwoClet.getwMean().getN()%256==0){
-                    ioC.addIocMeanServiceTimeJobClassTwoClet(meanServiceTimeJobClassTwoClet.getBatchMeanForIoC());
+                    double bm = meanServiceTimeJobClassTwoClet.getBatchMean();
+                    //System.out.println("Service time: " + bm);
+                    ioC.addIocMeanServiceTimeJobClassTwoClet(bm);
                 }
             }
         }
         globalServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
         if(globalServiceMeanTime.getwMean().getN()%256==0){
-            ioC.setIocGlobalServiceMeanTime(globalServiceMeanTime.getBatchMeanForIoC());
+            ioC.setIocGlobalServiceMeanTime(globalServiceMeanTime.getBatchMean());
         }
     }
 
