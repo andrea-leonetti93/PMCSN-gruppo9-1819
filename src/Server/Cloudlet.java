@@ -60,7 +60,7 @@ public class Cloudlet extends Server {
                 serviceTimeMu2 = distribution.exponential(1.0/mu2);
             }
             r.getJob().setServiceTime(serviceTimeMu2);
-            if(counter < 256.0){
+            /*if(counter < 256.0){
                 System.out.println("service time: " + serviceTimeMu2);
                 counter++;
             }

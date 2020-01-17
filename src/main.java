@@ -3,10 +3,9 @@ import Server.Cloud;
 import Server.Cloudlet;
 import Statistic.IoC;
 import Statistic.PrintStatistics;
-import Util.Clock;
-import Util.Configuration;
-import Util.Controller;
-import Util.RequestQueue;
+import Util.*;
+
+import java.util.Collections;
 
 
 public class main {
@@ -69,6 +68,8 @@ public class main {
         }
         /* HANDLING OF THE REQUESTS */
         while(clock.currentTime < Configuration.STOP_TIME || requestQueue.size()>0){
+            //TODO riordinare la lista qua
+
             controller.getRequestAlgorithm2();
         }
         System.out.println("Numero job completati: " + controller.numbCompletedRequest());

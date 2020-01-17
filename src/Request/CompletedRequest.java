@@ -9,8 +9,12 @@ public class CompletedRequest extends Request {
     private boolean preempted = false;
     private boolean toDelete = false;
 
+    private double requestTime = 0.0;
+
+
     public CompletedRequest(Job job) {
         super(job);
+        requestTime = job.getArrivalTime()+job.getServiceTime();
     }
 
     public Server getServer() {
@@ -39,7 +43,8 @@ public class CompletedRequest extends Request {
 
     @Override
     public double getRequestTime() {
-        return job.getArrivalTime()+job.getServiceTime();
+        //return job.getArrivalTime()+job.getServiceTime();
+        return requestTime;
     }
 
     @Override

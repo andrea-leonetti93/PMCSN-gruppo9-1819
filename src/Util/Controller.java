@@ -252,8 +252,21 @@ public class Controller {
 
     public void getRequestAlgorithm2() {
         Request re = requestQueue.poll();
+
         if(re != null){
             //TODO CONTROLLARE COME VIENE AGGIORNATO IL TEMPO IN QUESTO CASO!!!!!!!
+            if(clock.currentTime > re.getRequestTime()){
+                System.out.println("\ncurrent clock: " + clock.currentTime);
+                System.out.println("\nlast request time: " + re.getRequestTime());
+                System.out.println("\nrequest: " + re);
+
+                Request r;
+                while ((r = requestQueue.poll()) != null) {
+                    System.out.println(r);
+                }
+
+                System.exit(1);
+            }
             clock.currentTime = re.getRequestTime();
             if(re instanceof CompletedRequest && ((CompletedRequest) re).isToDelete()){
                 // handle two queues
@@ -307,15 +320,14 @@ public class Controller {
             //check cloudlet space class 2 job
             }else{
                 int totCletJobs = cloudlet.nJobsClass1+cloudlet.nJobsClass2;
-                if(totCletJobs < S){
+                //if the cloudlet is full, send the request to the cloud
+                if(totCletJobs >= S){
+                    cloud.handleRequest((ArrivalRequest) re);
+                }else{
                     //adding the job to the list of class 2 jobs accepted by cloudlet
                     type2JobRequestInCloudlet.add(re);
                     cloudlet.handleRequest((ArrivalRequest) re);
                     //gestire l'add del server che gestisce la richiesta alla richeista stessa
-                }
-                //if the cloudlet is full, send the request to the cloud
-                else{
-                    cloud.handleRequest((ArrivalRequest) re);
                 }
             }
         }else if(re instanceof CompletedRequest){
