@@ -7,7 +7,7 @@ import Util.Configuration;
 import Util.Job;
 import Util.RequestQueue;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 public class Cloud extends Server {
 
@@ -16,9 +16,9 @@ public class Cloud extends Server {
     private static double mu1 = Configuration.MU1CLOUD;
     private static double mu2 = Configuration.MU2CLOUD;
     private static double setup_time = Configuration.SETUP_TIME;
-    private double nJobClass2PreemptedCompleted = 0.0;
+    //private double nJobClass2PreemptedCompleted = 0.0;
     private static Cloud cloudInstance = null;
-    public ArrayList<CompletedRequest> preemptedRequest = new ArrayList<>();
+    //private ArrayList<CompletedRequest> preemptedRequest = new ArrayList<>();
 
     private Cloud() {
     }
@@ -68,7 +68,7 @@ public class Cloud extends Server {
         cr.setPreempted(true);
         this.nJobsClass2+=1;
         cr.setServer(this);
-        preemptedRequest.add(cr);
+        //preemptedRequest.add(cr);
         requestQueue.add(cr);
     }
 }

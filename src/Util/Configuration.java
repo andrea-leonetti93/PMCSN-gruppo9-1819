@@ -23,6 +23,7 @@ public class Configuration {
     public static boolean HYPEREXPO;
     public static int ALGORITHM;
     public static double SETUP_TIME;
+    public static boolean SERVICE_TIME_PREEMPTION;
     private static Configuration configuration = null;
 
     public static Configuration getInstance(){
@@ -64,6 +65,7 @@ public class Configuration {
             HYPEREXPO = Boolean.parseBoolean(prop.getProperty("hyperexpo"));
             ALGORITHM = Integer.parseInt(prop.getProperty("algorithm"));
             SETUP_TIME = Double.parseDouble(prop.getProperty("setup_time"));
+            SERVICE_TIME_PREEMPTION = Boolean.parseBoolean(prop.getProperty("service_time_preemption"));
         } catch (
                 IOException ex) {
             ex.printStackTrace();

@@ -1,5 +1,6 @@
 package Util;
 
+import Distribution.Distribution;
 import Request.*;
 import Server.Cloud;
 import Server.Cloudlet;
@@ -26,7 +27,9 @@ public class Controller {
     private static int S = Configuration.S;
     private static boolean batch_means = Configuration.BATCH_MEANS;
     private static int algorithm = Configuration.ALGORITHM;
+    private static boolean service_time_preemption = Configuration.SERVICE_TIME_PREEMPTION;
     private static Statistic s;
+    private static Distribution distribution;
 
     private Controller(){
         if(batch_means){
@@ -38,6 +41,9 @@ public class Controller {
         preemptedRequests = new ArrayList<>();
         type2JobRequestInCloudlet = new ArrayList<>();
         typeTwoJobToMove = new ArrayList<>();
+        if(service_time_preemption){
+            distribution = Distribution.getInstance();
+        }
         /*try{
             if(hyperexpo){
                 fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\JobFlowStatsHyperexpo.csv");
@@ -237,8 +243,9 @@ public class Controller {
         }
         if(algorithm == 2){
             double probLossC1 = (cloud.completedReqJobsClass1/(cloudlet.completedReqJobsClass1+cloud.completedReqJobsClass1));
+            //risultato che si avvicina è #job preempted/ #job completati da cloudlet + #job classe1 completati dal cloud
             double probPreemption = ((double) numbPreemptedRequest()/(cloudlet.completedReqJobsClass2+cloud.completedReqJobsClass2));
-            double probLossC2 = (cloud.completedReqJobsClass2/(cloudlet.completedReqJobsClass2+cloud.completedReqJobsClass2));
+            double probLossC2 = (cloud.completedRequests/((double)controller.completedRequests.size()));
             System.out.println("\nProbabilità di blocco job classe 1: " + probLossC1*100.0 + " %");
             System.out.println("\nProbabilità di blocco job classe 2: " + (probLossC2)*100.0 + " %");
             System.out.println("\nNumber of preempted job: " + probPreemption + " %\n");
@@ -363,13 +370,19 @@ public class Controller {
     }
 
     private Job chooseWhichClassTwoJobRemove(){
-        Random random = new Random();
-        //Collections.sort(type2JobRequestInCloudlet, new SortByCompletionTime());
-        int randomInteger = random.nextInt(type2JobRequestInCloudlet.size());
-        Job job = type2JobRequestInCloudlet.get(randomInteger).getJob();
-        //System.out.println("Job da eliminare: " + job);
+        Job job;
+        if(!service_time_preemption){
+            double uniform;
+            distribution.selectStream(8);
+            uniform = distribution.uniform(0.0, type2JobRequestInCloudlet.size());
+            job = type2JobRequestInCloudlet.get((int)uniform).getJob();
+            type2JobRequestInCloudlet.remove((int)uniform);
+        }else{
+            Collections.sort(type2JobRequestInCloudlet, new SortByCompletionTime());
+            job = type2JobRequestInCloudlet.get(0).getJob();
+            type2JobRequestInCloudlet.remove(0);
+        }
         job.getCompletedRequest().setToDelete(true);
-        type2JobRequestInCloudlet.remove(randomInteger);
         return job;
     }
 
