@@ -76,15 +76,21 @@ public class Controller {
                 if(((CompletedRequest) re).getServer() instanceof Cloudlet){
                     if(re.getJobType()==1){
                         cloudlet.nJobsClass1-=1;
+                        cloudlet.completedReqJobsClass1+=1;
                     }else{
                         cloudlet.nJobsClass2-=1;
+                        cloudlet.completedReqJobsClass2+=1;
                     }
+                    cloudlet.completedRequests++;
                 }else{
                     if(re.getJobType()==1){
                         cloud.nJobsClass1-=1;
+                        cloud.completedReqJobsClass1+=1;
                     }else{
                         cloud.nJobsClass2-=1;
+                        cloud.completedReqJobsClass2+=1;
                     }
+                    cloud.completedRequests++;
                 }
             }
             if(re instanceof ArrivalRequest){
