@@ -1,11 +1,13 @@
 package Statistic;
 
+import Util.Configuration;
+
 public class BatchMeans {
 
     private Double batchMean = 0.0;
     private Double current_batchMean = 0.0;
     private Welford wMean;
-    private static final int batchMeanDim = 256;
+    private static final double batchMeanDim = Configuration.BATCH_DIM;
 
     public BatchMeans() {
         wMean = new Welford();
@@ -26,17 +28,10 @@ public class BatchMeans {
     }
 
     public Double getBatchMean() {
-        batchMean = current_batchMean / (double) batchMeanDim;
+        batchMean = current_batchMean / batchMeanDim;
         reset();
         return batchMean;
     }
-
-    /*public Double getBatchMeanForIoC(){
-        batchMean = current_batchMean / (double) batchMeanDim;
-        System.out.println("valore");
-        reset();
-        return batchMean;
-    }*/
 
     public Double getCurrent_batchMean() {
         return current_batchMean;

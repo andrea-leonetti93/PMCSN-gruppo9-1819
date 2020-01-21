@@ -48,34 +48,29 @@ public class BaseStatistic extends Statistic {
     }
 
     private BaseStatistic() {
-        String path;
-        File dir1 = new File(System.getProperty("user.dir") + File.separator + "stat1");
+        String path = System.getProperty("user.dir") + File.separator + "stat1";
+        File dir1 = new File(path);
         if (!dir1.exists()) {
             if (dir1.mkdir()) {
                 System.out.println("Directory stat1 is created!");
-                File baseDir = new File(System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "BaseStatistics");
-                if(baseDir.mkdir()){
-                    System.out.println("Directory BaseStatistics in stat1 created");
-                }else{
-                    System.out.println("Failed to create directory BaseStatistics!");
-                }
+                createSubDir(path);
             } else {
                 System.out.println("Failed to create directory stat1!");
             }
+        }else{
+            createSubDir(path);
         }
-        File dir2 = new File(System.getProperty("user.dir") + File.separator + "stat2");
+        path = System.getProperty("user.dir") + File.separator + "stat2";
+        File dir2 = new File(path);
         if(!dir2.exists()){
             if (dir2.mkdir()) {
                 System.out.println("Directory stat2 is created!");
-                File baseDir = new File(System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "BaseStatistics");
-                if(baseDir.mkdir()){
-                    System.out.println("Directory BaseStatistics in stat2 created");
-                }else{
-                    System.out.println("Failed to create directory BaseStatistics!");
-                }
+                createSubDir(path);
             } else {
                 System.out.println("Failed to create directory stat2!");
             }
+        }else{
+            createSubDir(path);
         }
         if(algorithm == 1){
             path = System.getProperty("user.dir") + File.separator + "stat1" + File.separator + "BaseStatistics";
@@ -136,6 +131,15 @@ public class BaseStatistic extends Statistic {
             fileWriter.append("\n");
         }catch (Exception e){
             System.out.println("Exception: " + e.getMessage());
+        }
+    }
+
+    private void createSubDir(String path){
+        File baseDir = new File(path + File.separator + "BaseStatistics");
+        if(baseDir.mkdir()){
+            System.out.println("Directory BaseStatistics in " + path +"created");
+        }else{
+            System.out.println("Failed to create directory BaseStatistics!");
         }
     }
 

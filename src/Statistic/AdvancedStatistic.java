@@ -4,6 +4,7 @@ import Request.CompletedRequest;
 import Server.Cloud;
 import Server.Cloudlet;
 import Util.Clock;
+import Util.Configuration;
 
 public class AdvancedStatistic extends Statistic {
 
@@ -34,8 +35,9 @@ public class AdvancedStatistic extends Statistic {
     private BatchMeans meanServiceTimeJobClassTwoPreempted;
     private BatchMeans meanInterDeparturesJobClassOne;
     private BatchMeans meanInterDeparturesJobClassTwo;
-    private double lastArrival1 = 0.0;
-    private double lastArrival2 = 0.0;
+    private double lastCompletion1 = 0.0;
+    private double lastCompletion2 = 0.0;
+private static double batch_dim = Configuration.BATCH_DIM;
     private int counter = 1;
 
     public static AdvancedStatistic getInstance(){
@@ -97,7 +99,7 @@ public class AdvancedStatistic extends Statistic {
         meanThroughputJobClassTwoClet.computeBatchMeans(cloudlet.completedReqJobsClass2/clock.currentTime);
         meanThroughputJobClassOneCloud.computeBatchMeans(cloud.completedReqJobsClass1/clock.currentTime);
         meanThroughputJobClassTwoCloud.computeBatchMeans(cloud.completedReqJobsClass2/clock.currentTime);
-        if(counter == 256){
+        if(counter == batch_dim){
             //TODO write del valore batchmean on file
             counter = 1;
             ioC.setIocCloudMeanPopulation(cloudMeanPopulation.getBatchMean());
@@ -122,52 +124,52 @@ public class AdvancedStatistic extends Statistic {
     private void updateStatisticCompletedReq(CompletedRequest request){
         if(request.getServer() instanceof Cloud){
             cloudServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
-            if(cloudServiceMeanTime.getwMean().getN()%256==0){
+            if(cloudServiceMeanTime.getwMean().getN()%batch_dim==0){
                 ioC.setIocCloudServiceMeanTime(cloudServiceMeanTime.getBatchMean());
             }
             if(request.getJobType() == 1){
                 meanServiceTimeJobClassOneCloud.computeBatchMeans(request.getJob().getServiceTime());
-                if(meanServiceTimeJobClassOneCloud.getwMean().getN()%256==0){
+                if(meanServiceTimeJobClassOneCloud.getwMean().getN()%batch_dim==0){
                     ioC.addIocMeanServiceTimeJobClassOneCloud(meanServiceTimeJobClassOneCloud.getBatchMean());
                 }
             }else{
                 meanServiceTimeJobClassTwoCloud.computeBatchMeans(request.getJob().getServiceTime());
-                if(meanServiceTimeJobClassTwoCloud.getwMean().getN()%256==0){
+                if(meanServiceTimeJobClassTwoCloud.getwMean().getN()%batch_dim==0){
                     ioC.addIocMeanServiceTimeJobClassTwoCloud(meanServiceTimeJobClassTwoCloud.getBatchMean());
                 }
                 // if the request is preempted then update the mean value of the service time in the cloud
                 if(request.isPreempted()){
                     meanServiceTimeJobClassTwoPreempted.computeBatchMeans(request.getJob().getServiceTime());
-                    if(meanServiceTimeJobClassTwoPreempted.getwMean().getN()%256==0){
+                    if(meanServiceTimeJobClassTwoPreempted.getwMean().getN()%batch_dim==0){
                         ioC.addIocMeanServiceTimeJobClassTwoPreempted(meanServiceTimeJobClassTwoPreempted.getBatchMean());
                     }
                 }
             }
         }else{
             cloudletServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
-            if(cloudletServiceMeanTime.getwMean().getN()%256==0){
+            if(cloudletServiceMeanTime.getwMean().getN()%batch_dim==0){
                 ioC.setIocCloudletServiceMeanTime(cloudletServiceMeanTime.getBatchMean());
             }
             if(request.getJobType() == 1){
-                meanInterDeparturesJobClassOne.computeBatchMeans(request.getRequestTime()-lastArrival1);
-                lastArrival1 = request.getRequestTime();
+                meanInterDeparturesJobClassOne.computeBatchMeans(request.getRequestTime()-lastCompletion1);
+                lastCompletion1 = request.getRequestTime();
                 meanServiceTimeJobClassOneClet.computeBatchMeans(request.getJob().getServiceTime());
-                if(meanServiceTimeJobClassOneClet.getwMean().getN()%256==0){
+                if(meanServiceTimeJobClassOneClet.getwMean().getN()%batch_dim==0){
                     ioC.addIocMeanInterDeparturesJobClassOne(meanInterDeparturesJobClassOne.getBatchMean());
                     ioC.addIocMeanServiceTimeJobClassOneClet(meanServiceTimeJobClassOneClet.getBatchMean());
                 }
             }else{
-                meanInterDeparturesJobClassTwo.computeBatchMeans(request.getRequestTime()-lastArrival2);
-                lastArrival2 = request.getRequestTime();
+                meanInterDeparturesJobClassTwo.computeBatchMeans(request.getRequestTime()-lastCompletion2);
+                lastCompletion2 = request.getRequestTime();
                 meanServiceTimeJobClassTwoClet.computeBatchMeans(request.getJob().getServiceTime());
-                if(meanServiceTimeJobClassTwoClet.getwMean().getN()%256==0){
+                if(meanServiceTimeJobClassTwoClet.getwMean().getN()%batch_dim==0){
                     ioC.addIocMeanInterDeparturesJobClassTwo(meanInterDeparturesJobClassTwo.getBatchMean());
                     ioC.addIocMeanServiceTimeJobClassTwoClet(meanServiceTimeJobClassTwoClet.getBatchMean());
                 }
             }
         }
         globalServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
-        if(globalServiceMeanTime.getwMean().getN()%256==0){
+        if(globalServiceMeanTime.getwMean().getN()%batch_dim==0){
             ioC.setIocGlobalServiceMeanTime(globalServiceMeanTime.getBatchMean());
         }
     }

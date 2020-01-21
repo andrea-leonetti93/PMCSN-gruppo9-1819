@@ -16,14 +16,13 @@ public class Configuration {
     public static int N;
     public static int S;
     public static int STOP_TIME;
-    public static double PROB_LAMBDA1;
-    public static double PROB_LAMBDA2;
     public static boolean BATCH_MEANS;
     public static double P_HYPEREXPO;
     public static boolean HYPEREXPO;
     public static int ALGORITHM;
     public static double SETUP_TIME;
     public static boolean SERVICE_TIME_PREEMPTION;
+    public static double BATCH_DIM;
     private static Configuration configuration = null;
 
     public static Configuration getInstance(){
@@ -58,14 +57,13 @@ public class Configuration {
             N = Integer.parseInt(prop.getProperty("N"));
             S = Integer.parseInt(prop.getProperty("S"));
             STOP_TIME = Integer.parseInt(prop.getProperty("STOP_TIME"));
-            PROB_LAMBDA1 = Double.parseDouble(prop.getProperty("prob_lambda1"));
-            PROB_LAMBDA2 = Double.parseDouble(prop.getProperty("prob_lambda2"));
             BATCH_MEANS = Boolean.parseBoolean(prop.getProperty("batch_means"));
             P_HYPEREXPO = Double.parseDouble(prop.getProperty("p_hyperexpo"));
             HYPEREXPO = Boolean.parseBoolean(prop.getProperty("hyperexpo"));
             ALGORITHM = Integer.parseInt(prop.getProperty("algorithm"));
             SETUP_TIME = Double.parseDouble(prop.getProperty("setup_time"));
             SERVICE_TIME_PREEMPTION = Boolean.parseBoolean(prop.getProperty("service_time_preemption"));
+            BATCH_DIM = Double.parseDouble(prop.getProperty("batch_dim"));
         } catch (
                 IOException ex) {
             ex.printStackTrace();
