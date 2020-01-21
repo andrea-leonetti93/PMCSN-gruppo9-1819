@@ -68,8 +68,6 @@ public class main {
         }
         /* HANDLING OF THE REQUESTS */
         while(clock.currentTime < Configuration.STOP_TIME || requestQueue.size()>0){
-            //TODO riordinare la lista qua
-
             controller.getRequestAlgorithm2();
         }
         System.out.println("Numero job completati: " + controller.numbCompletedRequest());

@@ -14,8 +14,6 @@ public class Cloudlet extends Server {
     private static double mu2 = Configuration.MU2CLET;
     private static double p_hyperexpo = Configuration.P_HYPEREXPO;
     private static boolean hyperexpo = Configuration.HYPEREXPO;
-    private double servicemenatimemu2 = 0.0;
-    private double counter = 0.0;
     private static Cloudlet cloudletInstance = null;
     private double uniform;
     public int allClass2JobsArrivedToCLoudlet = 0;
@@ -46,7 +44,6 @@ public class Cloudlet extends Server {
             r.getJob().setServiceTime(serviceTimeMu1);
             cr = new CompletedRequest(r.getJob());
             this.nJobsClass1+=1;
-            //this.completedReqJobsClass1+=1;
         }else{
             double serviceTimeMu2;
             allClass2JobsArrivedToCLoudlet++;
@@ -60,23 +57,10 @@ public class Cloudlet extends Server {
                 serviceTimeMu2 = distribution.exponential(1.0/mu2);
             }
             r.getJob().setServiceTime(serviceTimeMu2);
-            /*if(counter < 256.0){
-                System.out.println("service time: " + serviceTimeMu2);
-                counter++;
-            }
-            /*servicemenatimemu2 += serviceTimeMu2;
-            counter++;
-            if(counter == 256.0){
-                System.out.println("Service time: " + servicemenatimemu2/counter);
-                servicemenatimemu2 = 0.0;
-                counter = 0.0;
-            }*/
             cr = new CompletedRequest(r.getJob());
             r.getJob().setCompletedRequest(cr);
             this.nJobsClass2+=1;
-            //this.completedReqJobsClass2+=1;
         }
-        //this.completedRequests++;
         cr.setServer(this);
         requestQueue.add(cr);
     }

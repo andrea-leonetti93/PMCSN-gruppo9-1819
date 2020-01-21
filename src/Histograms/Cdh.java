@@ -18,7 +18,6 @@ package Histograms;/* ----------------------------------------------------------
  */
 
 import java.io.*;
-import java.util.*;
 import java.text.*;
 
 
@@ -30,8 +29,8 @@ class Outliers {
 class Cdh {
 
   static double MIN   = 0.0;
-  static double MAX   = 8.0;
-  static int    K     = 16;                        /* number of histogram bins   */
+  static double MAX   = 1.0;
+  static int    K     = 64;                        /* number of histogram bins   */
   static double DELTA = ((MAX - MIN) / K);         /* histogram bin size (width) */
 
   public static void main(String[] args) throws IOException {
@@ -55,8 +54,12 @@ class Cdh {
     }
 
     String line = null;
-    InputStreamReader r = new InputStreamReader(System.in);
-    BufferedReader in = new BufferedReader(r);
+    String path = System.getProperty("user.dir");
+    BufferedReader in = new BufferedReader(new FileReader( path + File.separator + "stat2" +
+            File.separator + "Batch_InterDepartureTimeJ1Expo.csv"));
+    //BufferedReader in = new BufferedReader(new FileReader( path + File.separator + "stat2" +
+      //      File.separator + "Batch_InterDepartureTimeJ2Expo.csv"));
+
     try {
       while ( (line = in.readLine()) != null ) {
         x = Double.parseDouble(line);
@@ -73,7 +76,7 @@ class Cdh {
     } catch (EOFException e) {
       System.out.println("Cdh: " + e);
     } catch (NumberFormatException nfe) {
-//      System.out.println("Cdh: " + nfe);
+      System.out.println("Cdh: " + nfe);
     }
 
     if (index > 0) {

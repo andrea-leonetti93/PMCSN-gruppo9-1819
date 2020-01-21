@@ -33,6 +33,8 @@ public class PrintStatistics {
     private FileWriter serviceTimeClass1CloudFile;
     private FileWriter serviceTimeClass2CloudFile;
     private FileWriter serviceTimeClass2PreemptedFile;
+    private FileWriter interDeparturesTimeJobClassOne;
+    private FileWriter interDeparturesTimeJobClassTwo;
     private static int algorithm = Configuration.ALGORITHM;
     private static boolean hyperexpo = Configuration.HYPEREXPO;
 
@@ -89,6 +91,8 @@ public class PrintStatistics {
                 serviceTimeClass1CloudFile = new FileWriter(path2 + File.separator + "Batch_STimeClass1CloudExpo.csv");
                 serviceTimeClass2CloudFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2CloudExpo.csv");
                 serviceTimeClass2PreemptedFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2PreemptedExpo.csv");
+                interDeparturesTimeJobClassOne = new FileWriter(System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "Batch_InterDepartureTimeJ1Expo.csv");
+                interDeparturesTimeJobClassTwo = new FileWriter(System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "Batch_InterDepartureTimeJ2Expo.csv");
             }
             //TODO check if it's necessary adding the curtime to each file with the statistics, ex: value1CloudMeanPop : curtime
             //fileWriter.append("curtime;");
@@ -110,28 +114,32 @@ public class PrintStatistics {
             populationClass1CletFile.append("\n");
             populationClass2CletFile.append("MeanPopJobClassTwoCloudlet;");
             populationClass2CletFile.append("\n");
-            populationClass1CloudFile.append("MeanPopJobClassOneCloud;");
+            populationClass1CloudFile.append("MeanPopJobClassOneCloud");
             populationClass1CloudFile.append("\n");
-            populationClass2CloudFile.append("MeanPopJobClassTwoCloud;");
+            populationClass2CloudFile.append("MeanPopJobClassTwoCloud");
             populationClass2CloudFile.append("\n");
-            throughputClass1CletFile.append("MeanThrJobClassOneClet;");
+            throughputClass1CletFile.append("MeanThrJobClassOneClet");
             throughputClass1CletFile.append("\n");
-            throughputClass2CletFile.append("MeanThrJobClassTwoClet;");
+            throughputClass2CletFile.append("MeanThrJobClassTwoClet");
             throughputClass2CletFile.append("\n");
-            throughputClass1CloudFile.append("MeanThrJobClassOneCloud;");
+            throughputClass1CloudFile.append("MeanThrJobClassOneCloud");
             throughputClass1CloudFile.append("\n");
-            throughputClass2CloudFile.append("MeanThrJobClassTwoCloud;");
+            throughputClass2CloudFile.append("MeanThrJobClassTwoCloud");
             throughputClass2CloudFile.append("\n");
-            serviceTimeClass1CletFile.append("MeanSTimeJobClassOneClet;");
+            serviceTimeClass1CletFile.append("MeanSTimeJobClassOneClet");
             serviceTimeClass1CletFile.append("\n");
-            serviceTimeClass2CletFile.append("MeanSTimeJobClassTwoClet;");
+            serviceTimeClass2CletFile.append("MeanSTimeJobClassTwoClet");
             serviceTimeClass2CletFile.append("\n");
-            serviceTimeClass1CloudFile.append("MeanSTimeJobClassOneCloud;");
+            serviceTimeClass1CloudFile.append("MeanSTimeJobClassOneCloud");
             serviceTimeClass1CloudFile.append("\n");
-            serviceTimeClass2CloudFile.append("MeanSTimeJobClassTwoCloud;");
+            serviceTimeClass2CloudFile.append("MeanSTimeJobClassTwoCloud");
             serviceTimeClass2CloudFile.append("\n");
-            serviceTimeClass2CloudFile.append("MeanSTimeJobClassTwoPreempted;");
+            serviceTimeClass2CloudFile.append("MeanSTimeJobClassTwoPreempted");
             serviceTimeClass2CloudFile.append("\n");
+            interDeparturesTimeJobClassOne.append("MeanInterDeparturesTimeJobClassOne");
+            interDeparturesTimeJobClassOne.append("\n");
+            interDeparturesTimeJobClassTwo.append("MeanInterDeparturesTimeJobClassTwo");
+            interDeparturesTimeJobClassTwo.append("\n");
         }catch (Exception e){
             System.out.println("Exception: " + e.getMessage());
         }
@@ -242,7 +250,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocCloudServiceMeanTime().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocCloudServiceMeanTime().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 serviceTimeCloudFile.append(sb.toString());
@@ -257,7 +264,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocCloudletServiceMeanTime().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocCloudletServiceMeanTime().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 serviceTimeCloudletFile.append(sb.toString());
@@ -272,7 +278,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocGlobalServiceMeanTime().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocGlobalServiceMeanTime().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 serviceTimeGlobalFile.append(sb.toString());
@@ -287,7 +292,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanPopulationJobClassOneClet().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanPopulationJobClassOneClet().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 populationClass1CletFile.append(sb.toString());
@@ -302,7 +306,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanPopulationJobClassTwoClet().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanPopulationJobClassTwoClet().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 populationClass2CletFile.append(sb.toString());
@@ -317,7 +320,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanPopulationJobClassOneCloud().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanPopulationJobClassOneCloud().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 populationClass1CloudFile.append(sb.toString());
@@ -332,7 +334,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanPopulationJobClassTwoCloud().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanPopulationJobClassTwoCloud().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 populationClass2CloudFile.append(sb.toString());
@@ -347,7 +348,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanThroughputJobClassOneClet().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanThroughputJobClassOneClet().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 throughputClass1CletFile.append(sb.toString());
@@ -362,7 +362,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanThroughputJobClassTwoClet().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanThroughputJobClassTwoClet().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 throughputClass2CletFile.append(sb.toString());
@@ -377,7 +376,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanThroughputJobClassOneCloud().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanThroughputJobClassOneCloud().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 throughputClass1CloudFile.append(sb.toString());
@@ -392,7 +390,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanThroughputJobClassTwoCloud().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanThroughputJobClassTwoCloud().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 throughputClass2CloudFile.append(sb.toString());
@@ -407,7 +404,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanServiceTimeJobClassOneClet().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanServiceTimeJobClassOneClet().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 serviceTimeClass1CletFile.append(sb.toString());
@@ -422,7 +418,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanServiceTimeJobClassTwoClet().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanServiceTimeJobClassTwoClet().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 serviceTimeClass2CletFile.append(sb.toString());
@@ -437,7 +432,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanServiceTimeJobClassOneCloud().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanServiceTimeJobClassOneCloud().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 serviceTimeClass1CloudFile.append(sb.toString());
@@ -452,7 +446,6 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanServiceTimeJobClassTwoCloud().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanServiceTimeJobClassTwoCloud().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 serviceTimeClass2CloudFile.append(sb.toString());
@@ -467,11 +460,38 @@ public class PrintStatistics {
         for(int i=0; i<ioC.getIocMeanServiceTimeJobClassTwoPreempted().size(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ioC.getIocMeanServiceTimeJobClassTwoPreempted().get(i));
-            sb.append(";");
             sb.append("\n");
             try {
                 serviceTimeClass2PreemptedFile.append(sb.toString());
                 serviceTimeClass2PreemptedFile.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void writeInterDeparturesTimeClassOneStatistics() {
+        for(int i=0; i<ioC.getIocMeanInterDeparturesJobClassOne().size(); i++){
+            StringBuilder sb = new StringBuilder();
+            sb.append(ioC.getIocMeanInterDeparturesJobClassOne().get(i));
+            sb.append("\n");
+            try {
+                interDeparturesTimeJobClassOne.append(sb.toString());
+                interDeparturesTimeJobClassOne.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void writeInterDeparturesTimeClassTwoStatistics() {
+        for(int i=0; i<ioC.getIocMeanInterDeparturesJobClassTwo().size(); i++){
+            StringBuilder sb = new StringBuilder();
+            sb.append(ioC.getIocMeanInterDeparturesJobClassTwo().get(i));
+            sb.append("\n");
+            try {
+                interDeparturesTimeJobClassTwo.append(sb.toString());
+                interDeparturesTimeJobClassTwo.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -496,6 +516,8 @@ public class PrintStatistics {
         writeServiceTimeClass2CletStatistics();
         writeServiceTimeClass1CloudStatistics();
         writeServiceTimeClass2CloudStatistics();
+        writeInterDeparturesTimeClassOneStatistics();
+        writeInterDeparturesTimeClassTwoStatistics();
         if(algorithm == 2){
             writeServiceTimeClass2PreemptedStatistics();
         }

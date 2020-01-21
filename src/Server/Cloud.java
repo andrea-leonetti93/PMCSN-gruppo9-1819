@@ -56,7 +56,6 @@ public class Cloud extends Server {
     // handle request from cloudlet to cloud second algorithm
     public void handleRequestFromCloudlet(Job job){
         CompletedRequest cr;
-        //
         double serviceTimeMu2;
         distribution.selectStream(4);
         serviceTimeMu2 = distribution.exponential(1.0/mu2);
@@ -64,7 +63,6 @@ public class Cloud extends Server {
         cr = new CompletedRequest(job);
         double newServiceTime = serviceTimeMu2 + setup_time;
         job.setServiceTime(newServiceTime);
-        //System.out.println("New service time: " + newServiceTime);
         cr.setPreempted(true);
         this.nJobsClass2+=1;
         cr.setServer(this);

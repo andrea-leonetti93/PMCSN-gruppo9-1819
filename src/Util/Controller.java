@@ -8,7 +8,6 @@ import Statistic.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class Controller {
 
@@ -41,25 +40,9 @@ public class Controller {
         preemptedRequests = new ArrayList<>();
         type2JobRequestInCloudlet = new ArrayList<>();
         typeTwoJobToMove = new ArrayList<>();
-        if(service_time_preemption){
+        if(!service_time_preemption){
             distribution = Distribution.getInstance();
         }
-        /*try{
-            if(hyperexpo){
-                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\JobFlowStatsHyperexpo.csv");
-            }else{
-                fileWriter = new FileWriter("C:\\Users\\andre\\IdeaProjects\\PMCSN-gruppo9-1819\\src\\JobFlowStatsExpo.csv");
-            }
-            fileWriter.append("curtime;");
-            fileWriter.append("j1cloudlet;");
-            fileWriter.append("j2cloudlet;");
-            fileWriter.append("j1cloud;");
-            fileWriter.append("j2cloud;");
-            fileWriter.append("curtime;");
-            fileWriter.append("\n");
-        }catch (Exception e){
-            System.out.println("Exception: " + e.getMessage());
-        }*/
     }
 
     public static Controller getInstance() {
@@ -72,33 +55,25 @@ public class Controller {
     public void getRequest(){
         Request re = requestQueue.poll();
         if(re !=null){
-            //TODO aggiornare qui clock globale
             clock.currentTime = re.getRequestTime();
-            //System.out.println("To handle:" + re);
-            //System.out.println("Current time:" + clock.currentTime);
             if(re instanceof ArrivalRequest){
-                //check cloudlet space
-                //if it's lower than N, send the request to the cloudlet
                 if(re.getJobType() == 1){
                     numberAllJobClass1+=1;
                 }else{
                     numberAllJobClass2+=1;
                 }
                 int totCletJobs = cloudlet.nJobsClass1+cloudlet.nJobsClass2;
+                //check cloudlet space, if it's lower than N, send the request to the cloudlet
                 if(totCletJobs < N){
-                    //cloudlet.incrNServerUsed();
                     cloudlet.handleRequest((ArrivalRequest) re);
-                    //gestire l'add del server che gestisce la richiesta alla richeista stessa
                 }
                 //if the cloudlet is full, send the request to the cloud
                 else{
                     cloud.handleRequest((ArrivalRequest) re);
                 }
-            }
-            else{
+            }else{
                 completedRequests.add((CompletedRequest) re);
                 if(((CompletedRequest) re).getServer() instanceof Cloudlet){
-                    //cloudlet.decrNServerUsed();
                     if(re.getJobType()==1){
                         cloudlet.nJobsClass1-=1;
                     }else{
@@ -112,7 +87,6 @@ public class Controller {
                     }
                 }
             }
-            //writeOnFile(clock, cloudlet, cloud);
             if(re instanceof ArrivalRequest){
                 s.updateStatistic(clock, cloudlet, cloud, null);
             }else{
@@ -244,11 +218,12 @@ public class Controller {
         if(algorithm == 2){
             double probLossC1 = (cloud.completedReqJobsClass1/(cloudlet.completedReqJobsClass1+cloud.completedReqJobsClass1));
             //risultato che si avvicina è #job preempted/ #job completati da cloudlet + #job classe1 completati dal cloud
-            double probPreemption = ((double) numbPreemptedRequest()/(cloudlet.completedReqJobsClass2+cloud.completedReqJobsClass2));
+            //double probPreemption = ((double) numbPreemptedRequest()/(cloudlet.completedReqJobsClass2+cloud.completedReqJobsClass2));
             double probLossC2 = (cloud.completedRequests/((double)controller.completedRequests.size()));
             System.out.println("\nProbabilità di blocco job classe 1: " + probLossC1*100.0 + " %");
             System.out.println("\nProbabilità di blocco job classe 2: " + (probLossC2)*100.0 + " %");
-            System.out.println("\nNumber of preempted job: " + probPreemption + " %\n");
+            //System.out.println("\nNumber of preempted job: " + probPreemption + " %");
+            System.out.println("\nPercentage preempted job: " + ((double)numbPreemptedRequest())/(double)cloudlet.allClass2JobsArrivedToCLoudlet*100.0 + " %\n");
         }else{
             double probLossC1 = (cloud.completedReqJobsClass1/numberAllJobClass1)*100.0;
             double probLossC2 = (cloud.completedReqJobsClass2/numberAllJobClass2)*100.0;
@@ -259,21 +234,7 @@ public class Controller {
 
     public void getRequestAlgorithm2() {
         Request re = requestQueue.poll();
-
         if(re != null){
-            //TODO CONTROLLARE COME VIENE AGGIORNATO IL TEMPO IN QUESTO CASO!!!!!!!
-            if(clock.currentTime > re.getRequestTime()){
-                System.out.println("\ncurrent clock: " + clock.currentTime);
-                System.out.println("\nlast request time: " + re.getRequestTime());
-                System.out.println("\nrequest: " + re);
-
-                Request r;
-                while ((r = requestQueue.poll()) != null) {
-                    System.out.println(r);
-                }
-
-                System.exit(1);
-            }
             clock.currentTime = re.getRequestTime();
             if(re instanceof CompletedRequest && ((CompletedRequest) re).isToDelete()){
                 // handle two queues
@@ -283,10 +244,7 @@ public class Controller {
                     // update the job elaboration time and send it to the cloud
                     preemptedRequests.add(jobId);
                     //System.out.println("Job ID: " + jobId + "preempted\n");
-                }/*else{
-                    // it executes the normal handlerequest function if it recived a new class 2 job
-                    handleRequest(re);
-                }*/
+                }
             }else if(re instanceof CompletedRequest && ((CompletedRequest) re).getServer() instanceof Cloudlet){
                 removeFromList(re.getJob().getId());
                 handleRequest(re);
@@ -312,12 +270,7 @@ public class Controller {
                     //accept a class 1 job to the cloudlet and send a class 2 job from cloudlet to cloud
                     Job job = chooseWhichClassTwoJobRemove();
                     typeTwoJobToMove.add(job.getId());
-                    //job.getCompletedRequest().setToDelete(true);
-                    //job.setCompletedRequest(null);
-                    //reqToDelete.setJob(null);
                     cloudlet.nJobsClass2-=1;
-                    //handle jobclassone/two
-                    //nJobClass1 and completedRequest are updating in the cloudlet class
                     cloud.handleRequestFromCloudlet(job);
                     cloudlet.handleRequest((ArrivalRequest) re);
                     //if there's space in the cloudlet
@@ -334,18 +287,15 @@ public class Controller {
                     //adding the job to the list of class 2 jobs accepted by cloudlet
                     type2JobRequestInCloudlet.add(re);
                     cloudlet.handleRequest((ArrivalRequest) re);
-                    //gestire l'add del server che gestisce la richiesta alla richeista stessa
                 }
             }
         }else if(re instanceof CompletedRequest){
             completedRequests.add((CompletedRequest) re);
-            //TODO gestire la richiesta prelazionata che deve dare come instanceof quella del cloud
             if(((CompletedRequest) re).getServer() instanceof Cloudlet){
                 if(re.getJobType()==1){
                     cloudlet.nJobsClass1-=1;
                     cloudlet.completedReqJobsClass1+=1;
                 }else{
-                    //TODO sistemare l'errore qua
                     cloudlet.nJobsClass2-=1;
                     cloudlet.completedReqJobsClass2+=1;
                 }
@@ -361,7 +311,6 @@ public class Controller {
                 cloud.completedRequests++;
             }
         }
-        //writeOnFile(clock, cloudlet, cloud);
         if(re instanceof ArrivalRequest){
             s.updateStatistic(clock, cloudlet, cloud, null);
         }else if(re instanceof CompletedRequest){

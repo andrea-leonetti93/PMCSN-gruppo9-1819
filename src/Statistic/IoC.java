@@ -34,6 +34,8 @@ public class IoC {
     private ArrayList<Double> iocMeanServiceTimeJobClassOneCloud = new ArrayList<>();
     private ArrayList<Double> iocMeanServiceTimeJobClassTwoCloud = new ArrayList<>();
     private ArrayList<Double> iocMeanServiceTimeJobClassTwoPreempted = new ArrayList<>();
+    private ArrayList<Double> iocMeanInterDeparturesJobClassOne = new ArrayList<>();
+    private ArrayList<Double> iocMeanInterDeparturesJobClassTwo = new ArrayList<>();
 
     private IoC(){};
 
@@ -217,6 +219,14 @@ public class IoC {
         this.iocMeanServiceTimeJobClassTwoPreempted.add(value);
     }
 
+    public void addIocMeanInterDeparturesJobClassOne(double value){
+        this.iocMeanInterDeparturesJobClassOne.add(value);
+    }
+
+    public void addIocMeanInterDeparturesJobClassTwo(double value){
+        this.iocMeanInterDeparturesJobClassTwo.add(value);
+    }
+
     public ArrayList<Double> getIocCloudMeanPopulation() {
         return iocCloudMeanPopulation;
     }
@@ -305,5 +315,12 @@ public class IoC {
         return iocMeanServiceTimeJobClassTwoPreempted;
     }
 
+    public ArrayList<Double> getIocMeanInterDeparturesJobClassOne() {
+        return iocMeanInterDeparturesJobClassOne;
+    }
+
+    public ArrayList<Double> getIocMeanInterDeparturesJobClassTwo() {
+        return iocMeanInterDeparturesJobClassTwo;
+    }
 }
 
