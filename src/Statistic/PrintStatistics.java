@@ -35,6 +35,8 @@ public class PrintStatistics {
     private FileWriter serviceTimeClass2PreemptedFile;
     private FileWriter interDeparturesTimeJobClassOne;
     private FileWriter interDeparturesTimeJobClassTwo;
+    private FileWriter serviceTimeJobClassOne;
+    private FileWriter serviceTimeJobClassTwo;
     private static int algorithm = Configuration.ALGORITHM;
     private static boolean hyperexpo = Configuration.HYPEREXPO;
 
@@ -90,6 +92,8 @@ public class PrintStatistics {
                 serviceTimeClass2CletFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2CletExpo.csv");
                 serviceTimeClass1CloudFile = new FileWriter(path2 + File.separator + "Batch_STimeClass1CloudExpo.csv");
                 serviceTimeClass2CloudFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2CloudExpo.csv");
+                serviceTimeJobClassOne = new FileWriter(path2 + File.separator + "Batch_STimeClass1Expo.csv");
+                serviceTimeJobClassTwo = new FileWriter(path2 + File.separator + "Batch_STimeClass2Expo.csv");
                 serviceTimeClass2PreemptedFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2PreemptedExpo.csv");
                 interDeparturesTimeJobClassOne = new FileWriter(System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "Batch_InterDepartureTimeJ1Expo.csv");
                 interDeparturesTimeJobClassTwo = new FileWriter(System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "Batch_InterDepartureTimeJ2Expo.csv");
@@ -140,6 +144,10 @@ public class PrintStatistics {
             interDeparturesTimeJobClassOne.append("\n");
             interDeparturesTimeJobClassTwo.append("MeanInterDeparturesTimeJobClassTwo");
             interDeparturesTimeJobClassTwo.append("\n");
+            serviceTimeJobClassOne.append("MeanServiceTimeJobClassOne");
+            serviceTimeJobClassOne.append("\n");
+            serviceTimeJobClassTwo.append("MeanServiceTimeJobClassTwo");
+            serviceTimeJobClassTwo.append("\n");
         }catch (Exception e){
             System.out.println("Exception: " + e.getMessage());
         }
@@ -491,6 +499,34 @@ public class PrintStatistics {
         }
     }
 
+    private void writeServiceTimeClassOneStatistics() {
+        for(int i=0; i<ioC.getIocMeanServiceTimeJobClassOne().size(); i++){
+            StringBuilder sb = new StringBuilder();
+            sb.append(ioC.getIocMeanServiceTimeJobClassOne().get(i));
+            sb.append("\n");
+            try {
+                serviceTimeJobClassOne.append(sb.toString());
+                serviceTimeJobClassOne.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void writeServiceTimeClassTwoStatistics() {
+        for(int i=0; i<ioC.getIocMeanServiceTimeJobClassTwo().size(); i++){
+            StringBuilder sb = new StringBuilder();
+            sb.append(ioC.getIocMeanServiceTimeJobClassTwo().get(i));
+            sb.append("\n");
+            try {
+                serviceTimeJobClassTwo.append(sb.toString());
+                serviceTimeJobClassTwo.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void writeStatistics(){
         writePopulationStatistics();
         writeThroughputStatistics();
@@ -511,6 +547,8 @@ public class PrintStatistics {
         writeServiceTimeClass2CloudStatistics();
         writeInterDeparturesTimeClassOneStatistics();
         writeInterDeparturesTimeClassTwoStatistics();
+        writeServiceTimeClassOneStatistics();
+        writeServiceTimeClassTwoStatistics();
         if(algorithm == 2){
             writeServiceTimeClass2PreemptedStatistics();
         }

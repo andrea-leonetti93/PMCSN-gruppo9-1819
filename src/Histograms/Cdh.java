@@ -28,8 +28,8 @@ class Outliers {
 
 class Cdh {
 
-  static double MIN   = 0.0;
-  static double MAX   = 1.0;
+  static double MIN   = 10.0;
+  static double MAX   = 17.0;
   static int    K     = 64;                        /* number of histogram bins   */
   static double DELTA = ((MAX - MIN) / K);         /* histogram bin size (width) */
 
@@ -55,10 +55,10 @@ class Cdh {
 
     String line = null;
     String path = System.getProperty("user.dir");
-    BufferedReader in = new BufferedReader(new FileReader( path + File.separator + "stat2" +
-            File.separator + "Batch_InterDepartureTimeJ1Expo.csv"));
     //BufferedReader in = new BufferedReader(new FileReader( path + File.separator + "stat2" +
-      //      File.separator + "Batch_InterDepartureTimeJ2Expo.csv"));
+      //      File.separator + "Batch_InterDepartureTimeJ1Expo.csv"));
+    BufferedReader in = new BufferedReader(new FileReader( path + File.separator + "stat2" +
+            File.separator + "Batch_InterDepartureTimeJ2Expo.csv"));
 
     try {
       while ( (line = in.readLine()) != null ) {

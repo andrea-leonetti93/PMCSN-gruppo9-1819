@@ -35,9 +35,11 @@ public class AdvancedStatistic extends Statistic {
     private BatchMeans meanServiceTimeJobClassTwoPreempted;
     private BatchMeans meanInterDeparturesJobClassOne;
     private BatchMeans meanInterDeparturesJobClassTwo;
+    private BatchMeans meanServiceTimeJobClassOne;
+    private BatchMeans meanServiceTimeJobClassTwo;
     private double lastCompletion1 = 0.0;
     private double lastCompletion2 = 0.0;
-private static double batch_dim = Configuration.BATCH_DIM;
+    private static double batch_dim = Configuration.BATCH_DIM;
     private int counter = 1;
 
     public static AdvancedStatistic getInstance(){
@@ -72,6 +74,8 @@ private static double batch_dim = Configuration.BATCH_DIM;
         this.meanServiceTimeJobClassTwoPreempted = new BatchMeans();
         this.meanInterDeparturesJobClassOne = new BatchMeans();
         this.meanInterDeparturesJobClassTwo = new BatchMeans();
+        this.meanServiceTimeJobClassOne = new BatchMeans();
+        this.meanServiceTimeJobClassTwo = new BatchMeans();
     }
 
     @Override
@@ -171,6 +175,17 @@ private static double batch_dim = Configuration.BATCH_DIM;
         globalServiceMeanTime.computeBatchMeans(request.getJob().getServiceTime());
         if(globalServiceMeanTime.getwMean().getN()%batch_dim==0){
             ioC.setIocGlobalServiceMeanTime(globalServiceMeanTime.getBatchMean());
+        }
+        if(request.getJobType() == 1){
+            meanServiceTimeJobClassOne.computeBatchMeans(request.getJob().getServiceTime());
+            if(meanServiceTimeJobClassOne.getwMean().getN()%batch_dim==0){
+                ioC.addIocMeanServiceTimeJobClassOne(meanServiceTimeJobClassOne.getBatchMean());
+            }
+        }else{
+            meanServiceTimeJobClassTwo.computeBatchMeans(request.getJob().getServiceTime());
+            if(meanServiceTimeJobClassTwo.getwMean().getN()%batch_dim==0){
+                ioC.addIocMeanServiceTimeJobClassTwo(meanServiceTimeJobClassTwo.getBatchMean());
+            }
         }
     }
 
