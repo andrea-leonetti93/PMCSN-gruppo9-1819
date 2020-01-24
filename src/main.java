@@ -1,12 +1,9 @@
 import Request.RequestGenerator;
 import Server.Cloud;
 import Server.Cloudlet;
-import Statistic.InterDepartureTimeCollector;
 import Statistic.IoC;
 import Statistic.PrintStatistics;
 import Util.*;
-
-import java.util.Collections;
 
 
 public class main {
@@ -85,7 +82,6 @@ public class main {
         controller.printStatistics();
         ioC.computeIoCForEveryMetric();
         printStatistics.writeStatistics();
-        InterDepartureTimeCollector.printMetrics();
     }
 
 
