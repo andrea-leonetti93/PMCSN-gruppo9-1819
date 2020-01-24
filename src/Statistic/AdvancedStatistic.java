@@ -155,7 +155,9 @@ public class AdvancedStatistic extends Statistic {
                 ioC.setIocCloudletServiceMeanTime(cloudletServiceMeanTime.getBatchMean());
             }
             if(request.getJobType() == 1){
-                meanInterDeparturesJobClassOne.computeBatchMeans(request.getRequestTime()-lastCompletion1);
+                double interDep = request.getRequestTime()-lastCompletion1;
+                InterDepartureTimeCollector.addElement1(interDep);
+                meanInterDeparturesJobClassOne.computeBatchMeans(interDep);
                 lastCompletion1 = request.getRequestTime();
                 meanServiceTimeJobClassOneClet.computeBatchMeans(request.getJob().getServiceTime());
                 if(meanServiceTimeJobClassOneClet.getwMean().getN()%batch_dim==0){
@@ -163,7 +165,9 @@ public class AdvancedStatistic extends Statistic {
                     ioC.addIocMeanServiceTimeJobClassOneClet(meanServiceTimeJobClassOneClet.getBatchMean());
                 }
             }else{
-                meanInterDeparturesJobClassTwo.computeBatchMeans(request.getRequestTime()-lastCompletion2);
+                double interDep2 = request.getRequestTime()-lastCompletion2;
+                InterDepartureTimeCollector.addElement2(interDep2);
+                meanInterDeparturesJobClassTwo.computeBatchMeans(interDep2);
                 lastCompletion2 = request.getRequestTime();
                 meanServiceTimeJobClassTwoClet.computeBatchMeans(request.getJob().getServiceTime());
                 if(meanServiceTimeJobClassTwoClet.getwMean().getN()%batch_dim==0){
