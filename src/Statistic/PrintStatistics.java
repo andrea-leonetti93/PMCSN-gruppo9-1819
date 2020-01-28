@@ -74,6 +74,10 @@ public class PrintStatistics {
                 serviceTimeClass1CloudFile = new FileWriter(path2 + File.separator + "Batch_STimeClass1CloudHyper.csv");
                 serviceTimeClass2CloudFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2CloudHyper.csv");
                 serviceTimeClass2PreemptedFile = new FileWriter(path2 + File.separator + "Batch_STimeClass2PreemptedHyper.csv");
+                serviceTimeJobClassOne = new FileWriter(path2 + File.separator + "Batch_STimeClass1Hyper.csv");
+                serviceTimeJobClassTwo = new FileWriter(path2 + File.separator + "Batch_STimeClass2Hyper.csv");
+                interDeparturesTimeJobClassOne = new FileWriter(System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "Batch_InterDepartureTimeJ1Hyper.csv");
+                interDeparturesTimeJobClassTwo = new FileWriter(System.getProperty("user.dir") + File.separator + "stat2" + File.separator + "Batch_InterDepartureTimeJ2Hyper.csv");
             }else{
                 populationFile = new FileWriter(path1 + File.separator + "Batch_MeansExpo.csv");
                 throughputFile = new FileWriter(path3 + File.separator + "Batch_ThrpughputExpo.csv");

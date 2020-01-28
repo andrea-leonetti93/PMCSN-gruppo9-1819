@@ -1,6 +1,7 @@
 import Request.RequestGenerator;
 import Server.Cloud;
 import Server.Cloudlet;
+import Statistic.InterDepartureTimeCollector;
 import Statistic.IoC;
 import Statistic.PrintStatistics;
 import Util.*;
@@ -37,7 +38,7 @@ public class main {
         }
         /* HANDLING OF THE REQUESTS */
         while (clock.currentTime < Configuration.STOP_TIME || requestQueue.size() > 0) {
-            controller.getRequest();
+            controller.getRequestAlgorithm1();
         }
         System.out.println("Numero job completati: " + controller.numbCompletedRequest());
         controller.printStatistics();
@@ -70,18 +71,15 @@ public class main {
         }
         System.out.println("Numero job completati: " + controller.numbCompletedRequest());
         System.out.println("Numero job prelazionati: " + controller.numbPreemptedRequest());
-        System.out.println("Numero job classe 2 cloudlet finale: (deve essere 0)" + cloudlet.nJobsClass2);
         System.out.println("Numero job classe 1 cloud completati: " + cloud.completedReqJobsClass1);
         System.out.println("Numero job classe 2 cloud completati: " + cloud.completedReqJobsClass2);
         System.out.println("Numero job classe 1 cloudlet completati: " + cloudlet.completedReqJobsClass1);
         System.out.println("Numero job classe 2 cloudlet completati: " + cloudlet.completedReqJobsClass2);
-        System.out.println("Numero job cloudlet completati: " + cloudlet.completedRequests);
-        System.out.println("Numero jobId lista job prelazionati: " + controller.typeTwoJobToMove.size());
-        System.out.println("Numero request nella lista in cloudlet: " + controller.type2JobRequestInCloudlet.size());
         System.out.println("Numero di tutti i job di classe 2 arrivati alla cloudlet: " + cloudlet.allClass2JobsArrivedToCLoudlet);
         controller.printStatistics();
         ioC.computeIoCForEveryMetric();
         printStatistics.writeStatistics();
+        InterDepartureTimeCollector.printMetrics();
     }
 
 

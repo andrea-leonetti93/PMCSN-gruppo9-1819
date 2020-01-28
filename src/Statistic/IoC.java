@@ -67,7 +67,7 @@ public class IoC {
         if(n>1){
             double u = 1.0 - 0.5*(1.0 - LOC);                                            /* interval parameter  */
             t_student = rvms.idfStudent(n - 1, u);                                    /* critical value of t */
-            width = t_student * standardDeviation / Math.sqrt(n - 1);                    /* interval half width */
+            width = (t_student * standardDeviation) / Math.sqrt(n - 1);                    /* interval half width */
         }
         double[] confidenceInterval = {sampleMean, width};
         return confidenceInterval;
@@ -99,6 +99,8 @@ public class IoC {
         double[] confIntSJ1C = computeIoC(iocMeanServiceTimeJobClassOneCloud);
         double[] confIntSJ2C = computeIoC(iocMeanServiceTimeJobClassTwoCloud);
         double[] confIntSJ2P = computeIoC(iocMeanServiceTimeJobClassTwoPreempted);
+        double[] confIntSJ1 = computeIoC(iocMeanServiceTimeJobClassOne);
+        double[] confIntSJ2 = computeIoC(iocMeanServiceTimeJobClassTwo);
 
         System.out.println("\n INTERVALLI DI CONFIDENZA ");
 
@@ -128,6 +130,8 @@ public class IoC {
         System.out.println("\nService mean time job class 2 Cloudlet: " + confIntSJ2CL[0] + ", width: " + confIntSJ2CL[1]);
         System.out.println("\nService mean time job class 1 Cloud: " + confIntSJ1C[0] + ", width: " + confIntSJ1C[1]);
         System.out.println("\nService mean time job class 2 Cloud: " + confIntSJ2C[0] + ", width: " + confIntSJ2C[1]);
+        System.out.println("\nService mean time job class 1: " + confIntSJ1[0] + ", width: " + confIntSJ1[1]);
+        System.out.println("\nService mean time job class 2: " + confIntSJ2[0] + ", width: " + confIntSJ2[1]);
         if(algorithm == 2){
             System.out.println("\nService mean time job class 2 Preempted: " + confIntSJ2P[0] + ", width: " + confIntSJ2P[1]);
         }

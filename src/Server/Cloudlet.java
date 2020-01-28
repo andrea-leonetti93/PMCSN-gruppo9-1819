@@ -15,7 +15,6 @@ public class Cloudlet extends Server {
     private static double p_hyperexpo = Configuration.P_HYPEREXPO;
     private static boolean hyperexpo = Configuration.HYPEREXPO;
     private static Cloudlet cloudletInstance = null;
-    private double uniform;
     public int allClass2JobsArrivedToCLoudlet = 0;
 
     private Cloudlet() {}
@@ -28,7 +27,6 @@ public class Cloudlet extends Server {
     }
 
     public void handleRequest(ArrivalRequest r){
-        //TODO gestire la richiesta in arrrivo
         CompletedRequest cr;
         if(r.getJobType()==1){
             double serviceTimeMu1;
@@ -68,30 +66,30 @@ public class Cloudlet extends Server {
     // calculating the new service time with hyperexponential distribution
     private double serviceTimeMu1Hyper() {
         double serviceTimeMu1;
+        double uniform;
         distribution.selectStream(2);
         uniform = distribution.uniform(0.0, 1.0);
         distribution.selectStream(5);
         if(uniform < p_hyperexpo){
-            serviceTimeMu1 = distribution.exponential(1.0/2*p_hyperexpo*mu1);
-            return serviceTimeMu1;
+            serviceTimeMu1 = distribution.exponential(1.0/(2*p_hyperexpo*mu1));
         }else{
-            serviceTimeMu1 = distribution.exponential(1.0/2*(1-p_hyperexpo)*mu1);
-            return serviceTimeMu1;
+            serviceTimeMu1 = distribution.exponential(1.0/(2*(1-p_hyperexpo)*mu1));
         }
+        return serviceTimeMu1;
     }
 
     private double serviceTimeMu2Hyper() {
         double serviceTimeMu2;
+        double uniform;
         distribution.selectStream(7);
         uniform = distribution.uniform(0.0, 1.0);
         distribution.selectStream(6);
         if(uniform < p_hyperexpo){
-            serviceTimeMu2 = distribution.exponential(1.0/2*p_hyperexpo*mu2);
-            return serviceTimeMu2;
+            serviceTimeMu2 = distribution.exponential(1.0/(2*p_hyperexpo*mu2));
         }else{
-            serviceTimeMu2 = distribution.exponential(1.0/2*(1-p_hyperexpo)*mu2);
-            return serviceTimeMu2;
+            serviceTimeMu2 = distribution.exponential(1.0/(2*(1-p_hyperexpo)*mu2));
         }
+        return serviceTimeMu2;
     }
     ///////////////////////////////////
 }

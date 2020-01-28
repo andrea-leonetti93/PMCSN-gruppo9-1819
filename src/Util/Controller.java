@@ -52,7 +52,7 @@ public class Controller {
         return controller;
     }
 
-    public void getRequest(){
+    public void getRequestAlgorithm1(){
         Request re = requestQueue.poll();
         if(re !=null){
             clock.currentTime = re.getRequestTime();
@@ -223,18 +223,15 @@ public class Controller {
         }
         if(algorithm == 2){
             double probLossC1 = (cloud.completedReqJobsClass1/(cloudlet.completedReqJobsClass1+cloud.completedReqJobsClass1));
-            //risultato che si avvicina è #job preempted/ #job completati da cloudlet + #job classe1 completati dal cloud
-            //double probPreemption = ((double) numbPreemptedRequest()/(cloudlet.completedReqJobsClass2+cloud.completedReqJobsClass2));
             double probLossC2 = (cloud.completedRequests/((double)controller.completedRequests.size()));
-            System.out.println("\nProbabilità di blocco job classe 1: " + probLossC1*100.0 + " %");
-            System.out.println("\nProbabilità di blocco job classe 2: " + (probLossC2)*100.0 + " %");
-            //System.out.println("\nNumber of preempted job: " + probPreemption + " %");
-            System.out.println("\nPercentage preempted job: " + ((double)numbPreemptedRequest())/(double)cloudlet.allClass2JobsArrivedToCLoudlet*100.0 + " %\n");
+            System.out.println("\nBlock Probability job class 1: " + probLossC1*100.0 + " %");
+            System.out.println("\nBlock Probability job class 2: " + (probLossC2)*100.0 + " %");
+            System.out.println("\nPreemption Probability job class 2: " + ((double)numbPreemptedRequest())/(cloudlet.completedReqJobsClass2+cloud.completedReqJobsClass2)*100.0 + " %\n");
         }else{
             double probLossC1 = (cloud.completedReqJobsClass1/numberAllJobClass1)*100.0;
             double probLossC2 = (cloud.completedReqJobsClass2/numberAllJobClass2)*100.0;
-            System.out.println("\nProbabilità di blocco job classe 1: " + probLossC1 + " %");
-            System.out.println("\nProbabilità di blocco job classe 2: " + probLossC2 + " %");
+            System.out.println("\nBlock Probability job class 1: " + probLossC1 + " %");
+            System.out.println("\nBlock Probability job class 2: " + probLossC2 + " %");
         }
     }
 
@@ -326,16 +323,16 @@ public class Controller {
 
     private Job chooseWhichClassTwoJobRemove(){
         Job job;
-        if(!service_time_preemption){
+        if(service_time_preemption){
+            Collections.sort(type2JobRequestInCloudlet, new SortByCompletionTime());
+            job = type2JobRequestInCloudlet.get(0).getJob();
+            type2JobRequestInCloudlet.remove(0);
+        }else{
             double uniform;
             distribution.selectStream(8);
             uniform = distribution.uniform(0.0, type2JobRequestInCloudlet.size());
             job = type2JobRequestInCloudlet.get((int)uniform).getJob();
             type2JobRequestInCloudlet.remove((int)uniform);
-        }else{
-            Collections.sort(type2JobRequestInCloudlet, new SortByCompletionTime());
-            job = type2JobRequestInCloudlet.get(0).getJob();
-            type2JobRequestInCloudlet.remove(0);
         }
         job.getCompletedRequest().setToDelete(true);
         return job;

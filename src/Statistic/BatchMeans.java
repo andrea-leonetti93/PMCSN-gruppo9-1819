@@ -21,6 +21,7 @@ public class BatchMeans {
 
     public void reset(){
         current_batchMean = 0.0;
+        wMean = new Welford();
     }
 
     public Welford getwMean() {
@@ -33,7 +34,4 @@ public class BatchMeans {
         return batchMean;
     }
 
-    public Double getCurrent_batchMean() {
-        return current_batchMean;
-    }
 }
